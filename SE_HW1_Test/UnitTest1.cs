@@ -531,42 +531,30 @@ namespace SE_HW1_Test
         }
 
         [TestMethod]
-        public void testCreateList_CreatesCorrectList()
+        public void testCreateList_NonemptyArray()
         {
             BozoLL ll = new BozoLL();
+            int[] array = {1, 2, 3, 4, 5};
 
-            int start = 1, end = 5;
-            int expectedLength = end - start + 1;
+            ll.CreateList(array, ll);
 
-            ll.CreateList(start, end);
-
-            Assert.AreEqual(expectedLength, ll.Length());
-
-            for (int i = start; i <= end; i++)
+            Assert.AreEqual(array.Length, ll.Length());
+            
+            for (int i = 0; i < array.Length; i++)
             {
-                Assert.AreEqual(i, ll.GetNode(i - start));
+                Assert.AreEqual(array[i], ll.GetNode(i));
             }
         }
 
         [TestMethod]
-        public void CreateList_OnExistingList_ClearsAndCreatesNewList()
+        public void testCreateList_EmptyArray()
         {
             BozoLL ll = new BozoLL();
+            int[] array = {};
 
-            ll.AddToTail(10);
-            ll.AddToTail(11);
+            ll.CreateList(array, ll);
 
-            int start = 1, end = 3;
-            int expectedLength = end - start + 1;
-
-            ll.CreateList(start, end);
-
-            Assert.AreEqual(expectedLength, ll.Length());
-
-            for (int i = start; i <= end; i++)
-            {
-                Assert.AreEqual(i, ll.GetNode(i - start));
-            }
+            Assert.AreEqual(0, ll.Length());
         }
     }
 }

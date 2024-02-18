@@ -267,14 +267,15 @@ namespace SE_HW1
         }
 
         // Not sure about this, wanted different functionality from the constructor
-        public void CreateList(int start, int end)
+        public void CreateList(int[] array, BozoLL ll)
         {
-            head = null;
-            len = 0;
+            ll.head = null;
+            ll.len = 0;
 
-            for (int i = start; i <= end; i++)
+            for (int index = 0; index < array.Length; index++)
             {
-                AddToTail(i);
+                ll.AddToTail(array[index]);
+                ll.len++;
             }
         }
 
