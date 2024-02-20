@@ -11,5 +11,5 @@ import org.springframework.data.repository.CrudRepository;
 //----------------------------------------------------------------------------------------------
 // An interface that allows Attendance Logs to be queried to and from the database.
 //----------------------------------------------------------------------------------------------
-interface AttendanceLogRepository extends CrudRepository<AttendanceLog, Integer> {
+public interface AttendanceLogRepository extends CrudRepository<AttendanceLog, Integer> {
 }

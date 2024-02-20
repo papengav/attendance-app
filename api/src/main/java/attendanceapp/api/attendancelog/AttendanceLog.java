@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 // An entity to represent Attendance Logs from the database.
 //----------------------------------------------------------------------------------------------
 @Table(name = "ATTENDANCE_LOGS")
-record AttendanceLog(
+public record AttendanceLog(
         @Id
         @Column("ID")
         Integer id,

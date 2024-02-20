@@ -9,5 +9,5 @@ package attendanceapp.api.attendancelog;
 //----------------------------------------------------------------------------------------------
 // An entity to represent the version of Attendance Logs used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
-record AttendanceLogDTO(String studentCardId, int sectionId) {
+public record AttendanceLogDTO(String studentCardId, int sectionId) {
 }
