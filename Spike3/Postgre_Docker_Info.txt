@@ -1,0 +1,4 @@
+PostgreSQL Docker hostname: 137.104.247.89:5432
+PostgreSQL Docker port: 5433
+PostgreSQL Docker username: postgres
+PostgreSQL Docker password: project_docker
