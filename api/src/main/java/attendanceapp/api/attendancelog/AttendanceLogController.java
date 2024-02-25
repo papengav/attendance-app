@@ -6,8 +6,8 @@
 
 package attendanceapp.api.attendancelog;
 
-import attendanceapp.api.attendancelog.exceptions.InvalidCredentialsException;
-import attendanceapp.api.attendancelog.exceptions.InvalidEnrollmentException;
+import attendanceapp.api.exceptions.InvalidCredentialsException;
+import attendanceapp.api.exceptions.InvalidEnrollmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -86,12 +86,12 @@ class AttendanceLogController {
             return ResponseEntity.created(locationOfNewLog).body(savedLog);
         }
         catch (InvalidCredentialsException e) {
-            logger.warn("Invalid request to create AttendanceLog: " + e.getMessage());
+            logger.warn("Invalid request: " + e.getMessage());
             return ResponseEntity.badRequest().build();
         }
         catch (InvalidEnrollmentException e) {
-            logger.warn("Unauthorized access to create AttendanceLog: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            logger.warn("Invalid Enrollment: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 }

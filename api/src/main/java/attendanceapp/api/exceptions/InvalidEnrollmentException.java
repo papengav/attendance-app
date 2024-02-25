@@ -1,4 +1,4 @@
-package attendanceapp.api.attendancelog.exceptions;
+package attendanceapp.api.exceptions;
 
 public class InvalidEnrollmentException extends RuntimeException {
 

@@ -34,10 +34,10 @@ public class AttendanceLogControllerTest {
     void shouldCreateANewAttendanceLog() {
         // Get AttendanceLogDTO body info. This will all be supplied by the client sending in the request normally
         String studentCardId = "ABC123";
-        int sectionId = 1;
+        int roomNum = 1;
 
         // Create request - Takes in a DTO and returns the actual object with server-calculated values
-        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, sectionId);
+        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
         ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);      // By setting type to AttendanceLog, it essentially asserts that we were returned the expected object.
 
         // Verify HTTP status code
@@ -55,9 +55,9 @@ public class AttendanceLogControllerTest {
     @Test
     void shouldNotCreateAttendanceLogWhenStudentCardIdDoesNotExist() {
         String studentCardId = "This Doesn't Exist";
-        int sectionId = 1;
+        int roomNum = 1;
 
-        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, sectionId);
+        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
         ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -67,11 +67,11 @@ public class AttendanceLogControllerTest {
      * Ensure that an AttendanceLog is not created if the sectionId / section does not exist.
      */
     @Test
-    void shouldNotCreateAttendanceLogWhenSectionIdDoesNotExist() {
+    void shouldNotCreateAttendanceLogWhenRoomNumDoesNotExist() {
         String studentCardId = "ABC123";
-        int sectionId = -1;
+        int roomNum = -1;
 
-        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, sectionId);
+        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
         ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -83,11 +83,11 @@ public class AttendanceLogControllerTest {
     @Test
     void shouldNotCreateAttendanceLogWhenStudentIsNotEnrolledInSection() {
         String studentCardId = "DEF456";
-        int sectionId = 1;
+        int roomNum = 1;
 
-        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, sectionId);
+        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
         ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);
 
-        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }

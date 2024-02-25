@@ -8,6 +8,7 @@ package attendanceapp.api.enrollment;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 //----------------------------------------------------------------------------------------------
@@ -23,4 +24,12 @@ public interface EnrollmentRepository extends CrudRepository<Enrollment, Integer
      * @return Enrollment object if it exists.
      */
     Optional<Enrollment> findByStudentIdAndSectionId(int studentId, int sectionId);
+
+    /**
+     * Custom query to find all of a Student's Enrollments by studentId
+     *
+     * @param studentId int id of student in requested enrollments
+     * @return List of found Enrollments
+     */
+    List<Enrollment> findAllByStudentId(int studentId);
 }
