@@ -2,3 +2,9 @@ PostgreSQL Docker hostname: 137.104.247.89:5432
 PostgreSQL Docker port: 5433
 PostgreSQL Docker username: postgres
 PostgreSQL Docker password: project_docker
+
+Slight problem:
+    The hostname will not work outside of localhost, so
+    we'd have to do everything locally. I'll keep at it
+    to see if I can connect remotely to the docker.
+    Until then, we can run it locally.
