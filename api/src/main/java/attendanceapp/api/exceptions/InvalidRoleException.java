@@ -7,11 +7,11 @@
 package attendanceapp.api.exceptions;
 
 //----------------------------------------------------------------------------------------------
-// Custom Exception for when a request contains credentials not associated with any Users
+// Custom Exception for when a POST /users request contains a roleId that isn't associated with any Role
 //----------------------------------------------------------------------------------------------
-public class InvalidCredentialsException extends RuntimeException {
+public class InvalidRoleException extends RuntimeException {
 
-    public InvalidCredentialsException(String message) {
+    public InvalidRoleException(String message) {
         super(message);
     }
 }

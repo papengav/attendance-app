@@ -6,12 +6,12 @@
 
 package attendanceapp.api.exceptions;
 
-//----------------------------------------------------------------------------------------------
-// Custom Exception for when a request contains credentials not associated with any Users
-//----------------------------------------------------------------------------------------------
-public class InvalidCredentialsException extends RuntimeException {
 
-    public InvalidCredentialsException(String message) {
+//----------------------------------------------------------------------------------------------
+// Custom Exception for when a POST /users requests to create a Student but doesn't provide a studentCardId
+//----------------------------------------------------------------------------------------------
+public class MissingStudentCardIdException extends Exception {
+    public MissingStudentCardIdException(String message) {
         super(message);
     }
 }

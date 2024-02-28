@@ -33,6 +33,7 @@ class AttendanceLogController {
     /**
      * Construct the AttendanceLogController
      *
+     * @param attendanceLogService AttendanceLogService providing services related to AttendanceLog
      * @param attendanceLogRepository AttendanceLogRepository containing AttendanceLog objects
      */
     private AttendanceLogController(AttendanceLogService attendanceLogService, AttendanceLogRepository attendanceLogRepository) {

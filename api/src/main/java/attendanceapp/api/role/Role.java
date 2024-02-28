@@ -14,7 +14,7 @@ import org.springframework.data.relational.core.mapping.Table;
 // An entity that represents roles from the database.
 //----------------------------------------------------------------------------------------------
 @Table("ROLES")
-record Role(
+public record Role(
    @Id
    @Column("ID")
    Integer id,

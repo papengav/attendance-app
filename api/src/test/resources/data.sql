@@ -5,9 +5,9 @@
 ------------------------------------------------------------------------------------------------
 
 INSERT INTO ROLES (NAME) VALUES
-('Student'),
+('Administrator'),
 ('Professor'),
-('Administrator');
+('Student');
 
 INSERT INTO USERS (FIRST_NAME, LAST_NAME, STUDENT_CARD_ID, USERNAME, PASSWORD, ROLE_ID) VALUES
 ('Gavin', 'Papenthien', 'ABC123', 'papengav', 'password123', 1),

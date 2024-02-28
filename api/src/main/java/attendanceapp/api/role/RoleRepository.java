@@ -1,17 +1,14 @@
 //----------------------------------------------------------------------------------------------
 // Name: Gavin Papenthien
 // Project: Attendance App - This is a full stack attendance tracking and management software.
-// Purpose: Provide custom Exceptions for errors that may occur in the API.
+// Purpose: Provide an interface that allows Roles to be queried to and from the database.
 //----------------------------------------------------------------------------------------------
 
-package attendanceapp.api.exceptions;
+package attendanceapp.api.role;
+
+import org.springframework.data.repository.CrudRepository;
 
 //----------------------------------------------------------------------------------------------
-// Custom Exception for when a request contains credentials not associated with any Users
+// An interface that allows Roles to be queried to and from the database.
 //----------------------------------------------------------------------------------------------
-public class InvalidCredentialsException extends RuntimeException {
-
-    public InvalidCredentialsException(String message) {
-        super(message);
-    }
-}
+public interface RoleRepository extends CrudRepository<Role, Integer> { }

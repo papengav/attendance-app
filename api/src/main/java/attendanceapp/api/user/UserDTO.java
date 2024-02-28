@@ -1,17 +1,19 @@
 //----------------------------------------------------------------------------------------------
 // Name: Gavin Papenthien
 // Project: Attendance App - This is a full stack attendance tracking and management software.
-// Purpose: Provide custom Exceptions for errors that may occur in the API.
+// Purpose: Create an entity to represent the version of Users used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
 
-package attendanceapp.api.exceptions;
+package attendanceapp.api.user;
 
 //----------------------------------------------------------------------------------------------
-// Custom Exception for when a request contains credentials not associated with any Users
+// An entity to represent the version of Users used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
-public class InvalidCredentialsException extends RuntimeException {
-
-    public InvalidCredentialsException(String message) {
-        super(message);
-    }
-}
+public record UserDTO(
+        String firstName,
+        String lastName,
+        String studentCardId,
+        String username,
+        String password,
+        int roleId
+) {}
