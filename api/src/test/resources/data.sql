@@ -10,8 +10,8 @@ INSERT INTO ROLES (NAME) VALUES
 ('Student');
 
 INSERT INTO USERS (FIRST_NAME, LAST_NAME, STUDENT_CARD_ID, USERNAME, PASSWORD, ROLE_ID) VALUES
-('Gavin', 'Papenthien', 'ABC123', 'papengav', 'password123', 1),
-('Sam', 'Miller', 'DEF456', 'millerSam', 'pwd456', 1);
+('Gavin', 'Papenthien', 'ABC123', 'papengav', 'password123', 3),
+('Sam', 'Miller', 'DEF456', 'millerSam', 'pwd456', 3);
 
 INSERT INTO COURSES (NAME, SECTION_COUNT) VALUES
 ('SE3330', 2);
