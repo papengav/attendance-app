@@ -1,3 +1,6 @@
+//Name: Sam Miller
+//Project: Scrum of the Earth
+//Purpose: Handles routing of the UI pages
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginForm from './Pages/LoginForm/LoginForm';
 import CreateUserDropdown from './Pages/CreateUserForm/CreateUserDropdown'

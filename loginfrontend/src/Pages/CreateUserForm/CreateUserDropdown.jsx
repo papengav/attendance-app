@@ -1,3 +1,6 @@
+//Name: Sam Miller
+//Project: Scrum of the Earth
+//Purpose: Attempt at a fancier dropdown menu
 import "./CreateUserDropdown.css";
 import React, { useState } from 'react';
 import list from "./list.json";

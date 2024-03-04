@@ -1,3 +1,6 @@
+//Name: Sam Miller
+//Project: Scrum of the Earth
+//Purpose: Frontend page for creating new users
 import { even } from "check-types";
 import React, { useState } from "react";
 import { valid } from "semver";

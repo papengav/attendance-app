@@ -1,3 +1,6 @@
+//Name: Sam Miller
+//Project: Scrum of the Earth
+//Purpose: Frontend page for users to login. Currently the home page.
 import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
