@@ -1,14 +1,28 @@
+import { even } from "check-types";
 import React, { useState } from "react";
+import { valid } from "semver";
 
 function CreateUser() {
     const options = [
-        {label: "Student", value: "Student"},
-        {label: "Professor", value: "Professor"},
-        {label: "Administrator", value: "Administrator"},
+        {label: "Student", value: "1"},
+        {label: "Professor", value: "2"},
+        {label: "Administrator", value: "3"},
     ]
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [type, setType] = useState("")
+    const [firstname, setFirstname] = useState("")
+    const [lastname, setLastname] = useState("")
+    const [cardId, setCardId] = useState(null)
+    const changeCardId = event => {
+        setCardId(event.target.value)
+    }
+    const changeFirstname = event => {
+        setFirstname(event.target.value)
+    }
+    const changeLastname = event => {
+        setLastname(event.target.value)
+    }
     const changeUsername = event => {
         setUsername(event.target.value)
     }
@@ -20,7 +34,7 @@ function CreateUser() {
     }
     const handleClick = (e) => {
         e.preventDefault();
-        const user = {username, password, type}
+        const user = {firstname, lastname, cardId, username, password, type}
         console.log(user)
         const postArgs = {
             method: "POST",
@@ -40,6 +54,18 @@ function CreateUser() {
                         <option value={option.value}>{option.label}</option>
                     ))}
                 </select>
+            </div>
+            <div className="w-50 p-3 border rounded">
+                <h4>Input First Name</h4>
+                <input onChange={changeFirstname} value= {firstname}/>
+            </div>
+            <div className="w-50 p-3 border rounded">
+                <h4>Input Last Name</h4>
+                <input onChange={changeLastname} value= {lastname}/>
+            </div>
+            <div className="w-50 p-3 border rounded">
+                <h4>Input Card ID</h4>
+                <input onChange={changeCardId} value= {cardId}/>
             </div>
             <div className="w-50 p-3 border rounded">
                 <h4>Input Username</h4>
