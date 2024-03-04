@@ -7,9 +7,9 @@ import { valid } from "semver";
 
 function CreateUser() {
     const options = [
-        {label: "Student", value: "1"},
+        {label: "Student", value: "3"},
         {label: "Professor", value: "2"},
-        {label: "Administrator", value: "3"},
+        {label: "Administrator", value: "1"},
     ]
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
