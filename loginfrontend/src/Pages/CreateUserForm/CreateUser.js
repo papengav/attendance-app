@@ -15,8 +15,8 @@ function CreateUser() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [roleId, setroleID] = useState(3)
-    const [firstname, setFirstname] = useState("")
-    const [lastname, setLastname] = useState("")
+    const [firstName, setFirstname] = useState("")
+    const [lastName, setLastname] = useState("")
     const [studentCardId, setCardId] = useState(null)
     const changeCardId = event => {
         setCardId(event.target.value)
@@ -63,15 +63,15 @@ function CreateUser() {
             </div>
             <div className="w-50 p-3 border rounded">
                 <h4>Input First Name</h4>
-                <input onChange={changeFirstname} value= {firstname}/>
+                <input onChange={changeFirstname} value= {firstName}/>
             </div>
             <div className="w-50 p-3 border rounded">
                 <h4>Input Last Name</h4>
-                <input onChange={changeLastname} value= {lastname}/>
+                <input onChange={changeLastname} value= {lastName}/>
             </div>
             <div className="w-50 p-3 border rounded">
                 <h4>Input Card ID</h4>
-                <input onChange={changeCardId} value= {cardId}/>
+                <input onChange={changeCardId} value= {studentCardId}/>
             </div>
             <div className="w-50 p-3 border rounded">
                 <h4>Input Username</h4>
