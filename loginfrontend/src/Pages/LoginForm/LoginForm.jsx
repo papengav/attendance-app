@@ -5,10 +5,12 @@ import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
 
+//Displays the login UI
 const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    //method to handle the user clicking the submit button
+    //sends a post to the API
     const handleClick = (e) => {
         e.preventDefault();
         const User = { username, password };

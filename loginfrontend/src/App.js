@@ -7,7 +7,7 @@ import CreateUserDropdown from './Pages/CreateUserForm/CreateUserDropdown'
 import NoPage from './Pages/NoPage'
 import CreateUser from './Pages/CreateUserForm/CreateUser';
 
-
+//Handles the routing of the frontend pages
 function App() {
   return (
     <div>

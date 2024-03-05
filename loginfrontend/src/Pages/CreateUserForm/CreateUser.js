@@ -5,6 +5,7 @@ import { even } from "check-types";
 import React, { useState } from "react";
 import { valid } from "semver";
 
+//displays the create user UI
 function CreateUser() {
     const options = [
         {label: "Student", value: "3"},
@@ -35,6 +36,8 @@ function CreateUser() {
     const handleSelect = event => {
         setType(event.target.value)
     }
+    //method to handle the user clicking the submit button
+    //sends a post to the API
     const handleClick = (e) => {
         e.preventDefault();
         const user = {firstname, lastname, cardId, username, password, type}
