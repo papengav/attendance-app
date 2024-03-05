@@ -1,5 +1,5 @@
 //Name: Sam Miller
-//Project: Scrum of the Earth
+//Project: Attendance App - This is a full stack attendance tracking and managament software
 //Purpose: Handles routing of the UI pages
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginForm from './Pages/LoginForm/LoginForm';

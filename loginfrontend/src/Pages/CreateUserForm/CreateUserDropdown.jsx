@@ -1,5 +1,5 @@
 //Name: Sam Miller
-//Project: Scrum of the Earth
+//Project: Attendance App - This is a full stack attendance tracking and managament software
 //Purpose: Attempt at a fancier dropdown menu
 import "./CreateUserDropdown.css";
 import React, { useState } from 'react';

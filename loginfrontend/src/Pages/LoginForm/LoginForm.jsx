@@ -1,5 +1,5 @@
 //Name: Sam Miller
-//Project: Scrum of the Earth
+//Project: Attendance App - This is a full stack attendance tracking and managament software
 //Purpose: Frontend page for users to login. Currently the home page.
 import React, { useState } from 'react';
 import './LoginForm.css';
