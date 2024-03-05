@@ -17,7 +17,7 @@ function CreateUser() {
     const [roleId, setroleID] = useState(3)
     const [firstName, setFirstname] = useState("")
     const [lastName, setLastname] = useState("")
-    const [studentCardId, setCardId] = useState(null)
+    const [studentCardId, setCardId] = useState("")
     const changeCardId = event => {
         setCardId(event.target.value)
     }
@@ -34,12 +34,13 @@ function CreateUser() {
         setPassword(event.target.value)
     }
     const handleSelect = event => {
-        setroleID(parseInt(event.target.value, 10))
+        setroleID(event.target.value)
     }
     //method to handle the user clicking the submit button
     //sends a post to the API
     const handleClick = (e) => {
         e.preventDefault();
+        setroleID(options.map(option => (option.value)))
         const user = {firstName, lastName, studentCardId, username, password, roleId}
         console.log(user)
         const postArgs = {
@@ -55,7 +56,7 @@ function CreateUser() {
         <div className="d-flex justify-content-center mt-5">
             <div className="w-50 p-3 border rounded">
                 <h4>Select User Type</h4>
-                <select onSelect={handleSelect} className="form-select">
+                <select onChange={handleSelect} className="form-select">
                     {options.map(option => (
                         <option value={option.value}>{option.label}</option>
                     ))}
