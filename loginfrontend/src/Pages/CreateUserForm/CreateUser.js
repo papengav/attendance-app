@@ -8,16 +8,16 @@ import { valid } from "semver";
 //displays the create user UI
 function CreateUser() {
     const options = [
-        {label: "Student", value: "3"},
-        {label: "Professor", value: "2"},
-        {label: "Administrator", value: "1"},
+        {label: "Student", value: 3},
+        {label: "Professor", value: 2},
+        {label: "Administrator", value: 1},
     ]
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [type, setType] = useState("")
+    const [roleId, setroleID] = useState(3)
     const [firstname, setFirstname] = useState("")
     const [lastname, setLastname] = useState("")
-    const [cardId, setCardId] = useState(null)
+    const [studentCardId, setCardId] = useState(null)
     const changeCardId = event => {
         setCardId(event.target.value)
     }
@@ -34,20 +34,20 @@ function CreateUser() {
         setPassword(event.target.value)
     }
     const handleSelect = event => {
-        setType(event.target.value)
+        setroleID(parseInt(event.target.value, 10))
     }
     //method to handle the user clicking the submit button
     //sends a post to the API
     const handleClick = (e) => {
         e.preventDefault();
-        const user = {firstname, lastname, cardId, username, password, type}
+        const user = {firstName, lastName, studentCardId, username, password, roleId}
         console.log(user)
         const postArgs = {
             method: "POST",
             headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
             body: JSON.stringify(user)
         };
-        fetch('http://localhost:8080/login', postArgs).then(() => {
+        fetch('http://localhost:8080/users', postArgs).then(() => {
             console.log("User created");
         });
     };
