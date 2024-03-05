@@ -22,6 +22,7 @@ import java.util.Optional;
 // Provide mappings for clients to interact with AttendanceLogs.
 //---------------------------------------------------------------
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/users")
 class UserController {
 

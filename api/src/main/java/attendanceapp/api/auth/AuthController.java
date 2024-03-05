@@ -12,10 +12,7 @@ import attendanceapp.api.user.User;
 import attendanceapp.api.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -23,6 +20,7 @@ import java.util.Optional;
 // Provide mappings for clients to interact with AttendanceLogs.
 //---------------------------------------------------------------
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/login")
 public class AuthController {
 
