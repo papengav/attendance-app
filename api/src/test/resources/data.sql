@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------------------------
+-- Name: Gavin Papenthien
+-- Project: Attendance App - This is a full stack attendance tracking and management software.
+-- Purpose: Create mock data to test the API with.
+------------------------------------------------------------------------------------------------
+
+INSERT INTO ROLES (NAME) VALUES
+('Administrator'),
+('Professor'),
+('Student');
+
+INSERT INTO USERS (FIRST_NAME, LAST_NAME, STUDENT_CARD_ID, USERNAME, PASSWORD, ROLE_ID) VALUES
+('Gavin', 'Papenthien', 'ABC123', 'papengav', 'password123', 3),
+('Sam', 'Miller', 'DEF456', 'millerSam', 'pwd456', 3);
+
+INSERT INTO COURSES (NAME, SECTION_COUNT) VALUES
+('SE3330', 2);
+
+INSERT INTO SECTIONS (ROOM_NUM, NUM_STUDENTS, COURSE_ID) VALUES
+(1, 1, 1);
+
+INSERT INTO ENROLLMENTS (SECTION_ID, STUDENT_ID) VALUES
+(1, 1);
+
+INSERT INTO MEETING_TIMES (SECTION_ID, DAY_OF_WEEK, START_TIME, END_TIME) VALUES
+(1, DAY_OF_WEEK(CURRENT_DATE()), CURRENT_TIME() + 10 MINUTE, CURRENT_TIME() + 1 HOUR);
