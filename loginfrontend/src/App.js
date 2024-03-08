@@ -4,7 +4,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginForm from './Pages/LoginForm/LoginForm';
 import CreateUserDropdown from './Pages/CreateUserForm/CreateUserDropdown'
-import NoPage from './Pages/NoPage'
+import NoPage from './Pages/NoPage/NoPage'
 import CreateUser from './Pages/CreateUserForm/CreateUser';
 
 //Handles the routing of the frontend pages
