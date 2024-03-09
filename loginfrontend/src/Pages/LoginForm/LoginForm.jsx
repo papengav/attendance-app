@@ -20,8 +20,13 @@ const LoginForm = () => {
             headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
             body: JSON.stringify(User)
         };
-        fetch('http://localhost:8080/login', postArgs).then(() => {
-            console.log("User Logged In");
+        fetch('http://localhost:8080/login', postArgs).then(response => {
+            if(response.status != 404) {
+                console.log("User Logged In");
+            }
+            else {
+                alert('Incorrect loggin credentials');
+            }
         });
     };
 
