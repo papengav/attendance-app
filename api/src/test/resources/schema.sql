@@ -65,6 +65,3 @@ INSERT INTO ROLES (NAME) VALUES
 ('Administrator'),
 ('Professor'),
 ('Student');
-
-INSERT INTO USERS (FIRST_NAME, LAST_NAME, STUDENT_CARD_ID, USERNAME, PASSWORD, ROLE_ID) VALUES
-('admin', 'admin', null, 'admin', 'password', 1);

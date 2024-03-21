@@ -13,6 +13,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 
@@ -23,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // A testing class to test for proper functionality and outputs of endpoints from UserController
 //----------------------------------------------------------------------------------------------
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class UserControllerTest {
 
     @Autowired
