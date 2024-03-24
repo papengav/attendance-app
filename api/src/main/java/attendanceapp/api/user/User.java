@@ -13,27 +13,26 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity that represents Users from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "USERS")
+@Table(name = "users", schema = "se3330")
 public record User(
         @Id
-        @Column("ID")
         Integer id,
 
-        @Column("FIRST_NAME")
+        @Column("first_name")
         String firstName,
 
-        @Column("LAST_NAME")
+        @Column("last_name")
         String lastName,
 
-        @Column("STUDENT_CARD_ID")
+        @Column("student_card_id")
         String studentCardId,
 
-        @Column("USERNAME")
+        @Column("username")
         String username,
 
-        @Column("PASSWORD")
+        @Column("password")
         String password,
 
-        @Column("ROLE_ID")
+        @Column("role_id")
         int roleId
 ) {}
