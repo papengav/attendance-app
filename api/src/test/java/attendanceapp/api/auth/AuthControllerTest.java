@@ -30,13 +30,13 @@ public class AuthControllerTest {
     @Test
     void shouldLoginAUser() {
         String username = "papengav";
-        String password = "password123";
+        String password = "password";
 
         AuthDTO newAuth = new AuthDTO(username, password);
         ResponseEntity<String> createResponse = restTemplate.postForEntity("/login", newAuth, String.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(createResponse.getBody()).isEqualTo("Student");
+        assertThat(createResponse.getBody()).contains("Student");
     }
 
     /**
@@ -45,7 +45,7 @@ public class AuthControllerTest {
     @Test
     void shouldNotLoginWithInvalidUsername() {
         String username = "I_dont_exit";
-        String password = "password123";
+        String password = "password";
 
         AuthDTO newAuth = new AuthDTO(username, password);
         ResponseEntity<String> createResponse = restTemplate.postForEntity("/login", newAuth, String.class);

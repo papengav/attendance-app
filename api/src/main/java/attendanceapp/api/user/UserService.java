@@ -45,7 +45,7 @@ public class UserService {
     public User createUser(UserDTO userRequest) throws InvalidRoleException, MissingStudentCardIdException {
         Role role = getRole(userRequest.roleId());
         verifyStudentCardId(userRequest.studentCardId(), role); // Make sure if request is for a Student that a valid studentCardId has been provided
-        User newUser = new User(null, userRequest.firstName(), userRequest.lastName(), userRequest.studentCardId(), userRequest.username(), userRequest.password(), 3);
+        User newUser = new User(null, userRequest.firstName(), userRequest.lastName(), userRequest.studentCardId(), userRequest.username(), userRequest.password(), userRequest.roleId());
 
         return userRepository.save(newUser);
     }

@@ -32,4 +32,12 @@ public interface UserRepository extends CrudRepository<User, Integer> {
      * @return User if they exist
      */
     Optional<User> findByUsernameAndPassword(String username, String password);
+
+    /**
+     * Custom query to search for Users by their username in the database
+     *
+     * @param username String username of requested User
+     * @return User if they exist
+     */
+    Optional<User> findByUsername(String username);
 }

@@ -6,12 +6,13 @@
 
 package attendanceapp.api.attendancelog;
 
+import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCredentialsException;
 import attendanceapp.api.exceptions.InvalidEnrollmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,7 +38,7 @@ class AttendanceLogController {
      * @param attendanceLogService AttendanceLogService providing services related to AttendanceLog
      * @param attendanceLogRepository AttendanceLogRepository containing AttendanceLog objects
      */
-    private AttendanceLogController(AttendanceLogService attendanceLogService, AttendanceLogRepository attendanceLogRepository) {
+    public AttendanceLogController(AttendanceLogService attendanceLogService, AttendanceLogRepository attendanceLogRepository) {
         this.attendanceLogService = attendanceLogService;
         logger = LoggerFactory.getLogger(AttendanceLogController.class);
         this.attendanceLogRepository = attendanceLogRepository;
@@ -50,7 +51,8 @@ class AttendanceLogController {
      * @return AttendanceLog or 404 NOT FOUND
      */
     @GetMapping("/{requestedId}")
-    private ResponseEntity<AttendanceLog> findById(@PathVariable int requestedId) {
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<AttendanceLog> findById(@PathVariable int requestedId) {
         logger.info("An AttendanceLog was requested");
         logger.trace(String.format("Entering findById with parameters (requestedId = %d)", requestedId));
 
@@ -76,7 +78,7 @@ class AttendanceLogController {
      * @return AttendanceLog or 403 FORBIDDEN or 400 BAD REQUEST
      */
     @PostMapping
-    private ResponseEntity<AttendanceLog> createAttendanceLog(@RequestBody AttendanceLogDTO newLogRequest, UriComponentsBuilder ucb) {
+    public ResponseEntity<AttendanceLog> createAttendanceLog(@RequestBody AttendanceLogDTO newLogRequest, UriComponentsBuilder ucb) {
         try {
             AttendanceLog savedLog = attendanceLogService.createAttendanceLog(newLogRequest);
             URI locationOfNewLog = ucb
