@@ -35,6 +35,7 @@ const CreateCourse = () => {
             <form onSubmit={handleClick}>
                 <h1>Create Course</h1>
                 <div className='input-box'>
+                    <h2>Input Course Name</h2>
                     <input
                     type= "text"
                     placeholder='Course Name'
@@ -44,6 +45,7 @@ const CreateCourse = () => {
                     />
                 </div>
                 <div className='input-box'>
+                    <h2>Input Number of Sections</h2>
                     <input
                     type= "number"
                     placeholder='1'
@@ -53,6 +55,7 @@ const CreateCourse = () => {
                     />
                 </div>
                 <div className='input-box'>
+                    <h2>Input Professor Name</h2>
                     <input
                     type= "text"
                     placeholder='Professor Name'

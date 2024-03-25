@@ -36,10 +36,13 @@ const CreateSection = () => {
     };
 
     return (
+        //missing choosing meeting dates
+        //try to make it so user can select days of the week
         <div className='wrapper'>
             <form onSubmit={handleClick}>
                 <h1>Create Section</h1>
                 <div className='input-box'>
+                    <h2>Input Room Number</h2>
                     <input
                     type= "text"
                     placeholder='001A'
@@ -49,8 +52,9 @@ const CreateSection = () => {
                     />
                 </div>
                 <div className='input-box'>
+                    <h2>Input Start time</h2>
                     <input
-                    type= "datetime-local"
+                    type= "time"
                     placeholder='1:00 pm'
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
@@ -58,8 +62,9 @@ const CreateSection = () => {
                     />
                 </div>
                 <div className='input-box'>
+                    <h2>Input End Time</h2>
                     <input
-                    type = "datetime-local"
+                    type = "time"
                     placeholder='1:50 pm'
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
@@ -67,6 +72,7 @@ const CreateSection = () => {
                     />
                 </div>
                 <div className='input-box'>
+                    <h2>Input Number of Students</h2>
                     <input
                     type= "number"
                     placeholder='1'
