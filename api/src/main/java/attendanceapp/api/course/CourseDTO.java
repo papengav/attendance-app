@@ -1,27 +1,14 @@
 //----------------------------------------------------------------------------------------------
 // Name: Gavin Papenthien
 // Project: Attendance App - This is a full stack attendance tracking and management software.
-// Purpose: Create an entity to represent Courses from the database.
+// Purpose: Create an entity to represent the version of Courses used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
 
 package attendanceapp.api.course;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
 //----------------------------------------------------------------------------------------------
-// An entity that represents Courses from the database.
+// An entity to represent the version of Courses used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
-@Table("COURSES")
-public record Course(
-        @Id
-        @Column("ID")
-        Integer id,
-
-        @Column("NAME")
-        String name,
-
-        @Column("SECTION_COUNT")
-        Integer sectionCount
+public record CourseDTO(
+        String name
 ) {}
