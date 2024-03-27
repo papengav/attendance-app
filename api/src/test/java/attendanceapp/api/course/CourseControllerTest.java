@@ -66,7 +66,7 @@ public class CourseControllerTest {
     }
 
     /**
-     * Ensure that a Course is not created if the the request is coming from an unauthenticated User
+     * Ensure that a Course is not created if the request is coming from an unauthenticated User
      */
     @Test
     void shouldNotCreateANewCourseIfNotAuthenticated() {

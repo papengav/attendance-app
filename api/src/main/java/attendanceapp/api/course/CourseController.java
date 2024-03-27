@@ -39,6 +39,11 @@ public class CourseController {
         this.courseService = courseService;
     }
 
+    /**
+     * Get a Course by its ID
+     * @param id ID of requested Course
+     * @return Requested Course
+     */
     @GetMapping("/{id}")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<Course> findById(@PathVariable int id) {
