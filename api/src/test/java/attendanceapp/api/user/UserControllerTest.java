@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,6 +19,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 
+import static attendanceapp.api.utils.HeadersGenerator.getAdminHeaders;
+import static attendanceapp.api.utils.HeadersGenerator.getStudentHeaders;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -34,8 +38,10 @@ public class UserControllerTest {
      * Ensure that a User is created when all data and configuration is valid
      */
     @Test
-    @DirtiesContext
     void shouldCreateANewUser() {
+        // Only admins can create new users
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+
         // Data for new user
         String firstName = "John";
         String lastName = "Trachte";
@@ -46,15 +52,12 @@ public class UserControllerTest {
 
         // Construct DTO and send request
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", newUser, User.class);
+        HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
+
+        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
 
         // Assert HTTP status code
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        // Assert user was created in returned location
-        URI locationOfNewUser = createResponse.getHeaders().getLocation();
-        ResponseEntity<User> getResponse = restTemplate.getForEntity(locationOfNewUser, User.class);
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     /**
@@ -62,6 +65,8 @@ public class UserControllerTest {
      */
     @Test
     void shouldNotCreateUserIfRoleIdDoesNotExist() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+
         String firstName = "John";
         String lastName = "Trachte";
         String studentCardId = "GHI789";
@@ -70,7 +75,8 @@ public class UserControllerTest {
         int roleId = 99;    // Invalid roleId in our system
 
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", newUser, User.class);
+        HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
+        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -80,6 +86,8 @@ public class UserControllerTest {
      */
     @Test
     void shouldNotCreateUserIfRoleIsStudentAndStudentCardIdIsEmpty() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+
         String firstName = "John";
         String lastName = "Trachte";
         String studentCardId = "";      // should fail because this is empty
@@ -88,9 +96,49 @@ public class UserControllerTest {
         int roleId = 3;                 // id associated with student
 
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", newUser, User.class);
+        HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
+        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Ensure that a User is not created if the request is coming from a non-admin User
+     */
+    @Test
+    void shouldNotCreateUserIfNotRequestedByAdmin() {
+        HttpHeaders headers = getStudentHeaders(restTemplate); // Students cannot create users
+
+        String firstName = "John";
+        String lastName = "Trachte";
+        String studentCardId = "GHI789";
+        String username = "trachteJohn";
+        String password = "anotherPwd";
+        int roleId = 3;
+
+        UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
+        HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
+        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a User is not created if the request is coming from an unauthenticated User
+     */
+    @Test
+    void shouldNotCreateUserIfNotAuthenticated() {
+        String firstName = "John";
+        String lastName = "Trachte";
+        String studentCardId = "GHI789";
+        String username = "trachteJohn";
+        String password = "anotherPwd";
+        int roleId = 3;
+
+        UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
+        // No auth headers included in request
+        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", newUser, User.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
 }

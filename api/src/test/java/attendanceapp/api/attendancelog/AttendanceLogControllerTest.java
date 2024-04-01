@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 
+import static attendanceapp.api.utils.HeadersGenerator.getAdminHeaders;
 import static org.assertj.core.api.Assertions.assertThat;
 
 //----------------------------------------------------------------------------------------------
@@ -32,8 +33,9 @@ public class AttendanceLogControllerTest {
      * Ensure that an AttendanceLog is created when all data and configuration is valid.
      */
     @Test
-    @DirtiesContext
     void shouldCreateANewAttendanceLog() {
+        HttpHeaders headers = getAdminHeaders(restTemplate); // Need to be an admin to obtain the created log via GET
+
         // Get AttendanceLogDTO body info. This will all be supplied by the client sending in the request normally
         String studentCardId = "ABC123";
         int roomNum = 1;
@@ -47,7 +49,8 @@ public class AttendanceLogControllerTest {
 
         // Verify location header points to created object
         URI locationOfNewLog = createResponse.getHeaders().getLocation();
-        ResponseEntity<String> getResponse = restTemplate.getForEntity(locationOfNewLog, String.class);
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<String> getResponse = restTemplate.exchange(locationOfNewLog, HttpMethod.GET, request, String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

@@ -6,11 +6,13 @@
 
 package attendanceapp.api.user;
 
+import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.exceptions.MissingStudentCardIdException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -49,7 +51,8 @@ class UserController {
      * @return User or 404 NOT FOUND
      */
     @GetMapping("/{requestedId}")
-    private ResponseEntity<User> findById(@PathVariable int requestedId) {
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<User> findById(@PathVariable int requestedId) {
         logger.info("A User was requested");
         logger.trace(String.format("Entering findById with parameters (requestedId = %d)", requestedId));
 
@@ -73,7 +76,8 @@ class UserController {
      * @return User or 400 BAD REQUEST OR 401 UNAUTHORIZED OR 403 FORBIDDEN
      */
     @PostMapping
-    private ResponseEntity<User> createUser(@RequestBody UserDTO newUserRequest, UriComponentsBuilder ucb) {
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<User> createUser(@RequestBody UserDTO newUserRequest, UriComponentsBuilder ucb) {
         try {
             User savedUser = userService.createUser(newUserRequest);
             URI locationOfNewUser = ucb

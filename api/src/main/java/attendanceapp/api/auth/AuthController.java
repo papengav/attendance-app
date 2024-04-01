@@ -6,6 +6,7 @@
 
 package attendanceapp.api.auth;
 
+import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
 import attendanceapp.api.user.User;
@@ -14,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -26,8 +29,7 @@ import java.util.Optional;
 @RequestMapping("/login")
 public class AuthController {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final AuthService authService;
     private final Logger logger;
 
     /**
@@ -36,48 +38,31 @@ public class AuthController {
      * @param userRepository Repository containing User objects
      * @param roleRepository Repository containing Role objects
      */
-    public AuthController(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+    public AuthController(UserRepository userRepository, RoleRepository roleRepository, AuthService authService) {
+        this.authService = authService;
         this.logger = LoggerFactory.getLogger(AuthController.class);
     }
-
-    /* TODO: Implement with Spring Security and JWT
-        Will include JwtFilterChain, Security Config, JWT Service, etc
-        I'm going to try and do this over Spring Break
-     */
 
     /**
      * Login a user to the system
      *
      * @param newAuthRequest AuthDTO containing username and password
-     * @return int roleId if associated User exists
+     * @return AuthResponse containing status message, JWT, and User role name
      */
     @PostMapping
-    private ResponseEntity<String> loginUser(@RequestBody AuthDTO newAuthRequest) {
-        String username = newAuthRequest.username();
-        String password = newAuthRequest.password();
-
-        Optional<User> userOptional = userRepository.findByUsernameAndPassword(username, password);
-
-        if (userOptional.isEmpty()) {
-            logger.warn("Invalid credentials in login request with auth request: " + newAuthRequest);
+    private ResponseEntity<AuthResponse> loginUser(@RequestBody AuthDTO newAuthRequest) {
+        try {
+            AuthResponse response = authService.authenticate(newAuthRequest);
+            logger.info("A User logged in");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }
+        catch (AuthenticationException e) {
+            logger.warn("Invalid credentials in login with request: " + newAuthRequest);
             return ResponseEntity.notFound().build();
         }
-
-        User user = userOptional.get();
-        Optional<Role> roleOptional = roleRepository.findById(user.roleId());
-
-        if (roleOptional.isEmpty()) {
+        catch (InvalidRoleException e) {
             logger.warn("Valid User attempted to login but somehow has a role that doesn't exist");
-            return ResponseEntity.internalServerError().body("User is valid but somehow has a role that doesn't exist");
+            return ResponseEntity.internalServerError().body(new AuthResponse(e.getMessage(), null, null));
         }
-
-        Role role = roleOptional.get();
-
-        logger.info("A User was logged in");
-        logger.trace("Logged in User: " + user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(role.name());
-
     }
 }
