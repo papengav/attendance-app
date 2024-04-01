@@ -15,21 +15,20 @@ import java.sql.Timestamp;
 //----------------------------------------------------------------------------------------------
 // An entity to represent Attendance Logs from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "ATTENDANCE_LOGS")
+@Table(name = "attendance_logs", schema = "se3330")
 public record AttendanceLog(
         @Id
-        @Column("ID")
         Integer id,
 
-        @Column("STUDENT_ID")
+        @Column("student_id")
         int studentId,
 
-        @Column("SECTION_ID")
+        @Column("section_id")
         int sectionId,
 
-        @Column("DATE_TIME")
+        @Column("date_time")
         Timestamp dateTime,
 
-        @Column("EXCUSED")
+        @Column("excused")
         Boolean excused
 ) {}

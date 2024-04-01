@@ -20,7 +20,7 @@ import java.util.List;
 //----------------------------------------------------------------------------------------------
 // An entity that represents Users from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "USERS")
+@Table(name = "users", schema = "se3330")
 public record User(
     @Id
     @Column("ID")

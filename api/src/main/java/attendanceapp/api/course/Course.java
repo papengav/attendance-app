@@ -13,15 +13,15 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity that represents Courses from the database.
 //----------------------------------------------------------------------------------------------
-@Table("COURSES")
-public record Course(
+@Table(name = "courses", schema = "se3330")
+record Course(
         @Id
-        @Column("ID")
+        @Column("id")
         Integer id,
 
-        @Column("NAME")
+        @Column("name")
         String name,
 
-        @Column("SECTION_COUNT")
+        @Column("section_count")
         Integer sectionCount
 ) {}
