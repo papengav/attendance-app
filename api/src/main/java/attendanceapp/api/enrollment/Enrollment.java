@@ -6,7 +6,6 @@
 
 package attendanceapp.api.enrollment;
 
-import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -14,7 +13,7 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity to represent Enrollments from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "enrollments", schema = "se3330")
+@Table(name = "enrollments", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record Enrollment(
    @Id
    @Column("id")

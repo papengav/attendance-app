@@ -15,7 +15,7 @@ import java.sql.Time;
 //----------------------------------------------------------------------------------------------
 // An entity that represents MeetingTimes from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "meeting_times", schema = "se3330")
+@Table(name = "meeting_times", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record MeetingTime(
         @Id
         @Column("id")

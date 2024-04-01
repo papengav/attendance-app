@@ -20,28 +20,28 @@ import java.util.List;
 //----------------------------------------------------------------------------------------------
 // An entity that represents Users from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "users", schema = "se3330")
+@Table(name = "users", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record User(
     @Id
-    @Column("ID")
+    @Column("id")
     Integer id,
 
-    @Column("FIRST_NAME")
+    @Column("first_name")
     String firstName,
 
-    @Column("LAST_NAME")
+    @Column("last_name")
     String lastName,
 
-    @Column("STUDENT_CARD_ID")
+    @Column("student_card_id")
     String studentCardId,
 
-    @Column("USERNAME")
+    @Column("username")
     String username,
 
-    @Column("PASSWORD")
+    @Column("password")
     String password,
 
-    @Column("ROLE_ID")
+    @Column("role_id")
     int roleId
 
 //----------------------------------------------------------------------------------------------

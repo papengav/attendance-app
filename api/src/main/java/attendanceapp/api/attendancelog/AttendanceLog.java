@@ -15,9 +15,10 @@ import java.sql.Timestamp;
 //----------------------------------------------------------------------------------------------
 // An entity to represent Attendance Logs from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "attendance_logs", schema = "se3330")
+@Table(name = "attendance_logs", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record AttendanceLog(
         @Id
+        @Column("id")
         Integer id,
 
         @Column("student_id")

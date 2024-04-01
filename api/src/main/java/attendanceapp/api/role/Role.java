@@ -13,7 +13,7 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity that represents roles from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "roles", schema = "se3330")
+@Table(name = "roles", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record Role(
    @Id
    @Column("id")

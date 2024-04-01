@@ -14,7 +14,7 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity that represents Sections from the database.
 //----------------------------------------------------------------------------------------------
-@Table(name = "sections", schema = "se3330")
+@Table(name = "sections", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record Section(
     @Id
     @Column("id")

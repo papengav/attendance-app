@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 
@@ -22,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // A testing class to test for proper functionality and outputs of endpoints from MeetingTimeController
 //----------------------------------------------------------------------------------------------
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class MeetingTimeControllerTest {
 
     @Autowired

@@ -7,7 +7,6 @@
 package attendanceapp.api.section;
 
 import attendanceapp.api.auth.AuthorityConstants;
-import attendanceapp.api.course.Course;
 import attendanceapp.api.exceptions.InvalidCourseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
