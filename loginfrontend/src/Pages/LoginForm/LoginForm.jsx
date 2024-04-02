@@ -4,14 +4,36 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
+import Cookies from "universal-cookies";
+import jwt from "jwt-decode";
 
 //Displays the login UI
 const LoginForm = () => {
+    const cookies = new Cookies();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [jwtToken, setJwtToken] = useState('');
     //method to handle the user clicking the submit button
     //sends a post to the API
-    const handleClick = (e) => {
+    // const handleClick = (e) => {
+    //     e.preventDefault();
+    //     const User = { username, password };
+    //     console.log(User);
+    //     const postArgs = {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
+    //         body: JSON.stringify(User)
+    //     };
+    //     fetch('http://localhost:8080/login', postArgs).then(response => {
+    //         if(response.status != 404) {
+    //             console.log("User Logged In");
+    //         }
+    //         else {
+    //             alert('Incorrect loggin credentials');
+    //         }
+    //     });
+    // };
+    const handleClick = (jwt_token) => {
         e.preventDefault();
         const User = { username, password };
         console.log(User);
@@ -23,6 +45,11 @@ const LoginForm = () => {
         fetch('http://localhost:8080/login', postArgs).then(response => {
             if(response.status != 404) {
                 console.log("User Logged In");
+                const decoded = jwt(jwt_token)
+                setJwtToken(decoded)
+                cookies.set("jwt_authorization", jwt_token, {
+                    expires: new Date(decoded.exp = 1000),
+                })
             }
             else {
                 alert('Incorrect loggin credentials');

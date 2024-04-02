@@ -3,8 +3,9 @@
 //Purpose: Frontend page for creating new users
 import { HdrAutoOutlined } from "@mui/icons-material";
 import { even } from "check-types";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { valid } from "semver";
+import Cookies from 'js-cookie';
 
 //displays the create user UI
 function CreateUser() {
@@ -44,9 +45,14 @@ function CreateUser() {
         setroleID(options.map(option => (option.value)))
         const user = {firstName, lastName, studentCardId, username, password, roleId}
         console.log(user)
+        useEffect(() => {
+            // Retrieve JWT token from the cookie
+            const jwt_token = Cookies.get('jwt_authorization');
+            console.log('JWT Token: ', jwt_token);
+          }, []);
         const postArgs = {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
+            headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+{jwt_token}},
             body: JSON.stringify(user)
         };
         fetch('http://localhost:8080/users', postArgs).then(() => {

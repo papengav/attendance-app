@@ -1,8 +1,9 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and managament software
 //Purpose: Frontend page for users to create sections.
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CreateSection.css';
+import Cookies from 'js-cookie';
 
 const CreateSection = () => {
     const [roomNumber, setRoomNumber] = useState()
@@ -25,9 +26,14 @@ const CreateSection = () => {
         e.preventDefault();
         const section = {roomNumber, startTime, endTime, numStudents}
         console.log(section);
+        useEffect(() => {
+            // Retrieve JWT token from the cookie
+            const jwt_token = Cookies.get('jwt_authorization');
+            console.log('JWT Token: ', jwt_token);
+          }, []);
         const postArgs = {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
+            headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+{jwt_token}},
             body: JSON.stringify(section)
         };
         fetch('http://localhost:8080/createSection', postArgs).then(() => {
