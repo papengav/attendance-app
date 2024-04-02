@@ -10,6 +10,7 @@ import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.exceptions.MissingStudentCardIdException;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,16 +23,19 @@ public class UserService {
 
     UserRepository userRepository;
     RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
 
     /**
      * Construct the UserService
      *
      * @param userRepository UserRepository containing User objects
      * @param roleRepository RoleRepository containing Role objects
+     * @param passwordEncoder PasswordEncoder injected by SpringSecurity, defined in AuthConfig used to hash new User passwords
      */
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -44,8 +48,10 @@ public class UserService {
      */
     public User createUser(UserDTO userRequest) throws InvalidRoleException, MissingStudentCardIdException {
         Role role = getRole(userRequest.roleId());
+        String encodedPassword = passwordEncoder.encode(userRequest.password());
+
         verifyStudentCardId(userRequest.studentCardId(), role); // Make sure if request is for a Student that a valid studentCardId has been provided
-        User newUser = new User(null, userRequest.firstName(), userRequest.lastName(), userRequest.studentCardId(), userRequest.username(), userRequest.password(), userRequest.roleId());
+        User newUser = new User(null, userRequest.firstName(), userRequest.lastName(), userRequest.studentCardId(), userRequest.username(), encodedPassword, userRequest.roleId());
 
         return userRepository.save(newUser);
     }

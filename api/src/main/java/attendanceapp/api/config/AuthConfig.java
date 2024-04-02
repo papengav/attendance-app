@@ -18,12 +18,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.security.SecureRandom;
+
 //---------------------------------------------------------------
 // Configure API security protocols and standards.
 //---------------------------------------------------------------
 @Configuration
 public class AuthConfig {
     private final UserRepository userRepository;
+    private static final int passwordEncodingStrength = 10;
 
     public AuthConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -47,12 +50,13 @@ public class AuthConfig {
 
     /**
      * Constructs password encoder to be used for User passwords
+     * Sets custom password "strength" level and adds random salt to end of hash
      *
      * @return password encoder
      */
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(passwordEncodingStrength, new SecureRandom());
     }
 
     /**
