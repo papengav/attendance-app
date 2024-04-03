@@ -25,15 +25,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findByStudentCardId(String studentCardId);
 
     /**
-     * Custom query to search for Users by their username and password in the database
-     *
-     * @param username String username of requested User
-     * @param password String password of requested User
-     * @return User if they exist
-     */
-    Optional<User> findByUsernameAndPassword(String username, String password);
-
-    /**
      * Custom query to search for Users by their username in the database
      *
      * @param username String username of requested User

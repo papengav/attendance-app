@@ -25,8 +25,8 @@ import java.net.URI;
 @CrossOrigin("*")
 public class SectionController {
 
-    Logger logger;
-    SectionService sectionService;
+    private final Logger logger;
+    private final SectionService sectionService;
 
     /**
      * Construct the Section Controller

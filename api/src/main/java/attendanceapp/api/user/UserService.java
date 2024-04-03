@@ -21,9 +21,9 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    UserRepository userRepository;
-    RoleRepository roleRepository;
-    PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Construct the UserService

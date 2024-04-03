@@ -35,10 +35,9 @@ public class AuthController {
     /**
      * Construct the AuthController
      *
-     * @param userRepository Repository containing User objects
-     * @param roleRepository Repository containing Role objects
+     * @param authService AuthService to perform business logic
      */
-    public AuthController(UserRepository userRepository, RoleRepository roleRepository, AuthService authService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
         this.logger = LoggerFactory.getLogger(AuthController.class);
     }

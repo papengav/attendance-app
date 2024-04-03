@@ -14,7 +14,7 @@ import org.springframework.data.relational.core.mapping.Table;
 // An entity that represents Courses from the database.
 //----------------------------------------------------------------------------------------------
 @Table(name = "courses", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-record Course(
+public record Course(
         @Id
         @Column("id")
         Integer id,
