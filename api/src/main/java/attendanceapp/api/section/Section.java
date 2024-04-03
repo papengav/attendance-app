@@ -27,5 +27,5 @@ public record Section(
     Integer numStudents,
 
     @Column("course_id")
-    int course_id
+    int courseId
 ) {}
