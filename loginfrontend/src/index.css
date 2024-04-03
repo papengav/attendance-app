@@ -28,7 +28,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url(./Components/Assets/lightGrey.png) no-repeat;
+  background: url(./Components/Assets/lightGrey.png);
   background-size: cover;
   background-position: center;
 }
