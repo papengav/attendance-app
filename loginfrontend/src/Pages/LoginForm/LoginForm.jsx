@@ -6,12 +6,12 @@ import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
 import Cookies from "universal-cookie";
 //import {jwtDecode} from "jwt-decode";
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 
 //The auto-routing has not been tested, it is in lines 14, and 67
 
 //Displays the login UI
-const LoginForm = ({history}) => {
+const LoginForm = () => {
     const cookies = new Cookies();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -64,7 +64,7 @@ const LoginForm = ({history}) => {
             console.log(token);
             setJwtToken(token);
             cookies.set("jwt_authorization", token);
-            history.push('/HomePage');
+            window.location.href = "/HomePage";
         });
     };
 

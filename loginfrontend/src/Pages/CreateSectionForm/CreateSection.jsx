@@ -6,16 +6,16 @@ import './CreateSection.css';
 import Cookies from 'js-cookie';
 
 const CreateSection = () => {
-    const [courseName, setCourseName] = useState('')
+    const [name, setCourseName] = useState('')
     const [numSections, setNumSections] = useState()
     const [professorName, setProfessorName] = useState('')
-    const [roomNumber, setRoomNumber] = useState()
+    const [roomNum, setRoomNumber] = useState()
     const [startTime, setStartTime] = useState("")
     const [endTime, setEndTime] = useState("")
-    const [numStudents, setNumStudents] = useState()
+    const [numberOfStudent, setNumStudents] = useState()
     const [dayOfWeek, setDayOfWeek] = useState()
-    const [courseID, setCourseID] = useState(1)
-    const [sectionID, setSectionID] = useState(1)
+    const [courseId, setCourseID] = useState()
+    const [sectionId, setSectionID] = useState()
     const [jwt_token, setJwt_token] = useState()
     // const changeRoomNumber = event => {
     //     setRoomNumber(event.target.value)
@@ -43,15 +43,24 @@ const CreateSection = () => {
         const handleClickC = (e) => {
             e.preventDefault();
             //const course = {courseName, numSections, professorName}
-            const course = {courseName}
+            const course = {name}
             console.log(course);
+            console.log(JSON.stringify(name));
             const postArgs = {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+ jwt_token},
-                body: JSON.stringify(course)
+                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer "+ jwt_token},
+                body: JSON.stringify({name})
             };
-            fetch('http://localhost:8080/courses', postArgs).then(() => {
+            fetch('http://localhost:8080/courses', postArgs).then((response) => {
                 console.log("Course created");
+                return response.json();
+            })
+            .then(data => {
+                const courseID = data.id; 
+                console.log(courseID);
+                console.log("course name: ", name);
+                setCourseID(courseID);
+                alert('Course Created')
             });
         };
 
@@ -63,16 +72,23 @@ const CreateSection = () => {
         const handleClickS = (e) => {
             e.preventDefault();
             //const section = {roomNumber, startTime, endTime, numStudents}m move start/end times to meeting time
-            setCourseID(1);
-            const section = {roomNumber, numStudents, courseID}
+            const section = {roomNum, numberOfStudent, courseId}
             console.log(section);
+            console.log("Stringified: ", JSON.stringify(section))
             const postArgs = {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+ jwt_token},
+                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer "+ jwt_token},
                 body: JSON.stringify(section)
             };
-            fetch('http://localhost:8080/sections', postArgs).then(() => {
+            fetch('http://localhost:8080/sections', postArgs).then((response) => {
                 console.log("Section created");
+                return response.json()
+            })
+            .then(data => {
+                const sectionID = data.id; 
+                console.log("Section ID: ",sectionID);
+                setSectionID(sectionID);
+                alert('Section Created')
             });
         };
 
@@ -83,16 +99,16 @@ const CreateSection = () => {
 
         const handleClickM = (e) => {
             e.preventDefault();
-            setSectionID(1);
-            const meetingTime = {startTime, endTime, dayOfWeek, sectionID}
+            const meetingTime = {startTime, endTime, dayOfWeek, sectionId}
             console.log(meetingTime);
             const postArgs = {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+ jwt_token},
+                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer "+ jwt_token},
                 body: JSON.stringify(meetingTime)
             };
-            fetch('http://localhost:8080/meetingTimes', postArgs).then(() => {
+            fetch('http://localhost:8080/meetingtimes', postArgs).then(() => {
                 console.log("Meeting Time created");
+                alert('Meeting Time Created')
             });
         };
 
@@ -114,7 +130,7 @@ const CreateSection = () => {
                     <input
                     type= "text"
                     placeholder='Course Name'
-                    value={courseName}
+                    value={name}
                     onChange= {(e) => setCourseName(e.target.value)}
                     required
                     />
@@ -148,7 +164,7 @@ const CreateSection = () => {
                     <input
                     type= "text"
                     placeholder='001A'
-                    value={roomNumber}
+                    value={roomNum}
                     onChange={(e) => setRoomNumber(e.target.value)}
                     required
                     />
@@ -178,7 +194,7 @@ const CreateSection = () => {
                     <input
                     type= "number"
                     placeholder='1'
-                    value={numStudents}
+                    value={numberOfStudent}
                     onChange={(e) => setNumStudents(e.target.value)}
                     required
                     />
