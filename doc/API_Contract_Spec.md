@@ -29,7 +29,7 @@ None
         ```
         {
             message: "Authentication successful",
-            "token": <JWT>
+            token: <JWT>
             role: String
         }
         ```
@@ -58,7 +58,7 @@ None
     * Content-Type:
         application/json
     * Authorization:
-        Bearer: `<JWT>`
+        Bearer `<JWT>`
 * **Body:**
 ```
 {
@@ -130,7 +130,7 @@ None
     * Content-Type:
         application/json
     * Authorization:
-        Bearer: `<JWT>`
+        Bearer `<JWT>`
 * **Body:**
 ```
 {
@@ -165,7 +165,7 @@ None
     * Content-Type:
         application/json
     * Authorization:
-        Bearer: `<JWT>`
+        Bearer `<JWT>`
 * **Body:**
 ```
 {
@@ -202,7 +202,7 @@ None
     * Content-Type:
         application/json
     * Authorization:
-        Bearer: `<JWT>`
+        Bearer `<JWT>`
 * **Body:**
     * Note: It is expected for startTime and endTime to follow "hh:mm" format
 ```
