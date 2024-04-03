@@ -33,27 +33,33 @@ const LoginForm = () => {
     //         }
     //     });
     // };
-    const handleClick = (jwt_token) => {
-        jwt_token.preventDefault();
+    const handleClick = (e) => {
+        e.preventDefault();
         const User = { username, password };
         console.log(User);
         const postArgs = {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
+            headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
             body: JSON.stringify(User)
         };
         fetch('http://localhost:8080/login', postArgs).then(response => {
-            if(response.status != 404) {
-                console.log("User Logged In");
-                const decoded = jwtDecode(jwt_token)
-                setJwtToken(decoded)
-                cookies.set("jwt_authorization", jwt_token, {
-                    expires: new Date(decoded.exp = 1000),
-                })
+            console.log(response)
+            const contentType = response.headers.get('content-type');
+            if(response.status != 404 && contentType.includes('application/json')) {
+                return response.json();
+                // setJwtToken(respone.token)
+                // cookies.set("jwt_authorization", response.token)
             }
             else {
                 alert('Incorrect loggin credentials');
             }
+        })
+        .then(data => {
+            console.log("User Logged In");
+            const token = data.token; // Access the token field from the parsed response
+            console.log(token);
+            setJwtToken(token);
+            cookies.set("jwt_authorization", token);
         });
     };
 
