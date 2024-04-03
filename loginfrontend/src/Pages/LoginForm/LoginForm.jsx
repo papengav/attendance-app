@@ -4,8 +4,8 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
-import Cookies from "universal-cookies";
-import jwt from "jwt-decode";
+import Cookies from "universal-cookie";
+import {jwtDecode} from "jwt-decode";
 
 //Displays the login UI
 const LoginForm = () => {
@@ -34,7 +34,7 @@ const LoginForm = () => {
     //     });
     // };
     const handleClick = (jwt_token) => {
-        e.preventDefault();
+        jwt_token.preventDefault();
         const User = { username, password };
         console.log(User);
         const postArgs = {
@@ -45,7 +45,7 @@ const LoginForm = () => {
         fetch('http://localhost:8080/login', postArgs).then(response => {
             if(response.status != 404) {
                 console.log("User Logged In");
-                const decoded = jwt(jwt_token)
+                const decoded = jwtDecode(jwt_token)
                 setJwtToken(decoded)
                 cookies.set("jwt_authorization", jwt_token, {
                     expires: new Date(decoded.exp = 1000),

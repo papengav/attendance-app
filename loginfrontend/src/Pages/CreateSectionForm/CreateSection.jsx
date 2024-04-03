@@ -6,10 +6,17 @@ import './CreateSection.css';
 import Cookies from 'js-cookie';
 
 const CreateSection = () => {
+    const [courseName, setCourseName] = useState('')
+    const [numSections, setNumSections] = useState()
+    const [professorName, setProfessorName] = useState('')
     const [roomNumber, setRoomNumber] = useState()
     const [startTime, setStartTime] = useState("")
     const [endTime, setEndTime] = useState("")
     const [numStudents, setNumStudents] = useState()
+    const [dayOfWeek, setDayOfWeek] = useState()
+    const [courseID, setCourseID] = useState(1)
+    const [sectionID, setSectionID] = useState(1)
+    const [jwt_token, setJwt_token] = useState()
     // const changeRoomNumber = event => {
     //     setRoomNumber(event.target.value)
     // }
@@ -22,21 +29,53 @@ const CreateSection = () => {
     // const changeNumStudents = event => {
     //     setNumStudents(event.target.value)
     // }
-    const handleClick = (e) => {
-        e.preventDefault();
-        const section = {roomNumber, startTime, endTime, numStudents}
-        console.log(section);
+    function useFetchJWT()
+    {
         useEffect(() => {
             // Retrieve JWT token from the cookie
-            const jwt_token = Cookies.get('jwt_authorization');
-            console.log('JWT Token: ', jwt_token);
+            const jwt_tokenT = Cookies.get('jwt_authorization');
+            console.log('JWT Token: ', jwt_tokenT);
+            setJwt_token(jwt_tokenT)
           }, []);
+    }
+    const handleClickC = (e) => {
+        e.preventDefault();
+        //const course = {courseName, numSections, professorName}
+        const course = {courseName}
+        console.log(course);
+        const postArgs = {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+{jwt_token}},
+            body: JSON.stringify(course)
+        };
+        fetch('http://localhost:8080/courses', postArgs).then(() => {
+            console.log("Course created");
+        });
+    };
+    const handleClickS = (e) => {
+        e.preventDefault();
+        //const section = {roomNumber, startTime, endTime, numStudents}m move start/end times to meeting time
+        const section = {roomNumber, numStudents, courseID}
+        console.log(section);
         const postArgs = {
             method: "POST",
             headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+{jwt_token}},
             body: JSON.stringify(section)
         };
-        fetch('http://localhost:8080/createSection', postArgs).then(() => {
+        fetch('http://localhost:8080/sections', postArgs).then(() => {
+            console.log("Section created");
+        });
+    };
+    const handleClickM = (e) => {
+        e.preventDefault();
+        const meetingTime = {startTime, endTime, dayOfWeek, sectionID}
+        console.log(meetingTime);
+        const postArgs = {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "bearer "+{jwt_token}},
+            body: JSON.stringify(meetingTime)
+        };
+        fetch('http://localhost:8080/meetingTimes', postArgs).then(() => {
             console.log("Section created");
         });
     };
@@ -45,7 +84,41 @@ const CreateSection = () => {
         //missing choosing meeting dates
         //try to make it so user can select days of the week
         <div className='wrapper'>
-            <form onSubmit={handleClick}>
+            <form onSubmit={handleClickC}>
+                <h1>Create Course</h1>
+                <div className='input-box'>
+                    <h2>Input Course Name</h2>
+                    <input
+                    type= "text"
+                    placeholder='Course Name'
+                    value={courseName}
+                    onChange= {(e) => setCourseName(e.target.value)}
+                    required
+                    />
+                </div>
+                <div className='input-box'>
+                    <h2>Input Number of Sections</h2>
+                    <input
+                    type= "number"
+                    placeholder='1'
+                    value={numSections}
+                    onChange={(e) => setNumSections(e.target.value)}
+                    required
+                    />
+                </div>
+                <div className='input-box'>
+                    <h2>Input Professor Name</h2>
+                    <input
+                    type= "text"
+                    placeholder='Professor Name'
+                    value={professorName}
+                    onChange={(e) => setProfessorName(e.target.value)}
+                    required
+                    />
+                </div>
+                <button type='submit'>Submit</button>
+            </form>
+            <form onSubmit={handleClickS}>
                 <h1>Create Section</h1>
                 <div className='input-box'>
                     <h2>Input Room Number</h2>
@@ -84,6 +157,40 @@ const CreateSection = () => {
                     placeholder='1'
                     value={numStudents}
                     onChange={(e) => setNumStudents(e.target.value)}
+                    required
+                    />
+                </div>
+                <button type='submit'>Submit</button>
+            </form>
+            <form onSubmit={handleClickM}>
+                <h1>Create Meeting Time</h1>
+                <div className='input-box'>
+                    <h2>Input Start time</h2>
+                    <input
+                    type= "time"
+                    placeholder='1:00 pm'
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    required
+                    />
+                </div>
+                <div className='input-box'>
+                    <h2>Input End Time</h2>
+                    <input
+                    type = "time"
+                    placeholder='1:50 pm'
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    required
+                    />
+                </div>
+                <div className='input-box'>
+                    <h2>Input Day of the Week</h2>
+                    <input
+                    type= "number"
+                    placeholder='1'
+                    value={dayOfWeek}
+                    onChange={(e) => setDayOfWeek(e.target.value)}
                     required
                     />
                 </div>
