@@ -5,14 +5,18 @@ import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
 import Cookies from "universal-cookie";
-import {jwtDecode} from "jwt-decode";
+//import {jwtDecode} from "jwt-decode";
+import { withRouter } from 'react-router-dom';
+
+//The auto-routing has not been tested, it is in lines 14, and 67
 
 //Displays the login UI
-const LoginForm = () => {
+const LoginForm = ({history}) => {
     const cookies = new Cookies();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [jwtToken, setJwtToken] = useState('');
+
     //method to handle the user clicking the submit button
     //sends a post to the API
     // const handleClick = (e) => {
@@ -60,6 +64,7 @@ const LoginForm = () => {
             console.log(token);
             setJwtToken(token);
             cookies.set("jwt_authorization", token);
+            history.push('/HomePage');
         });
     };
 
