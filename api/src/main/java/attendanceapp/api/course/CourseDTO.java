@@ -1,24 +1,14 @@
 //----------------------------------------------------------------------------------------------
 // Name: Gavin Papenthien
 // Project: Attendance App - This is a full stack attendance tracking and management software.
-// Purpose: Create an entity that represents Roles from the database.
+// Purpose: Create an entity to represent the version of Courses used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
 
-package attendanceapp.api.role;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+package attendanceapp.api.course;
 
 //----------------------------------------------------------------------------------------------
-// An entity that represents roles from the database.
+// An entity to represent the version of Courses used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
-@Table(name = "roles", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-public record Role(
-   @Id
-   @Column("id")
-   Integer id,
-
-   @Column("name")
-   String name
+public record CourseDTO(
+        String name
 ) {}

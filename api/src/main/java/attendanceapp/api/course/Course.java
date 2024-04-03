@@ -13,15 +13,15 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity that represents Courses from the database.
 //----------------------------------------------------------------------------------------------
-@Table("COURSES")
+@Table(name = "courses", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 record Course(
         @Id
-        @Column("ID")
+        @Column("id")
         Integer id,
 
-        @Column("NAME")
+        @Column("name")
         String name,
 
-        @Column("SECTION_COUNT")
+        @Column("section_count")
         Integer sectionCount
 ) {}

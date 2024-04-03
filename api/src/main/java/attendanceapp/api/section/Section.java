@@ -14,18 +14,18 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity that represents Sections from the database.
 //----------------------------------------------------------------------------------------------
-@Table("SECTIONS")
+@Table(name = "sections", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record Section(
     @Id
-    @Column("ID")
+    @Column("id")
     Integer id,
 
-    @Column("ROOM_NUM")
+    @Column("room_num")
     int roomNum,
 
-    @Column("NUM_STUDENTS")
+    @Column("num_students")
     Integer numStudents,
 
-    @Column("COURSE_ID")
+    @Column("course_id")
     int course_id
 ) {}

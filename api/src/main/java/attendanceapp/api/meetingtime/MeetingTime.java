@@ -15,21 +15,21 @@ import java.sql.Time;
 //----------------------------------------------------------------------------------------------
 // An entity that represents MeetingTimes from the database.
 //----------------------------------------------------------------------------------------------
-@Table("MEETING_TIMES")
+@Table(name = "meeting_times", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record MeetingTime(
         @Id
-        @Column("ID")
+        @Column("id")
         Integer id,
 
-        @Column("SECTION_ID")
+        @Column("section_id")
         int sectionId,
 
-        @Column("DAY_OF_WEEK")
+        @Column("day_of_week")
         int dayOfWeek,
 
-        @Column("START_TIME")
+        @Column("start_time")
         Time startTime,
 
-        @Column("END_TIME")
+        @Column("end_time")
         Time endTime
 ) {}

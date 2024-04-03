@@ -13,15 +13,15 @@ import org.springframework.data.relational.core.mapping.Table;
 //----------------------------------------------------------------------------------------------
 // An entity to represent Enrollments from the database.
 //----------------------------------------------------------------------------------------------
-@Table("ENROLLMENTS")
+@Table(name = "enrollments", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 public record Enrollment(
    @Id
-   @Column("ID")
+   @Column("id")
    Integer id,
 
-   @Column("SECTION_ID")
+   @Column("section_id")
    int sectionId,
 
-   @Column("STUDENT_ID")
+   @Column("student_id")
    int studentId
 ) {}
