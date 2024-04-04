@@ -5,10 +5,8 @@ import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaUser, FaLock } from "react-icons/fa";
 import Cookies from "universal-cookie";
-//import {jwtDecode} from "jwt-decode";
 import { withRouter, useHistory } from 'react-router-dom';
 
-//The auto-routing has not been tested, it is in lines 14, and 67
 
 //Displays the login UI
 const LoginForm = () => {
@@ -17,26 +15,8 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [jwtToken, setJwtToken] = useState('');
 
-    //method to handle the user clicking the submit button
-    //sends a post to the API
-    // const handleClick = (e) => {
-    //     e.preventDefault();
-    //     const User = { username, password };
-    //     console.log(User);
-    //     const postArgs = {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
-    //         body: JSON.stringify(User)
-    //     };
-    //     fetch('http://localhost:8080/login', postArgs).then(response => {
-    //         if(response.status != 404) {
-    //             console.log("User Logged In");
-    //         }
-    //         else {
-    //             alert('Incorrect loggin credentials');
-    //         }
-    //     });
-    // };
+    //method used when user submits login credentials
+    //saves the jwt from the API and routes the user to the home page upon succesful login
     const handleClick = (e) => {
         e.preventDefault();
         const User = { username, password };
@@ -51,8 +31,6 @@ const LoginForm = () => {
             const contentType = response.headers.get('content-type');
             if(response.status != 404 && contentType.includes('application/json')) {
                 return response.json();
-                // setJwtToken(respone.token)
-                // cookies.set("jwt_authorization", response.token)
             }
             else {
                 alert('Incorrect loggin credentials');
@@ -60,7 +38,7 @@ const LoginForm = () => {
         })
         .then(data => {
             console.log("User Logged In");
-            const token = data.token; // Access the token field from the parsed response
+            const token = data.token; 
             console.log(token);
             setJwtToken(token);
             cookies.set("jwt_authorization", token);
@@ -92,14 +70,7 @@ const LoginForm = () => {
                     />
                     <FaLock className='icon' />
                 </div>
-                {/* <div className="remember-forgot">
-                    <label htmlFor=""><input type='checkbox' />Remember me</label>
-                    <a href='#'>Forgot Password</a>
-                </div> */}
                 <button type="submit">Login</button>
-                {/* <div className="register-link">
-                    <p>Don't have an account? <a href='#'>Register</a></p>
-                </div> */}
             </form>
         </div>
     );
