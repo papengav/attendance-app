@@ -22,29 +22,14 @@ function CreateUser() {
     const [studentCardId, setCardId] = useState("")
     const [jwt_token, setJwt_token] = useState()
 
-
-    // const changeCardId = event => {
-    //     setCardId(event.target.value)
-    // }
-    // const changeFirstname = event => {
-    //     setFirstname(event.target.value)
-    // }
-    // const changeLastname = event => {
-    //     setLastname(event.target.value)
-    // }
-    // const changeUsername = event => {
-    //     setUsername(event.target.value)
-    // }
-    // const changePassword = event => {
-    //     setPassword(event.target.value)
-    // }
+    //Method used when user selects a role from the dropdow menu
     const handleSelect = event => {
         setroleID(event.target.value)
     }
 
+    //Used by handleClick method to get the jwt out of the cookies
     function useFetchJWT() {
         useEffect(() => {
-            // Retrieve JWT token from the cookie
             const jwt_tokenT = Cookies.get('jwt_authorization');
             console.log('JWT Token: ', jwt_tokenT);
             setJwt_token(jwt_tokenT)
@@ -61,6 +46,7 @@ function CreateUser() {
             setroleID(options.map(option => (option.value)))
             const user = { firstName, lastName, studentCardId, username, password, roleId }
             console.log(user)
+            console.log("Student's ID: ", studentCardId);
             console.log(jwt_token)
 
             const postArgs = {
@@ -141,45 +127,6 @@ function CreateUser() {
                 <button type="submit">Submit</button>
             </form>
         </div>
-
-
-
-        //this is the old implementation pre-styling
-
-
-        // <div className="d-flex justify-content-center mt-5">
-        //     <div className="w-50 p-3 border rounded">
-        //         <h4>Select User Type</h4>
-        //         <select onChange={handleSelect} className="form-select">
-        //             {options.map(option => (
-        //                 <option value={option.value}>{option.label}</option>
-        //             ))}
-        //         </select>
-        //     </div>
-        //     <div className="w-50 p-3 border rounded">
-        //         <h4>Input First Name</h4>
-        //         <input onChange={changeFirstname} value= {firstName}/>
-        //     </div>
-        //     <div className="w-50 p-3 border rounded">
-        //         <h4>Input Last Name</h4>
-        //         <input onChange={changeLastname} value= {lastName}/>
-        //     </div>
-        //     <div className="w-50 p-3 border rounded">
-        //         <h4>Input Card ID</h4>
-        //         <input onChange={changeCardId} value= {studentCardId}/>
-        //     </div>
-        //     <div className="w-50 p-3 border rounded">
-        //         <h4>Input Username</h4>
-        //         <input onChange={changeUsername} value= {username}/>
-        //     </div>
-        //     <div className="w-50 p-3 border rounded">
-        //         <h4>Input Password</h4>
-        //         <input onChange={changePassword} value= {password}/>
-        //     </div>
-        //     <div>
-        //         <button onClick={handleClick}>Submit</button>
-        //     </div>
-        // </div>
     );
 }
 export default CreateUser;

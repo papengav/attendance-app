@@ -1,6 +1,6 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and managament software
-//Purpose: Frontend page for users to create sections.
+//Purpose: Frontend page for users to create courses, sections, and meeting times.
 import React, { useState, useEffect } from 'react';
 import './CreateSection.css';
 import Cookies from 'js-cookie';
@@ -17,26 +17,17 @@ const CreateSection = () => {
     const [courseId, setCourseID] = useState()
     const [sectionId, setSectionID] = useState()
     const [jwt_token, setJwt_token] = useState()
-    // const changeRoomNumber = event => {
-    //     setRoomNumber(event.target.value)
-    // }
-    // const changeStartTime = event => {
-    //     setStartTime(event.target.value)
-    // }
-    // const changeEndTime = event => {
-    //     setEndTime(event.target.value)
-    // }
-    // const changeNumStudents = event => {
-    //     setNumStudents(event.target.value)
-    // }
+
+    //Used by each handleClick method to get the jwt out of the cookies
     function useFetchJWT() {
         useEffect(() => {
-            // Retrieve JWT token from the cookie
             const jwt_tokenT = Cookies.get('jwt_authorization');
             console.log('JWT Token: ', jwt_tokenT);
             setJwt_token(jwt_tokenT)
         }, []);
     }
+
+    //Method used when user submits course data to create a course
     function useHandleClickC() {
         useFetchJWT();
 
@@ -66,6 +57,8 @@ const CreateSection = () => {
 
         return handleClickC;
     }
+
+    //Method used when user submits section data to create a section
     function useHandleClickS() {
         useFetchJWT();
 
@@ -94,6 +87,8 @@ const CreateSection = () => {
 
         return handleClickS;
     }
+
+    //Method used when user submits meeting time data to create a meeting time
     function useHandleClickM() {
         useFetchJWT();
 
@@ -121,7 +116,8 @@ const CreateSection = () => {
 
     return (
         //missing choosing meeting dates
-        //try to make it so user can select days of the week
+        //try to make it so user can select days of the week rather than input them
+        //Need new styling (maybe acordion)
         <div className='wrapper'>
             <form onSubmit={handleClickC}>
                 <h1>Create Course</h1>
@@ -169,26 +165,6 @@ const CreateSection = () => {
                     required
                     />
                 </div>
-                {/* <div className='input-box'>
-                    <h2>Input Start time</h2>
-                    <input
-                    type= "time"
-                    placeholder='1:00 pm'
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    required
-                    />
-                </div>
-                <div className='input-box'>
-                    <h2>Input End Time</h2>
-                    <input
-                    type = "time"
-                    placeholder='1:50 pm'
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    required
-                    />
-                </div> */}
                 <div className='input-box'>
                     <h2>Input Number of Students</h2>
                     <input
@@ -236,30 +212,6 @@ const CreateSection = () => {
                 <button type='submit'>Submit</button>
             </form>
         </div>
-
-        //This is the old implementation pre-styling
-
-        // <div className='d-flex justify-content-center mt-5'>
-        //     <div className='w-50 p-3 border rounded'>
-        //         <h4>Input Section Room Number</h4>
-        //         <input onChange={changeRoomNumber} value= {roomNumber}/>
-        //     </div>
-        //     <div className='w-50 p-3 border rounded'>
-        //         <h4>Input Section Start Time</h4>
-        //         <input onChange={changeStartTime} value = {startTime}/>
-        //     </div>
-        //     <div className='w-50 p-3 border rounded'>
-        //         <h4>Input Section End Time</h4>
-        //         <input onChange={changeEndTime} value = {endTime}/>
-        //     </div>
-        //     <div className='w-50 p-3 border rounded'>
-        //         <h4>Input Number of Students</h4>
-        //         <input onChange={changeNumStudents} value = {numStudents}/>
-        //     </div>
-        //     <div>
-        //         <button onClick={handleClick}>Submit</button>
-        //     </div>
-        // </div>
     );
 };
 
