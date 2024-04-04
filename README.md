@@ -43,6 +43,7 @@
 
 **Dependancies:**
 * Python
+* PySerial
 
 **Build Instructions:**
 
