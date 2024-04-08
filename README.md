@@ -43,6 +43,7 @@
 
 **Dependancies:**
 * Python
+* PySerial
 
 **Build Instructions:**
 
@@ -57,3 +58,4 @@
 * (recommended) Install newest VS Code
 * Install newest nodejs LTS version for your operating system
 * open ternminal in VS Code and run this line: npm install npm-scripts
+* then run this line: npm install universal-cookie

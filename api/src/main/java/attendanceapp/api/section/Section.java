@@ -37,5 +37,5 @@ public class Section {
 
     @Column("course_id")
     @NonNull
-    private int course_id;
+    private int courseId;
 }
