@@ -31,7 +31,7 @@ public class HeadersGenerator {
         ResponseEntity<AuthResponse> authResponse = restTemplate.postForEntity("/login", adminLogin, AuthResponse.class);
         assertThat(authResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        String jwt = authResponse.getBody().token();
+        String jwt = authResponse.getBody().getToken();
         assertThat(jwt).isNotNull();
         assertThat(jwt).isNotBlank();
         assertThat(jwt).isNotEmpty();
@@ -53,7 +53,7 @@ public class HeadersGenerator {
         ResponseEntity<AuthResponse> authResponse = restTemplate.postForEntity("/login", adminLogin, AuthResponse.class);
         assertThat(authResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        String jwt = authResponse.getBody().token();
+        String jwt = authResponse.getBody().getToken();
         assertThat(jwt).isNotNull();
         assertThat(jwt).isNotBlank();
         assertThat(jwt).isNotEmpty();

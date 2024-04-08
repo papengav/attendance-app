@@ -6,6 +6,7 @@
 
 package attendanceapp.api.role;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -14,11 +15,15 @@ import org.springframework.data.relational.core.mapping.Table;
 // An entity that represents roles from the database.
 //----------------------------------------------------------------------------------------------
 @Table(name = "roles", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-public record Role(
+@AllArgsConstructor
+@Getter
+@Setter
+public class Role {
    @Id
    @Column("id")
-   Integer id,
+   private Integer id;
 
    @Column("name")
-   String name
-) {}
+   @NonNull
+   private String name;
+}

@@ -7,6 +7,7 @@
 package attendanceapp.api.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -21,35 +22,42 @@ import java.util.List;
 // An entity that represents Users from the database.
 //----------------------------------------------------------------------------------------------
 @Table(name = "users", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-public record User(
+@AllArgsConstructor
+@Getter
+@Setter
+public class User implements UserDetails {
     @Id
     @Column("id")
-    Integer id,
+    private Integer id;
 
     @Column("first_name")
-    String firstName,
+    @NonNull
+    private String firstName;
 
     @Column("last_name")
-    String lastName,
+    @NonNull
+    private String lastName;
 
+    // Nullable, only students have these
     @Column("student_card_id")
-    String studentCardId,
+    private String studentCardId;
 
     @Column("username")
-    String username,
+    @NonNull
+    private String username;
 
     @Column("password")
-    String password,
+    @NonNull
+    private String password;
 
     @Column("role_id")
-    int roleId
+    @NonNull
+    int roleId;
 
 //----------------------------------------------------------------------------------------------
 // UserDetails interface provided by Spring Security to build upon Users for various Auth features
 // Javadoc comment only supplied for methods I actually implement
 //----------------------------------------------------------------------------------------------
-) implements UserDetails {
-
     /**
      * Get a User's Authorities
      *

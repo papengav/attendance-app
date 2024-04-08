@@ -8,6 +8,7 @@ package attendanceapp.api.section;
 
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCourseException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +24,11 @@ import java.net.URI;
 @RestController
 @RequestMapping("/sections")
 @CrossOrigin("*")
+@RequiredArgsConstructor
 public class SectionController {
 
-    private final Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(SectionController.class);;
     private final SectionService sectionService;
-
-    /**
-     * Construct the Section Controller
-     *
-     * @param sectionService Section Service
-     */
-    public SectionController(SectionService sectionService) {
-        this.logger = LoggerFactory.getLogger(SectionController.class);
-        this.sectionService = sectionService;
-    }
 
     /**
      * Get a Section by its ID
@@ -76,7 +68,7 @@ public class SectionController {
 
             URI locationOfNewSection = ucb
                     .path("/sections/{id}")
-                    .buildAndExpand(savedSection.id())
+                    .buildAndExpand(savedSection.getId())
                     .toUri();
 
             logger.info("A new Section was created");

@@ -16,6 +16,7 @@ import attendanceapp.api.section.Section;
 import attendanceapp.api.section.SectionRepository;
 import attendanceapp.api.user.User;
 import attendanceapp.api.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -29,6 +30,7 @@ import java.util.Optional;
 // Provide services for AttendanceLogDTO validation and AttendanceLog construction.
 //---------------------------------------------------------------
 @Service
+@RequiredArgsConstructor
 public class AttendanceLogService {
 
     private final UserRepository userRepository;
@@ -36,21 +38,6 @@ public class AttendanceLogService {
     private final AttendanceLogRepository attendanceLogRepository;
     private final MeetingTimeRepository meetingTimeRepository;
     private final SectionRepository sectionRepository;
-
-    /**
-     * Construct the AttendanceLogService
-     *
-     * @param attendanceLogRepository AttendanceLogRepository containing AttendanceLog objects
-     * @param userRepository UserRepository containing User objects
-     * @param enrollmentRepository EnrollmentRepository containing Enrollment objects
-     */
-    public AttendanceLogService(AttendanceLogRepository attendanceLogRepository, UserRepository userRepository, EnrollmentRepository enrollmentRepository, MeetingTimeRepository meetingTimeRepository, SectionRepository sectionRepository) {
-        this.attendanceLogRepository = attendanceLogRepository;
-        this.userRepository = userRepository;
-        this.enrollmentRepository = enrollmentRepository;
-        this.meetingTimeRepository = meetingTimeRepository;
-        this.sectionRepository = sectionRepository;
-    }
 
     /**
      * Validate and create an AttendanceLog
@@ -62,8 +49,8 @@ public class AttendanceLogService {
      */
     public AttendanceLog createAttendanceLog(AttendanceLogDTO logRequest) throws InvalidCredentialsException, InvalidEnrollmentException {
         Timestamp timestamp = Timestamp.from(Instant.now());
-        int roomNum = logRequest.roomNum();
-        User student = getUserByStudentCardId(logRequest.studentCardId());
+        int roomNum = logRequest.getRoomNum();
+        User student = getUserByStudentCardId(logRequest.getStudentCardId());
 
         // Get list of student Enrollments
         List<Enrollment> enrollments = getStudentEnrollments(student);
@@ -75,7 +62,8 @@ public class AttendanceLogService {
         Section section = getSectionByMeetingTimeAndRoomNum(meetingTime, roomNum);
         
         // Create and return AttendanceLog
-        AttendanceLog newLog = new AttendanceLog(null, student.id(), section.id(), timestamp, null);
+        AttendanceLog newLog = new AttendanceLog(student.getId(), section.getId(), timestamp);
+
         return attendanceLogRepository.save(newLog);
     }
 
@@ -103,7 +91,7 @@ public class AttendanceLogService {
      * @throws InvalidEnrollmentException if the User is not enrolled in any Sections
      */
     private List<Enrollment> getStudentEnrollments(User student) throws InvalidEnrollmentException {
-        int studentId = student.id();
+        int studentId = student.getId();
         List<Enrollment> enrollments = enrollmentRepository.findAllByStudentId(studentId);
 
         if (enrollments.isEmpty()) {
@@ -130,14 +118,14 @@ public class AttendanceLogService {
 
         // Get list of MeetingTime for each enrollment
         for (Enrollment enrollment : enrollments) {
-            List<MeetingTime> meetingTimes = meetingTimeRepository.findAllBySectionId(enrollment.sectionId());
+            List<MeetingTime> meetingTimes = meetingTimeRepository.findAllBySectionId(enrollment.getSectionId());
 
             // Check if any MeetingTime time-frame fits current time
             for (MeetingTime meetingTime : meetingTimes) {
-                LocalTime startTime = meetingTime.startTime().toLocalTime();
-                LocalTime endTime = meetingTime.endTime().toLocalTime();
+                LocalTime startTime = meetingTime.getStartTime().toLocalTime();
+                LocalTime endTime = meetingTime.getEndTime().toLocalTime();
 
-                if (meetingTime.dayOfWeek() == dayOfWeek &&                             // day of week matches
+                if (meetingTime.getDayOfWeek() == dayOfWeek &&                             // day of week matches
                     ((startTime.isBefore(time) && endTime.isAfter(time)) ||             // and within session
                     (startTime.minusMinutes(10).isBefore(time)))) {     // or within 10 min of session start
                     return meetingTime;
@@ -156,7 +144,7 @@ public class AttendanceLogService {
      * @return Section if found
      */
     private Section getSectionByMeetingTimeAndRoomNum(MeetingTime meetingTime, int roomNum) {
-        int sectionId = meetingTime.sectionId();
+        int sectionId = meetingTime.getSectionId();
         Optional<Section> section = sectionRepository.findById(sectionId);
 
         if (section.isEmpty()) {
@@ -165,7 +153,7 @@ public class AttendanceLogService {
 
         Section validSection = section.get();
 
-        if (validSection.roomNum() != roomNum) {
+        if (validSection.getRoomNum() != roomNum) {
             throw new InvalidEnrollmentException("User is enrolled in a Section at this time but roomNum does not match");
         }
 

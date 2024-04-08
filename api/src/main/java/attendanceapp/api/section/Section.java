@@ -6,6 +6,10 @@
 
 package attendanceapp.api.section;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -15,17 +19,23 @@ import org.springframework.data.relational.core.mapping.Table;
 // An entity that represents Sections from the database.
 //----------------------------------------------------------------------------------------------
 @Table(name = "sections", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-public record Section(
+@RequiredArgsConstructor
+@Getter
+@Setter
+public class Section {
     @Id
     @Column("id")
-    Integer id,
+    private Integer id;
 
     @Column("room_num")
-    int roomNum,
+    @NonNull
+    private int roomNum;
 
     @Column("num_students")
-    Integer numStudents,
+    @NonNull
+    private int numStudents;
 
     @Column("course_id")
-    int course_id
-) {}
+    @NonNull
+    private int course_id;
+}

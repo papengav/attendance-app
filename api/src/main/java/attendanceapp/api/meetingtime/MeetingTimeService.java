@@ -5,6 +5,7 @@ import attendanceapp.api.exceptions.InvalidDayOfWeekException;
 import attendanceapp.api.exceptions.InvalidMeetingTimeException;
 import attendanceapp.api.exceptions.InvalidSectionException;
 import attendanceapp.api.section.SectionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -13,21 +14,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class MeetingTimeService {
 
     private final MeetingTimeRepository meetingTimeRepository;
     private final SectionService sectionService;
-
-    /**
-     * Construct the MeetingTime service
-     *
-     * @param meetingTimeRepository MeetingTime repository link to DB
-     * @param sectionService Section service for Section related business logic
-     */
-    public MeetingTimeService(MeetingTimeRepository meetingTimeRepository, SectionService sectionService) {
-        this.meetingTimeRepository = meetingTimeRepository;
-        this.sectionService = sectionService;
-    }
 
     /**
      * Find a MeetingTime by its ID
@@ -51,12 +42,12 @@ public class MeetingTimeService {
      * @throws ParseException Provided time String could not be converted into a java.sql.Time object
      */
     public MeetingTime createMeetingTime(MeetingTimeDTO request) throws InvalidCourseException, InvalidDayOfWeekException, ParseException {
-        validateSectionId(request.sectionId());
-        validateDayOfWeek(request.dayOfWeek());
-        Time startTime = extractTimeFromString(request.startTime());
-        Time endTime = extractTimeFromString(request.endTime());
+        validateSectionId(request.getSectionId());
+        validateDayOfWeek(request.getDayOfWeek());
+        Time startTime = extractTimeFromString(request.getStartTime());
+        Time endTime = extractTimeFromString(request.getEndTime());
 
-        MeetingTime newMeetingTime = new MeetingTime(null, request.sectionId(), request.dayOfWeek(), startTime, endTime);
+        MeetingTime newMeetingTime = new MeetingTime(request.getSectionId(), request.getDayOfWeek(), startTime, endTime);
 
         return meetingTimeRepository.save(newMeetingTime);
     }

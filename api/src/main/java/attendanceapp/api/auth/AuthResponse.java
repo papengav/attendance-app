@@ -6,11 +6,18 @@
 
 package attendanceapp.api.auth;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 //---------------------------------------------------------------
 // Provide standard for response to authentication requests
 //---------------------------------------------------------------
-public record AuthResponse(
-    String message,
-    String token,
-    String role
-){}
+@AllArgsConstructor
+@Getter
+@Setter
+public class AuthResponse {
+    private String message;
+    private String token;
+    private String role;
+}

@@ -38,7 +38,7 @@ public class CourseControllerTest {
 
         String newCourseName = "CS3330";
 
-        CourseDTO newCourse = new CourseDTO(newCourseName);
+        CourseDTO newCourse = new CourseDTO(newCourseName, null);
         HttpEntity<CourseDTO> request = new HttpEntity<>(newCourse, adminHeader);
         ResponseEntity<Course> createResponse = restTemplate.postForEntity("/courses", request, Course.class);
 
@@ -60,7 +60,7 @@ public class CourseControllerTest {
 
         String newCourseName = "CS3330";
 
-        CourseDTO newCourse = new CourseDTO(newCourseName);
+        CourseDTO newCourse = new CourseDTO(newCourseName, null);
         HttpEntity<CourseDTO> request = new HttpEntity<>(newCourse, header);
         ResponseEntity<Course> createResponse = restTemplate.postForEntity("/courses", request, Course.class);
 
@@ -74,7 +74,7 @@ public class CourseControllerTest {
     void shouldNotCreateANewCourseIfNotAuthenticated() {
         String newCourseName = "CS3330";
 
-        CourseDTO newCourse = new CourseDTO(newCourseName);
+        CourseDTO newCourse = new CourseDTO(newCourseName, null);
         HttpEntity<CourseDTO> request = new HttpEntity<>(newCourse);
         ResponseEntity<Course> createResponse = restTemplate.postForEntity("/courses", request, Course.class);
 

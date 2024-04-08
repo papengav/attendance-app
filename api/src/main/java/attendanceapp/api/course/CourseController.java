@@ -8,6 +8,7 @@ package attendanceapp.api.course;
 
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCourseException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -24,20 +25,11 @@ import java.util.Optional;
 @RestController()
 @CrossOrigin("*")
 @RequestMapping("/courses")
+@RequiredArgsConstructor
 public class CourseController {
 
     private final CourseService courseService;
-    private final Logger logger;
-
-    /**
-     * Construct the CourseController
-     *
-     * @param courseService Course Service to perform business logic related to courses
-     */
-    public CourseController(CourseService courseService) {
-        logger = LoggerFactory.getLogger(CourseController.class);
-        this.courseService = courseService;
-    }
+    private final Logger logger = LoggerFactory.getLogger(CourseController.class);;
 
     /**
      * Get a Course by its ID
@@ -75,7 +67,7 @@ public class CourseController {
         Course savedCourse = courseService.createCourse(courseRequest);
         URI locationOfNewCourse = ucb
                 .path("/courses/{id}")
-                .buildAndExpand(savedCourse.id())
+                .buildAndExpand(savedCourse.getId())
                 .toUri();
 
         logger.info("A new Course was created");

@@ -9,6 +9,7 @@ package attendanceapp.api.attendancelog;
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCredentialsException;
 import attendanceapp.api.exceptions.InvalidEnrollmentException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,24 +26,12 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/attendancelogs")
+@RequiredArgsConstructor
 class AttendanceLogController {
 
     private final AttendanceLogService attendanceLogService;
     private final AttendanceLogRepository attendanceLogRepository;
-
-    private final Logger logger;
-
-    /**
-     * Construct the AttendanceLogController
-     *
-     * @param attendanceLogService AttendanceLogService providing services related to AttendanceLog
-     * @param attendanceLogRepository AttendanceLogRepository containing AttendanceLog objects
-     */
-    public AttendanceLogController(AttendanceLogService attendanceLogService, AttendanceLogRepository attendanceLogRepository) {
-        this.attendanceLogService = attendanceLogService;
-        logger = LoggerFactory.getLogger(AttendanceLogController.class);
-        this.attendanceLogRepository = attendanceLogRepository;
-    }
+    private final Logger logger = LoggerFactory.getLogger(AttendanceLogController.class);
 
     /**
      * Get an attendance log by id
@@ -83,7 +72,7 @@ class AttendanceLogController {
             AttendanceLog savedLog = attendanceLogService.createAttendanceLog(newLogRequest);
             URI locationOfNewLog = ucb
                     .path("attendancelogs/{id}")
-                    .buildAndExpand(savedLog.id())
+                    .buildAndExpand(savedLog.id)
                     .toUri();
             logger.info("A new AttendanceLog was created");
             logger.trace(String.format("Created AttendanceLog: %s", savedLog));

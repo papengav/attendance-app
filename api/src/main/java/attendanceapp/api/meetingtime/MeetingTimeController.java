@@ -10,6 +10,7 @@ import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCourseException;
 import attendanceapp.api.exceptions.InvalidDayOfWeekException;
 import attendanceapp.api.exceptions.InvalidSectionException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,20 +27,11 @@ import java.text.ParseException;
 @RestController
 @RequestMapping("/meetingtimes")
 @CrossOrigin("*")
+@RequiredArgsConstructor
 public class MeetingTimeController {
 
-    private final Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(MeetingTimeController.class);;
     private final MeetingTimeService meetingTimeService;
-
-    /**
-     * Construct the MeetingTime Controller
-     *
-     * @param meetingTimeService MeetingTime service for business logic
-     */
-    public MeetingTimeController(MeetingTimeService meetingTimeService) {
-        logger = LoggerFactory.getLogger(MeetingTimeController.class);
-        this.meetingTimeService = meetingTimeService;
-    }
 
     /**
      * Get a MeetingTime by id
@@ -80,7 +72,7 @@ public class MeetingTimeController {
 
             URI locationOfNewMeetingTime = ucb
                     .path("/meetingtimes/{id}")
-                    .buildAndExpand(savedMeetingTime.id())
+                    .buildAndExpand(savedMeetingTime.getId())
                     .toUri();
 
             logger.info("A new MeetingTime was created");

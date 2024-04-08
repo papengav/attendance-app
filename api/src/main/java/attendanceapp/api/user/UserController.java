@@ -9,6 +9,7 @@ package attendanceapp.api.user;
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.exceptions.MissingStudentCardIdException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,23 +27,12 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/users")
+@RequiredArgsConstructor
 class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
-    private final Logger logger;
-
-    /**
-     * Construct the UserController
-     *
-     * @param userRepository UserRepository containing User objects
-     * @param userService UserService providing services related to User
-     */
-    public UserController(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-        logger = LoggerFactory.getLogger(UserController.class);
-    }
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);;
 
     /**
      * Get a User by id
@@ -82,7 +72,7 @@ class UserController {
             User savedUser = userService.createUser(newUserRequest);
             URI locationOfNewUser = ucb
                     .path("/users/{id}")
-                    .buildAndExpand(savedUser.id())
+                    .buildAndExpand(savedUser.getId())
                     .toUri();
 
             logger.info("A new User was created");

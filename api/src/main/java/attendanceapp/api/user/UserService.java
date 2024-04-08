@@ -10,6 +10,7 @@ import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.exceptions.MissingStudentCardIdException;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +20,12 @@ import java.util.Optional;
 // Provide services for UserDTO validation and User construction.
 //---------------------------------------------------------------
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
-    /**
-     * Construct the UserService
-     *
-     * @param userRepository UserRepository containing User objects
-     * @param roleRepository RoleRepository containing Role objects
-     * @param passwordEncoder PasswordEncoder injected by SpringSecurity, defined in AuthConfig used to hash new User passwords
-     */
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     /**
      * Validate and create a User
@@ -47,11 +36,11 @@ public class UserService {
      * @throws MissingStudentCardIdException Requested to create student but didn't provide a studentCardId
      */
     public User createUser(UserDTO userRequest) throws InvalidRoleException, MissingStudentCardIdException {
-        Role role = getRole(userRequest.roleId());
-        String encodedPassword = passwordEncoder.encode(userRequest.password());
+        Role role = getRole(userRequest.getRoleId());
+        String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
 
-        verifyStudentCardId(userRequest.studentCardId(), role); // Make sure if request is for a Student that a valid studentCardId has been provided
-        User newUser = new User(null, userRequest.firstName(), userRequest.lastName(), userRequest.studentCardId(), userRequest.username(), encodedPassword, userRequest.roleId());
+        verifyStudentCardId(userRequest.getStudentCardId(), role); // Make sure if request is for a Student that a valid studentCardId has been provided
+        User newUser = new User(null, userRequest.getFirstName(), userRequest.getLastName(), userRequest.getStudentCardId(), userRequest.getUsername(), encodedPassword, userRequest.getRoleId());
 
         return userRepository.save(newUser);
     }
@@ -81,7 +70,7 @@ public class UserService {
      * @throws MissingStudentCardIdException Requested to create a student but didn't provide a studentCardId
      */
     private void verifyStudentCardId(String studentCardId, Role role) throws MissingStudentCardIdException {
-        if (studentCardId.isEmpty() && role.name().equals("Student")) {
+        if (studentCardId.isEmpty() && role.getName().equals("Student")) {
             throw new MissingStudentCardIdException("User request for User with Role: 'Student' must contain studentCardId");
         }
     }

@@ -9,11 +9,31 @@ package attendanceapp.api.user;
 //----------------------------------------------------------------------------------------------
 // An entity to represent the version of Users used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
-public record UserDTO(
-        String firstName,
-        String lastName,
-        String studentCardId,
-        String username,
-        String password,
-        int roleId
-) {}
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
+public class UserDTO {
+
+    @NonNull
+    private String firstName;
+
+    @NonNull
+    private String lastName;
+
+    private String studentCardId;
+
+    @NonNull
+    private String username;
+
+    @NonNull
+    private String password;
+
+    @NonNull
+    private int roleId;
+}

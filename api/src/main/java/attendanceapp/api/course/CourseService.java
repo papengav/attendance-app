@@ -7,24 +7,17 @@
 package attendanceapp.api.course;
 
 import attendanceapp.api.exceptions.InvalidCourseException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 //---------------------------------------------------------------
 // Provide services for CourseDTO validation and Course construction.
 //---------------------------------------------------------------
 @Service
+@RequiredArgsConstructor
 public class CourseService {
 
     private final CourseRepository courseRepository;
-
-    /**
-     * Construct the CourseService
-     *
-     * @param courseRepository Repository of saved Courses
-     */
-    public CourseService(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
 
     /**
      * Find a Course by its ID
@@ -46,7 +39,8 @@ public class CourseService {
      * @return created Course
      */
     public Course createCourse(CourseDTO courseRequest) {
-        Course newCourse = new Course(null, courseRequest.name(), 0);
+        Course newCourse = new Course(courseRequest.getName(), 0);
+
         return courseRepository.save(newCourse);
     }
 }

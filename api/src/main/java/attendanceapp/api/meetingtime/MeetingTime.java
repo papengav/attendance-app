@@ -6,6 +6,7 @@
 
 package attendanceapp.api.meetingtime;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -16,20 +17,28 @@ import java.sql.Time;
 // An entity that represents MeetingTimes from the database.
 //----------------------------------------------------------------------------------------------
 @Table(name = "meeting_times", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-public record MeetingTime(
+@RequiredArgsConstructor
+@Getter
+@Setter
+public class MeetingTime {
+
         @Id
         @Column("id")
-        Integer id,
+        private Integer id;
 
         @Column("section_id")
-        int sectionId,
+        @NonNull
+        private int sectionId;
 
         @Column("day_of_week")
-        int dayOfWeek,
+        @NonNull
+        private int dayOfWeek;
 
         @Column("start_time")
-        Time startTime,
+        @NonNull
+        private Time startTime;
 
         @Column("end_time")
-        Time endTime
-) {}
+        @NonNull
+        private Time endTime;
+}

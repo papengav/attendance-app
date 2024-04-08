@@ -7,16 +7,12 @@
 package attendanceapp.api.auth;
 
 import attendanceapp.api.exceptions.InvalidRoleException;
-import attendanceapp.api.role.Role;
-import attendanceapp.api.role.RoleRepository;
-import attendanceapp.api.user.User;
-import attendanceapp.api.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -27,20 +23,11 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/login")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
-    private final Logger logger;
-
-    /**
-     * Construct the AuthController
-     *
-     * @param authService AuthService to perform business logic
-     */
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-        this.logger = LoggerFactory.getLogger(AuthController.class);
-    }
+    private final Logger logger = LoggerFactory.getLogger(AuthController.class);;
 
     /**
      * Login a user to the system

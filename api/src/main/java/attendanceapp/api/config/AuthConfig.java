@@ -7,6 +7,7 @@
 package attendanceapp.api.config;
 
 import attendanceapp.api.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,13 +25,10 @@ import java.security.SecureRandom;
 // Configure API security protocols and standards.
 //---------------------------------------------------------------
 @Configuration
+@RequiredArgsConstructor
 public class AuthConfig {
     private final UserRepository userRepository;
     private static final int passwordEncodingStrength = 10;
-
-    public AuthConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     /**
      * Fetches authentication DAO

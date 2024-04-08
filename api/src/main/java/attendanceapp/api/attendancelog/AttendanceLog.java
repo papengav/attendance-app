@@ -6,6 +6,7 @@
 
 package attendanceapp.api.attendancelog;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -15,21 +16,29 @@ import java.sql.Timestamp;
 //----------------------------------------------------------------------------------------------
 // An entity to represent Attendance Logs from the database.
 //----------------------------------------------------------------------------------------------
+
 @Table(name = "attendance_logs", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-public record AttendanceLog(
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class AttendanceLog {
         @Id
         @Column("id")
-        Integer id,
+        Integer id;
 
         @Column("student_id")
-        int studentId,
+        @NonNull
+        private int studentId;
+
 
         @Column("section_id")
-        int sectionId,
+        @NonNull
+        private int sectionId;
 
         @Column("date_time")
-        Timestamp dateTime,
+        @NonNull
+        private Timestamp dateTime;
 
         @Column("excused")
-        Boolean excused
-) {}
+        private Boolean excused;
+}

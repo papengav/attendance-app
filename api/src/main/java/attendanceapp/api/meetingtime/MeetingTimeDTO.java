@@ -9,11 +9,27 @@ package attendanceapp.api.meetingtime;
 //----------------------------------------------------------------------------------------------
 // An entity to represent the version of MeetingTimes used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
-public record MeetingTimeDTO(
-   int sectionId,
-   int dayOfWeek,
 
-   // Times in hh:mm format
-   String startTime,
-   String endTime
-) {}
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+@RequiredArgsConstructor
+@Getter
+@Setter
+public class MeetingTimeDTO {
+
+    @NonNull
+    private int sectionId;
+
+    @NonNull
+    private int dayOfWeek;
+
+    // Times in hh:mm format
+    @NonNull
+    private String startTime;
+
+    @NonNull
+    private String endTime;
+}

@@ -6,6 +6,7 @@
 
 package attendanceapp.api.course;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -14,14 +15,19 @@ import org.springframework.data.relational.core.mapping.Table;
 // An entity that represents Courses from the database.
 //----------------------------------------------------------------------------------------------
 @Table(name = "courses", schema = "#{@environment.getProperty('attendanceapp.schema')}")
-public record Course(
+@RequiredArgsConstructor
+@Getter
+@Setter
+public class Course {
         @Id
         @Column("id")
-        Integer id,
+        private Integer id;
 
         @Column("name")
-        String name,
+        @NonNull
+        private String name;
 
         @Column("section_count")
-        Integer sectionCount
-) {}
+        @NonNull
+        private Integer sectionCount;
+}

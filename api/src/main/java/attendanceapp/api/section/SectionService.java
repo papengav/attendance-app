@@ -9,27 +9,18 @@ package attendanceapp.api.section;
 import attendanceapp.api.course.CourseService;
 import attendanceapp.api.exceptions.InvalidCourseException;
 import attendanceapp.api.exceptions.InvalidSectionException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 //---------------------------------------------------------------
 // Provide services for SectionDTO validation and Section construction.
 //---------------------------------------------------------------
 @Service
+@RequiredArgsConstructor
 public class SectionService {
 
-    SectionRepository sectionRepository;
-    CourseService courseService;
-
-    /**
-     * Construct the SectionService
-     *
-     * @param sectionRepository Section Repository where Sections are stored
-     * @param courseService CourseService to perform business logic related to Courses
-     */
-    public SectionService(SectionRepository sectionRepository, CourseService courseService) {
-        this.sectionRepository = sectionRepository;
-        this.courseService = courseService;
-    }
+    private final SectionRepository sectionRepository;
+    private final CourseService courseService;
 
     /**
      * Find a Section by its ID
@@ -50,10 +41,10 @@ public class SectionService {
      * @return new Section
      */
     public Section createSection(SectionDTO sectionRequest) {
-        validateCourseId(sectionRequest.courseId());
-        Section newSection = new Section(null, sectionRequest.roomNum(),
-                sectionRequest.numberOfStudent(),
-                sectionRequest.courseId());
+        validateCourseId(sectionRequest.getCourseId());
+        Section newSection = new Section(sectionRequest.getRoomNum(),
+                sectionRequest.getNumberOfStudent(),
+                sectionRequest.getCourseId());
 
         return sectionRepository.save(newSection);
     }
