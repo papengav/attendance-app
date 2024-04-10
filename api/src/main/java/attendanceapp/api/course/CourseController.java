@@ -43,7 +43,7 @@ public class CourseController {
             logger.info("A Course was requested");
             logger.trace(String.format("Entering findById with parameters (id = %d)", id));
 
-            // Search for attendance log
+            // Search for Course
             Course requestedCourse = courseService.findById(id);
             return ResponseEntity.ok().body(requestedCourse);
         }

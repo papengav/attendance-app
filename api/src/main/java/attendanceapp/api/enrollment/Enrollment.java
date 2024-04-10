@@ -26,9 +26,9 @@ public class Enrollment {
 
    @Column("section_id")
    @NonNull
-   int sectionId;
+   private int sectionId;
 
    @Column("student_id")
    @NonNull
-   int studentId;
+   private int studentId;
 }

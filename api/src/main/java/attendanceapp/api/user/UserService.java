@@ -7,6 +7,7 @@
 package attendanceapp.api.user;
 
 import attendanceapp.api.exceptions.InvalidRoleException;
+import attendanceapp.api.exceptions.InvalidUserException;
 import attendanceapp.api.exceptions.MissingStudentCardIdException;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
@@ -26,6 +27,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * Find a User by their ID
+     *
+     * @param id ID of the requested User
+     * @return User found
+     * @throws InvalidUserException No User associated with the provided ID
+     */
+    public User findById(int id) throws InvalidUserException {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new InvalidUserException("Requested User does not exist"));
+    }
 
     /**
      * Validate and create a User

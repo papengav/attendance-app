@@ -76,6 +76,22 @@ None
     * Header: `Location=/users/{id}`
     * Body: `<User>`
 
+**GET /users/{id}**
+---
+Get a User by their ID
+* **URL Params:**
+    * {id} = ID of requested User
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code: 200 OK
+    * Body: `<User>`
+
 &nbsp;
 
 # AttendanceLog
@@ -97,6 +113,9 @@ Intended only to be interacted with via IoT scanners. Possession of a student ID
 None
 * **Headers:**
     * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
 * **Body:**
 ```
 {
@@ -109,7 +128,22 @@ None
         201 CREATED
     * Header: `Location=/attendancelogs/{id}`
     * Body: `<AttendanceLog>`
-    
+
+**GET /attendancelogs/{id}**
+---
+Get an AttendanceLog by its ID
+* **URL Params:**
+    * {id} = ID of requested AttendanceLog
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code: 200 OK
+    * Body: `<AttendanceLog>`
 &nbsp;
 
 # Course
@@ -143,7 +177,21 @@ None
     * Header: `Location=/courses/{id}`
     * Body: `<Course>`
 
-    
+**GET /courses/{id}**
+---
+Get a Course by its ID
+* **URL Params:**
+    * {id} = ID of requested Course
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code: 200 OK
+    * Body: `<Course>`
 &nbsp;
 
 # Section
@@ -178,6 +226,22 @@ None
     * Status Code:
         201 CREATED
     * Header: `Location=/sections/{id}`
+    * Body: `<Section>`
+
+**GET /sections/{id}**
+---
+Get a Section by its ID
+* **URL Params:**
+    * {id} = ID of requested Section
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code: 200 OK
     * Body: `<Section>`
 
 &nbsp;
@@ -218,3 +282,69 @@ None
         201 CREATED
     * Header: `Location=/meetingtimes/{id}`
     * Body: `<MeetingTime>`
+
+**GET /meetingtimes/{id}**
+---
+Get a MeetingTime by its ID
+* **URL Params:**
+    * {id} = ID of requested MeetingTime
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code: 200 OK
+    * Body: `<MeetingTime>`
+
+&nbsp;
+
+# Enrollment
+* Enrollment object:
+```
+{
+    id: Integer,
+    sectionId: int,
+    studentId: int
+}
+```
+**POST /enrollments**
+----
+Creates a new Enrollment and returns the URI of the new object along with the created object.
+* **URL Params:**
+None
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
+* **Body:**
+```
+{
+    sectionId: int,
+    studentId: int
+}
+```
+* **Success Response:**
+    * Status Code:
+        201 CREATED
+    * Header: `Location=/enrollments/{id}`
+    * Body: `<Enrollment>`
+
+**GET /enrollments/{id}**
+---
+Get an Enrollment by its ID
+* **URL Params:**
+    * {id} = ID of requested Enrollment
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authorization:
+        Bearer `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code: 200 OK
+    * Body: `<Enrollment>`
