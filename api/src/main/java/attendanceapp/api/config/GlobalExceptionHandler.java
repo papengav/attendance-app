@@ -9,6 +9,7 @@
 package attendanceapp.api.config;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,6 +32,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<Object> handleNullPointerException(NullPointerException e) {
         LoggerFactory.getLogger(GlobalExceptionHandler.class).warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    /**
+     * Intercept DuplicateKeyException and return the error message to the caller, probably another big vulnerability that will be moved if we deploy
+     *
+     * @param e Exception
+     * @return ResponseEntity with BAD_REQUEST and exception message
+     */
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<Object> handleDuplicateKeyException(DuplicateKeyException e) {
+        LoggerFactory.getLogger(GlobalExceptionHandler.class).warn(e.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }
