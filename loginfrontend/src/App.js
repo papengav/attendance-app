@@ -9,6 +9,7 @@ import CreateUser from './Pages/CreateUserForm/CreateUser';
 import CreateCourse from './Pages/CreateCourseForm/CreateCourse';
 import CreateSection from './Pages/CreateSectionForm/CreateSection';
 import HomePage from './Pages/HomePage/HomePage';
+import ViewUsersPage from './Pages/ViewUsersPage/ViewUsersPage';
 
 //Handles the routing of the frontend pages
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/createCourse" element={<CreateSection/>}/>
         <Route path="/homePage" element={<HomePage/>}/>
         <Route path = "*" element={<NoPage/>}/>
+        <Route path = "/viewUsers" element={<ViewUsersPage/>}/>
       </Routes>
       </BrowserRouter>
     </div>
