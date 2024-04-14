@@ -19,19 +19,29 @@ const HomePage = () => {
     };
 
     return (
-        <div className='wrapper'>
-            <div>
-            <div>
-            <h1>Home Page</h1>
-            <div>
-            <button type="button" onClick={handleClickU}>Create User</button>
+        <div className="body">
+          <div className="top-bar" style={{ backgroundColor: '#fe8019', height: '20px' }}></div>
+    
+          <div className="main-content">
+            <div className="sidebar" style={{ backgroundColor: '#282828', width: '172px' }}>
+              <div className="sidebar-bottom" style={{ backgroundColor: '#282828' }}>
+                <button className="signoutButton">Sign Out</button>
+              </div>
             </div>
-            <div>
-            <button type="button" onClick={handleClickC}>Create Course</button>
+    
+            <div className="center-content" style={{ backgroundColor: '#3c3836', padding: '10px' }}>
+              <div className="grid" style={{ maxWidth: '3000px', margin: 'auto' }}>
+                <button className="button" onClick={handleClickU}>Create User</button>
+                <button className="button" onClick={handleClickC}>Create Course</button>
+                <button className="button">View Users</button>
+                <button className="button">View Courses</button>
+                <button className="button">View Attendance Logs</button>
+                <button className="button">CHANGE ME</button>
+              </div>
             </div>
+          </div>
         </div>
-        </div>
-        </div>
-    );
-};
+      );
+    };
+
 export default HomePage;
