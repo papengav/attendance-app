@@ -18,6 +18,11 @@ const HomePage = () => {
         window.location.href = "/createCourse";
     };
 
+    //Method used when the user clickes the view users button
+    const handleClickVU = (e) => {
+      window.location.href = "/viewUsers";
+    };
+
     return (
         <div className="body">
           <div className="top-bar" style={{ backgroundColor: '#fe8019', height: '20px' }}></div>
@@ -33,7 +38,7 @@ const HomePage = () => {
               <div className="grid" style={{ maxWidth: '3000px', margin: 'auto' }}>
                 <button className="button" onClick={handleClickU}>Create User</button>
                 <button className="button" onClick={handleClickC}>Create Course</button>
-                <button className="button">View Users</button>
+                <button className="button" onClick={handleClickVU}>View Users</button>
                 <button className="button">View Courses</button>
                 <button className="button">View Attendance Logs</button>
                 <button className="button">CHANGE ME</button>

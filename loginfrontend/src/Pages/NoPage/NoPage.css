@@ -5,7 +5,7 @@
 } */
 
 .bg {
-    background-image: url(./gumballRizz.png);
+    background-image: url(../../Components/Assets/gumballRizz.png);
     background-position: center;
     background-size: cover;
     width: 100vw;

@@ -1,0 +1,47 @@
+/*
+Name: Dylan Brodie
+Project: Attendance App - This is a full stack attendance tracking and managament software
+Purpose: Styling for ViewUsersPage.jsx
+*/
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #3c3836;
+    color: #ebdbb2;
+  }
+  
+  .user-table th, .user-table td {
+    border: 1px solid #7c6f64;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .user-table th {
+    background-color: #504945;
+    color: #fabd2f;
+  }
+  
+  .user-table tr:nth-child(even) {
+    background-color: #282828;
+  }
+  
+  .user-table tr:hover {
+    background-color: #665c54;
+  }
+  
+  .user-table tr:nth-child(odd) {
+    background-color: #3c3836;
+  }
+  
+  .user-table td {
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  body {
+    padding: 20px;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
