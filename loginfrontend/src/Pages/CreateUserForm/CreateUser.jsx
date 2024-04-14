@@ -6,6 +6,7 @@ import { even } from "check-types";
 import React, { useState, useEffect } from "react";
 import { valid } from "semver";
 import Cookies from 'js-cookie';
+import '../../Components/Styles/GruvboxTheme.css';
 
 //displays the create user UI
 function CreateUser() {
@@ -60,8 +61,10 @@ function CreateUser() {
         };
 
 
+
         return handleClick;
     }
+
     const handleClick = useHandleClick();
     return (
         <div className="wrapper">
@@ -89,7 +92,7 @@ function CreateUser() {
                     <h2>Input Last Name</h2>
                     <input
                         type="text"
-                        placeholder="Lastname"
+                        placeholder="lastname"
                         value={lastName}
                         onChange={(e) => setLastname(e.target.value)}
                         required
@@ -99,7 +102,7 @@ function CreateUser() {
                     <h2>Input Card ID</h2>
                     <input
                         type="text"
-                        placeholder="00 00 00 00 00"
+                        placeholder="00 00 00 00"
                         value={studentCardId}
                         onChange={(e) => setCardId(e.target.value)}
                     />
@@ -125,6 +128,7 @@ function CreateUser() {
                     />
                 </div>
                 <button type="submit">Submit</button>
+                <button type="submit" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </form>
         </div>
     );
