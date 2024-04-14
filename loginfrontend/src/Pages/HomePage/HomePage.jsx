@@ -1,6 +1,9 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and managament software
-//Purpose: Frontend page that is currently just a skelition home page to handle routing
+//Purpose: Frontend page that is currently just a skeleton home page to handle routing
+
+import './HomePage.css';
+import '../../Components/Styles/GruvboxTheme.css';
 
 //displays the UI hompage
 const HomePage = () => {
@@ -16,15 +19,17 @@ const HomePage = () => {
     };
 
     return (
-        <div>
+        <div className='wrapper'>
+            <div>
             <div>
             <h1>Home Page</h1>
             <div>
-            <button onClick={handleClickU}>Create User</button>
+            <button type="button" onClick={handleClickU}>Create User</button>
             </div>
             <div>
-            <button onClick={handleClickC}>Create Course</button>
+            <button type="button" onClick={handleClickC}>Create Course</button>
             </div>
+        </div>
         </div>
         </div>
     );

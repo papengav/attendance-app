@@ -5,6 +5,7 @@ import "./CreateUserDropdown.css";
 import React, { useState } from 'react';
 import list from "./list.json";
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
+import '../../Components/Styles/GruvboxTheme.css';
 
 function CreateUserDropdown () {
     const [isOpen, setIsOpen] = useState(false)

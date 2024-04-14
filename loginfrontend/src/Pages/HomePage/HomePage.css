@@ -1,0 +1,19 @@
+/*
+Name: Dylan Brodie
+Project: Attendance App - This is a full stack attendance tracking and managament software
+Purpose: Basic styling for Home Page UI
+*/
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background-color: #282828;
+    color: #ebdbb2;
+}
+
+.centered-container {
+    display: block;
+}
