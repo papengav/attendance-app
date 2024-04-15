@@ -10,14 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import java.util.List;
 
 import static attendanceapp.api.utils.HeadersGenerator.getAdminHeaders;
 import static attendanceapp.api.utils.HeadersGenerator.getStudentHeaders;
@@ -140,5 +138,72 @@ public class UserControllerTest {
         ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", newUser, User.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a List of Users following the request parameters is returned
+     */
+    @Test
+    void shouldReturnAListOfUsers() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<User>>() {
+        });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody().size()).isEqualTo(size);
+    }
+
+    @Test
+    void shouldNotReturnAListOfUsersIfNotRequestedByAdmin() {
+        HttpHeaders headers = getStudentHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<User>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void shouldNotReturnAListOfUsersIfNotAuthenticated() {
+        HttpHeaders headers = new HttpHeaders(); // empty
+        int page = 0;
+        int size = 2;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<User>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }

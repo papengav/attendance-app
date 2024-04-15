@@ -12,6 +12,10 @@ import attendanceapp.api.exceptions.MissingStudentCardIdException;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +42,21 @@ public class UserService {
     public User findById(int id) throws InvalidUserException {
         return userRepository.findById(id)
                 .orElseThrow(() -> new InvalidUserException("Requested User does not exist"));
+    }
+
+    /**
+     * Construct a page of Users using Spring Data's Pagination feature
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
+     * @return Page containing found Users
+     */
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
+                ));
     }
 
     /**

@@ -8,16 +8,23 @@ package attendanceapp.api.user;
 
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidRoleException;
+import attendanceapp.api.exceptions.InvalidUserException;
 import attendanceapp.api.exceptions.MissingStudentCardIdException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -43,19 +50,32 @@ class UserController {
     @GetMapping("/{requestedId}")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<User> findById(@PathVariable int requestedId) {
-        logger.info("A User was requested");
-        logger.trace(String.format("Entering findById with parameters (requestedId = %d)", requestedId));
+        try {
+            logger.info("A User was requested");
+            logger.trace(String.format("Entering findById with parameters (requestedId = %d)", requestedId));
 
-        Optional<User> userOptional = userRepository.findById(requestedId);
-
-        if (userOptional.isPresent()) {
-            logger.trace(String.format("Exiting findById with output User = %s", userOptional.get()));
-            return ResponseEntity.ok().body(userOptional.get());
+            User user = userService.findById(requestedId);
+            return ResponseEntity.ok(user);
         }
-        else {
-            logger.warn("A client attempted to a request a User that does not exist");
+        catch (InvalidUserException e) {
+            logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+     * Get a Page from all existing Users represented as List
+     * Default page = 0
+     * Default size = 100
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule
+     * @return List of Users within the Page
+     */
+    @GetMapping
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<List<User>> findAll(@PageableDefault(size = 100) Pageable pageable) {
+        Page<User> page = userService.findAll(pageable);
+        return ResponseEntity.ok(page.getContent());
     }
 
     /**

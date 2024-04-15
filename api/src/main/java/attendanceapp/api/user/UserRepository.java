@@ -7,6 +7,7 @@
 package attendanceapp.api.user;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 //----------------------------------------------------------------------------------------------
 // An interface that allows Users to be queried to and from the database.
 //----------------------------------------------------------------------------------------------
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, Integer>, PagingAndSortingRepository<User, Integer> {
 
     /**
      * Custom query to search for students by their card ID in the database.

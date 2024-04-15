@@ -92,6 +92,28 @@ None
     * Status Code: 200 OK
     * Body: `<User>`
 
+**GET /users**
+---
+Get a List out of all existing Users \
+Sample URI: "/users?page=0&size=25&sort=lastName,asc"
+* **URL Params:**
+None
+* **Request Params**
+    * page: int (default = 0)
+    * size: int (default = 100)
+    * sort: String (default = "id,asc")
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authroization:
+        Bearer: `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        200 OK
+    * Body: `List<User>`
+
 &nbsp;
 
 # AttendanceLog
