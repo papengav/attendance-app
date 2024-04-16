@@ -4,6 +4,21 @@ Project: Attendance App - This is a full stack attendance tracking and managamen
 Purpose: Styling for ViewUsersPage.jsx
 */
 
+.wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.wrapper button {
+  padding: 5px 10px;
+  margin-right: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -43,5 +58,12 @@ Purpose: Styling for ViewUsersPage.jsx
     padding: 20px;
     margin: 0;
     font-family: Arial, sans-serif;
+  }
+
+  button {
+    max-height: 100px;
+    max-width: 200px;
+    min-height: 40px;
+    min-width: 20px;
   }
   
