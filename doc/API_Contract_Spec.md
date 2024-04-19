@@ -223,7 +223,8 @@ None
     id: Integer,
     roomNum: int,
     numStudents: Integer,
-    course_id: int
+    courseId: int,
+    professorId: int
 }
 ```
 **POST /sections**
@@ -241,7 +242,8 @@ None
 {
     roomNum: int,
     numberOfStudent: int,
-    courseId: int
+    courseId: int,
+    professorId: int
 }
 ```
 * **Success Response:**

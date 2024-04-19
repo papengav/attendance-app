@@ -39,8 +39,9 @@ public class SectionControllerTest {
         int roomNum = 1;
         int numberOfStudents = 10;
         int courseId = 1; // Provided from data.sql
+        int professorId = 4;
 
-        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId);
+        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId, professorId);
         HttpEntity<SectionDTO> request = new HttpEntity<>(newSection, adminHeader);
         ResponseEntity<Section> createResponse = restTemplate.postForEntity("/sections", request, Section.class);
 
@@ -63,8 +64,47 @@ public class SectionControllerTest {
         int roomNum = 1;
         int numberOfStudents = 10;
         int courseId = 99999; // Not provided in test data - should cause BAD REQUEST
+        int professorId = 4;
 
-        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId);
+        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId, professorId);
+        HttpEntity<SectionDTO> request = new HttpEntity<>(newSection, adminHeader);
+        ResponseEntity<Section> createResponse = restTemplate.postForEntity("/sections", request, Section.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Ensure that a Section is not created if the professorId is not associated with an existing User
+     */
+    @Test
+    void shouldNotCreateANewSectionIfProfessorIdInvalid() {
+        HttpHeaders adminHeader = getAdminHeaders(restTemplate);
+
+        int roomNum = 1;
+        int numberOfStudents = 10;
+        int courseId = 99999; // Not provided in test data - should cause BAD REQUEST
+        int professorId = 999999999;
+
+        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId, professorId);
+        HttpEntity<SectionDTO> request = new HttpEntity<>(newSection, adminHeader);
+        ResponseEntity<Section> createResponse = restTemplate.postForEntity("/sections", request, Section.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Ensure that a Section is not created if the provided professorId is associated with a User that does not have the Professor Role
+     */
+    @Test
+    void shouldNotCreateANewSectionIfProfessorIdIsNotAssociatedWithProfessor() {
+        HttpHeaders adminHeader = getAdminHeaders(restTemplate);
+
+        int roomNum = 1;
+        int numberOfStudents = 10;
+        int courseId = 99999; // Not provided in test data - should cause BAD REQUEST
+        int professorId = 1; // This is a student
+
+        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId, professorId);
         HttpEntity<SectionDTO> request = new HttpEntity<>(newSection, adminHeader);
         ResponseEntity<Section> createResponse = restTemplate.postForEntity("/sections", request, Section.class);
 
@@ -81,8 +121,9 @@ public class SectionControllerTest {
         int roomNum = 1;
         int numberOfStudents = 10;
         int courseId = 1; // Provided from data.sql
+        int professorId = 4;
 
-        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId);
+        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId, professorId);
         HttpEntity<SectionDTO> request = new HttpEntity<>(newSection, studentHeaders);
         ResponseEntity<Section> createResponse = restTemplate.postForEntity("/sections", request, Section.class);
 
@@ -97,8 +138,9 @@ public class SectionControllerTest {
         int roomNum = 1;
         int numberOfStudents = 10;
         int courseId = 1; // Provided from data.sql
+        int professorId = 4;
 
-        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId);
+        SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId, professorId);
         HttpEntity<SectionDTO> request = new HttpEntity<>(newSection);
         ResponseEntity<Section> createResponse = restTemplate.postForEntity("/sections", request, Section.class);
 
