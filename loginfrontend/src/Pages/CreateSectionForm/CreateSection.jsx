@@ -11,6 +11,9 @@ const CreateSection = () => {
     const [numberOfStudent, setNumStudents] = useState()
     const [courseId, setCourseID] = useState()
     const [jwt_token, setJwt_token] = useState()
+    const [professors, setProfessors] = useState([]);
+    const [sections, setSections] = useState([]);
+
 
     //Used by each handleClick method to get the jwt out of the cookies
     function useFetchJWT() {
@@ -40,16 +43,53 @@ const CreateSection = () => {
                 return response.json()
             })
             .then(data => {
-                const sectionID = data.id; 
-                console.log("Section ID: ",sectionID);
-                setSectionID(sectionID);
                 alert('Section Created')
             });
         };
 
         return handleClickS;
     }
+<<<<<<< HEAD
     const handleClickS = useHandleClickS();
+=======
+
+    const handleClickS = useHandleClickS();
+
+
+    const useFetchProfessors = (professorIds) => {
+        const [professors, setProfessors] = useState([]);
+    
+        useEffect(() => {
+            const jwtToken = Cookies.get('jwt_authorization');
+    
+            if (jwtToken && professorIds.length) {
+                fetch(`http://localhost:8080/users/by-roleId`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ ids: professorIds })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Professors data:', data);
+                    setProfessors(data);
+                })
+                .catch(error => {
+                    console.error('Failed to fetch professors:', error);
+                });
+            }
+        }, [professorIds]);
+    
+        return professors;
+    }
+>>>>>>> e46ec61ec8702b0a776b07f743214ca3074bf5ce
 
 
     return (
