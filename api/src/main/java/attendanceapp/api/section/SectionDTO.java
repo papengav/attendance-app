@@ -28,4 +28,7 @@ public class SectionDTO {
 
     @NonNull
     private int courseId;
+
+    @NonNull
+    private int professorId;
 }

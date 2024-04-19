@@ -61,6 +61,26 @@ public class UserService {
     }
 
     /**
+     * Construct a page of Users using Spring Data's Pagination feature
+     * Users must have Role associated with specified roleId
+     *
+     * @param roleId ID associated with desired Role
+     * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
+     * @return Page containing found Users
+     */
+    public Page<User> findAllByRoleId(int roleId, Pageable pageable) {
+        getRole(roleId);
+
+        return userRepository.findAllByRoleId(
+                roleId,
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
+                ));
+    }
+
+    /**
      * Validate and create a User
      *
      * @param userRequest UserDTO containing data related to the new User

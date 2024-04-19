@@ -8,6 +8,7 @@ package attendanceapp.api.section;
 
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCourseException;
+import attendanceapp.api.exceptions.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +76,7 @@ public class SectionController {
             logger.trace(String.format("Created Section: %s", savedSection));
             return ResponseEntity.created(locationOfNewSection).body(savedSection);
         }
-        catch (InvalidCourseException e) {
+        catch (InvalidCourseException | InvalidUserException e) {
             logger.warn("Invalid Request: " + e.getMessage());
             return ResponseEntity.badRequest().build();
         }
