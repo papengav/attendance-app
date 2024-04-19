@@ -7,10 +7,11 @@
 package attendanceapp.api.course;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 //----------------------------------------------------------------------------------------------
 // An interface that allows Courses to be queried to and from the database.
 //----------------------------------------------------------------------------------------------
-public interface CourseRepository extends CrudRepository<Course, Integer> {
+public interface CourseRepository extends CrudRepository<Course, Integer>, PagingAndSortingRepository<Course, Integer> {
 
 }

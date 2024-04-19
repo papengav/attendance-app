@@ -10,10 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 import static attendanceapp.api.utils.HeadersGenerator.getAdminHeaders;
 import static attendanceapp.api.utils.HeadersGenerator.getStudentHeaders;
@@ -79,5 +82,78 @@ public class CourseControllerTest {
         ResponseEntity<Course> createResponse = restTemplate.postForEntity("/courses", request, Course.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a List of Course following the request parameters is returned
+     */
+    @Test
+    void shouldReturnAListOfCourses() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/courses")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Course>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Course>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody().size()).isEqualTo(size);
+    }
+
+    /**
+     * Ensure that a List of Courses is not returned if not requested by an Admin
+     */
+    @Test
+    void shouldNotReturnAListOfCoursesIfNotRequestedByAdmin() {
+        HttpHeaders headers = getStudentHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/courses")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Course>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Course>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a List of Courses is not returned if the request is unauthenticated
+     */
+    @Test
+    void shouldNotReturnAListOfCoursesIfNotAuthenticated() {
+        HttpHeaders headers = new HttpHeaders(); // empty
+        int page = 0;
+        int size = 2;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/courses")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Course>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Course>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }
