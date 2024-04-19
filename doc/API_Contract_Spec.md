@@ -312,6 +312,27 @@ None
     * Status Code: 200 OK
     * Body: `<Section>`
 
+**GET /sections**
+---
+Get a List out of all existing Sections
+* **URL Params:**
+None
+* **Request Params**
+    * page: int (default = 0)
+    * size: int (default = 100)
+    * sort: String (default = "id,asc")
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authroization:
+        Bearer: `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        200 OK
+    * Body: `List<Section>`
+
 &nbsp;
 
 # MeetingTime

@@ -6,14 +6,18 @@
 
 package attendanceapp.api.section;
 
+import attendanceapp.api.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 import static attendanceapp.api.utils.HeadersGenerator.getAdminHeaders;
 import static attendanceapp.api.utils.HeadersGenerator.getStudentHeaders;
@@ -145,5 +149,78 @@ public class SectionControllerTest {
         ResponseEntity<Section> createResponse = restTemplate.postForEntity("/sections", request, Section.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a List of Sections following the request parameters is returned
+     */
+    @Test
+    void shouldReturnAListOfSections() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody().size()).isEqualTo(size);
+    }
+
+    /**
+     * Ensure that a List of Sections is not returned if not requested by an Admin
+     */
+    @Test
+    void shouldNotReturnAListOfSectionsIfNotRequestedByAdmin() {
+        HttpHeaders headers = getStudentHeaders(restTemplate);
+        int page = 0;
+        int size = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a List of Section is not returned if the request is unauthenticated
+     */
+    @Test
+    void shouldNotReturnAListOfSectionIfNotAuthenticated() {
+        HttpHeaders headers = new HttpHeaders(); // empty
+        int page = 0;
+        int size = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/section")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }

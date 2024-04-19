@@ -16,6 +16,10 @@ import attendanceapp.api.role.RoleRepository;
 import attendanceapp.api.user.User;
 import attendanceapp.api.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 //---------------------------------------------------------------
@@ -40,6 +44,21 @@ public class SectionService {
     public Section findById(int id) throws InvalidSectionException {
         return sectionRepository.findById(id)
                 .orElseThrow(() -> new InvalidSectionException("Requested Section does not exist"));
+    }
+
+    /**
+     * Construct a page of Sections using Spring Data's Pagination feature
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
+     * @return Page containing found Sections
+     */
+    public Page<Section> findAll(Pageable pageable) {
+        return sectionRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
+                ));
     }
 
     /**
