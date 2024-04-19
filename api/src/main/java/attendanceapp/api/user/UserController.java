@@ -79,6 +79,28 @@ class UserController {
     }
 
     /**
+     * Get a Page from all existing Users of a specified Role as List
+     * Default page = 0
+     * Default size = 100
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule
+     * @param roleId ID of desired Role
+     * @return List of Users within the Page with the specified roleId
+     */
+    @GetMapping("/by-roleId")
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<List<User>> findAllByRoleId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int roleId) {
+        try {
+            Page<User> page = userService.findAllByRoleId(roleId, pageable);
+            return ResponseEntity.ok(page.getContent());
+        }
+        catch (InvalidRoleException e) {
+            logger.warn("Invalid Role: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * Create a new User. Only accessible by existing Administrator Users
      *
      * @param newUserRequest UserDTO from request-body containing data for new User

@@ -114,6 +114,28 @@ None
         200 OK
     * Body: `List<User>`
 
+**GET /users/by-roleId**
+---
+Get a List out of all existing Users with the specified roleId
+* **URL Params:**
+None
+* **Request Params**
+    * roleId: int
+    * page: int (default = 0)
+    * size: int (default = 100)
+    * sort: String (default = "id,asc")
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authroization:
+        Bearer: `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        200 OK
+    * Body: `List<User>`
+
 &nbsp;
 
 # AttendanceLog
