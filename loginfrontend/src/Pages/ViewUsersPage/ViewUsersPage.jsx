@@ -115,6 +115,7 @@ const ViewUsersPage = () => {
             <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
                 <button onclick={handlePreviousButton()}>Previous</button>
                 <button onClick={handleNextButton()}>Next</button>
+                <button type="button" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </div>
         </div>
     );

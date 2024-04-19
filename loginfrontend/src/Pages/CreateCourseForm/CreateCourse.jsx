@@ -16,7 +16,7 @@ const CreateCourse= () => {
         useEffect(() => {
             const jwt1 = Cookies.get('jwt_authorization');
             console.log('JWT: ', jwt1);
-            setJwt(jwt_tokenT)
+            setJwt(jwt1)
         }, []);
     }
 
@@ -40,10 +40,7 @@ const CreateCourse= () => {
                 return response.json();
             })
             .then(data => {
-                const courseID = data.id; 
-                console.log(courseID);
                 console.log("course name: ", name);
-                setCourseID(courseID);
                 alert('Course Created')
             });
         };

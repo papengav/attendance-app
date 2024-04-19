@@ -8,12 +8,8 @@ import Cookies from 'js-cookie';
 const CreateSection = () => {
     const [roomNum, setRoomNumber] = useState()
     const [professorId, setProfessorId] = useState()
-    // const [startTime, setStartTime] = useState("")
-    // const [endTime, setEndTime] = useState("")
     const [numberOfStudent, setNumStudents] = useState()
-    // const [dayOfWeek, setDayOfWeek] = useState()
     const [courseId, setCourseID] = useState()
-    // const [sectionId, setSectionID] = useState()
     const [jwt_token, setJwt_token] = useState()
 
     //Used by each handleClick method to get the jwt out of the cookies
@@ -53,30 +49,7 @@ const CreateSection = () => {
 
         return handleClickS;
     }
-
-    //Method used when user submits meeting time data to create a meeting time
-    function useHandleClickM() {
-        useFetchJWT();
-
-        const handleClickM = (e) => {
-            e.preventDefault();
-            const meetingTime = {startTime, endTime, dayOfWeek, sectionId}
-            console.log(meetingTime);
-            const postArgs = {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer "+ jwt_token},
-                body: JSON.stringify(meetingTime)
-            };
-            fetch('http://localhost:8080/meetingtimes', postArgs).then(() => {
-                console.log("Meeting Time created");
-                alert('Meeting Time Created')
-            });
-        };
-
-        return handleClickM;
-    }
     const handleClickS = useHandleClickS();
-    const handleClickM = useHandleClickM();
 
 
     return (

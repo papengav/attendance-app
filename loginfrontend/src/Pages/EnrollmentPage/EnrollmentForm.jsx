@@ -6,7 +6,7 @@ import './EnrollmentForm.css';
 import Cookies from 'js-cookie';
 
 const EnrollmentForm = () => {
-    const [meetingTimeId, setMeetingTimeId] = useState()
+    const [sectionId, setSectionId] = useState()
     const [studetnId, setStudentId] = useState()
     const [jwt, setJwt_token] = useState()
 
@@ -25,7 +25,7 @@ const EnrollmentForm = () => {
 
         const handleClick = (e) => {
             e.preventDefault();
-            const enrollmentPost = {meetingTimeId, studetnId}
+            const enrollmentPost = {sectionId, studetnId}
             console.log("Post list: ", enrollmentPost)
             const postArgs = {
                 method: "POST",
@@ -37,8 +37,8 @@ const EnrollmentForm = () => {
                 return response.json();
             })
             .then(data => {
-                const meetingTimeID = data.id; 
-                console.log("meeting time ID: ", meetingTimeID);
+                const sectionID = data.id; 
+                console.log("meeting time ID: ", sectionID);
                 alert('Enrollment Created')
             });
         };
@@ -51,12 +51,12 @@ const EnrollmentForm = () => {
             <form onSubmit={useHandleClick}>
                 <h1>Create Enrollment</h1>
                 <div className='input-box'>
-                    <h2>Meeting Time ID</h2>
+                    <h2>Section</h2>
                     <input 
                     type = 'text'
                     placeholder='ex: 12'
-                    value ={meetingTimeId}
-                    onChange= {(e) => setMeetingTimeId(e.target.value)}
+                    value ={sectionId}
+                    onChange= {(e) => setSectionId(e.target.value)}
                     required
                     />
                 </div>
@@ -71,6 +71,7 @@ const EnrollmentForm = () => {
                     />
                 </div>
                 <button type='submit'>Submit</button>
+                <button type="button" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </form>
         </div>
     );

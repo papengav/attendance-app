@@ -11,6 +11,7 @@ import CreateSection from './Pages/CreateSectionForm/CreateSection';
 import HomePage from './Pages/HomePage/HomePage';
 import ViewUsersPage from './Pages/ViewUsersPage/ViewUsersPage';
 import EnrollmentForm from './Pages/EnrollmentPage/EnrollmentForm';
+import CreateMeetingTime from './Pages/CreateMeetingtime/CreateMeetingTimeForm';
 
 //Handles the routing of the frontend pages
 function App() {
@@ -21,7 +22,9 @@ function App() {
         <Route index element={<LoginForm/>}/>
         <Route path="/login" element={<LoginForm/>}/>
         <Route path="/createUser" element={<CreateUser/>}/>
-        <Route path="/createCourse" element={<CreateSection/>}/>
+        <Route path="/createCourse" element={<CreateCourse/>}/>
+        <Route path = "/createSection" element={<CreateSection/>}/>
+        <Route path = "/createMeetingTime" element={<CreateMeetingTime/>}/>
         <Route path="/homePage" element={<HomePage/>}/>
         <Route path = "*" element={<NoPage/>}/>
         <Route path = "/viewUsers" element={<ViewUsersPage/>}/>
