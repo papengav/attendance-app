@@ -38,4 +38,8 @@ public class Section {
     @Column("course_id")
     @NonNull
     private int courseId;
+
+    @Column("professor_id")
+    @NonNull
+    private int professorId;
 }

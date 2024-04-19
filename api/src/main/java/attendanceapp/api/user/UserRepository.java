@@ -6,6 +6,8 @@
 
 package attendanceapp.api.user;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -32,4 +34,13 @@ public interface UserRepository extends CrudRepository<User, Integer>, PagingAnd
      * @return User if they exist
      */
     Optional<User> findByUsername(String username);
+
+    /**
+     * Custom query to search for all Users with a specified Role
+     *
+     * @param roleId ID associated with the desired Role
+     * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
+     * @return Page containing found Users
+     */
+    Page<User> findAllByRoleId(int roleId, Pageable pageable);
 }
