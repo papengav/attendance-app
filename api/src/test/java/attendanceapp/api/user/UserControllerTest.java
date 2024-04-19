@@ -165,6 +165,9 @@ public class UserControllerTest {
         assertThat(getResponse.getBody().size()).isEqualTo(size);
     }
 
+    /**
+     * Ensure that a List of Users is not returned if not requested by an Admin
+     */
     @Test
     void shouldNotReturnAListOfUsersIfNotRequestedByAdmin() {
         HttpHeaders headers = getStudentHeaders(restTemplate);
@@ -186,6 +189,9 @@ public class UserControllerTest {
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * Ensure that a List of Users is not returned if the request is unauthenticated
+     */
     @Test
     void shouldNotReturnAListOfUsersIfNotAuthenticated() {
         HttpHeaders headers = new HttpHeaders(); // empty
@@ -193,6 +199,111 @@ public class UserControllerTest {
         int size = 2;
 
         UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users")
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<User>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a List of Users following the request parameters is returned
+     */
+    @Test
+    void shouldReturnAListOfUsersByRoleId() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 1;
+        int roleId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users/by-roleId")
+                .queryParam("roleId", roleId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<User>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody().size()).isEqualTo(size);
+    }
+
+    /**
+     * Ensure that a List of Users is not returned if the requested roleId is not associated with any existing Roles
+     */
+    @Test
+    void shouldNotReturnAListOfUsersByRoleIdIfRoleIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+        int roleId = 999999999;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users/by-roleId")
+                .queryParam("roleId", roleId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<User>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Ensure that a list of Users is not returned if not requested by an Admin
+     */
+    @Test
+    void shouldNotReturnAListOfUsersByRoleIdIfNotRequestedByAdmin() {
+        HttpHeaders headers = getStudentHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+        int roleId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users/by-roleId")
+                .queryParam("roleId", roleId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<User>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a list of Users is not returned if not request is not authenticated
+     */
+    @Test
+    void shouldNotReturnAListOfUsersByRoleIdIfNotAuthenticated() {
+        HttpHeaders headers = new HttpHeaders(); // empty
+        int page = 0;
+        int size = 2;
+        int roleId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/users/by-roleId")
+                .queryParam("roleId", roleId)
                 .queryParam("page", page)
                 .queryParam("size", size);
 

@@ -37,7 +37,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 class UserController {
 
-    private final UserRepository userRepository;
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
