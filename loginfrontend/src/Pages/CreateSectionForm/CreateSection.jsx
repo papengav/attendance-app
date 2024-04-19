@@ -8,13 +8,12 @@ import Cookies from 'js-cookie';
 const CreateSection = () => {
     const [roomNum, setRoomNumber] = useState()
     const [professorId, setProfessorId] = useState()
-    // const [startTime, setStartTime] = useState("")
-    // const [endTime, setEndTime] = useState("")
     const [numberOfStudent, setNumStudents] = useState()
-    // const [dayOfWeek, setDayOfWeek] = useState()
     const [courseId, setCourseID] = useState()
-    // const [sectionId, setSectionID] = useState()
     const [jwt_token, setJwt_token] = useState()
+    const [professors, setProfessors] = useState([]);
+    const [sections, setSections] = useState([]);
+
 
     //Used by each handleClick method to get the jwt out of the cookies
     function useFetchJWT() {
@@ -44,9 +43,6 @@ const CreateSection = () => {
                 return response.json()
             })
             .then(data => {
-                const sectionID = data.id; 
-                console.log("Section ID: ",sectionID);
-                setSectionID(sectionID);
                 alert('Section Created')
             });
         };
@@ -54,29 +50,42 @@ const CreateSection = () => {
         return handleClickS;
     }
 
-    //Method used when user submits meeting time data to create a meeting time
-    function useHandleClickM() {
-        useFetchJWT();
-
-        const handleClickM = (e) => {
-            e.preventDefault();
-            const meetingTime = {startTime, endTime, dayOfWeek, sectionId}
-            console.log(meetingTime);
-            const postArgs = {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer "+ jwt_token},
-                body: JSON.stringify(meetingTime)
-            };
-            fetch('http://localhost:8080/meetingtimes', postArgs).then(() => {
-                console.log("Meeting Time created");
-                alert('Meeting Time Created')
-            });
-        };
-
-        return handleClickM;
-    }
     const handleClickS = useHandleClickS();
-    const handleClickM = useHandleClickM();
+
+
+    const useFetchProfessors = (professorIds) => {
+        const [professors, setProfessors] = useState([]);
+    
+        useEffect(() => {
+            const jwtToken = Cookies.get('jwt_authorization');
+    
+            if (jwtToken && professorIds.length) {
+                fetch(`http://localhost:8080/users/by-roleId`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ ids: professorIds })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Professors data:', data);
+                    setProfessors(data);
+                })
+                .catch(error => {
+                    console.error('Failed to fetch professors:', error);
+                });
+            }
+        }, [professorIds]);
+    
+        return professors;
+    }
 
 
     return (
