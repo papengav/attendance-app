@@ -10,6 +10,7 @@ import CreateCourse from './Pages/CreateCourseForm/CreateCourse';
 import CreateSection from './Pages/CreateSectionForm/CreateSection';
 import HomePage from './Pages/HomePage/HomePage';
 import ViewUsersPage from './Pages/ViewUsersPage/ViewUsersPage';
+import EnrollmentForm from './Pages/EnrollmentPage/EnrollmentForm';
 
 //Handles the routing of the frontend pages
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/homePage" element={<HomePage/>}/>
         <Route path = "*" element={<NoPage/>}/>
         <Route path = "/viewUsers" element={<ViewUsersPage/>}/>
+        <Route path= "/createEnrollment" element={<EnrollmentForm/>}/>
       </Routes>
       </BrowserRouter>
     </div>

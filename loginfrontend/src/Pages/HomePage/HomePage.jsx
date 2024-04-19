@@ -47,7 +47,7 @@ const HomePage = () => {
                 <button className="button" onClick={handleClickViewUsers}>View Users</button>
                 <button className="button">View Courses</button>
                 <button className="button">View Attendance Logs</button>
-                <button className="button">CHANGE ME</button>
+                <button className="button">Create Enrollment</button>
               </div>
             </div>
           </div>
