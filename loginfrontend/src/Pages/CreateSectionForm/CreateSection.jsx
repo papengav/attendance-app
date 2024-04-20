@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import './CreateSection.css';
 import Cookies from 'js-cookie';
+import '../../Components/Styles/GruvboxTheme.css';
 
 const CreateSection = () => {
     const [roomNum, setRoomNumber] = useState()
@@ -12,7 +13,7 @@ const CreateSection = () => {
     const [courseId, setCourseID] = useState()
     const [jwt_token, setJwt_token] = useState()
     const [professors, setProfessors] = useState([]);
-    const [sections, setSections] = useState([]);
+    const [courses, setCourse] = useState([]);
 
 
     //Used by each handleClick method to get the jwt out of the cookies
@@ -49,27 +50,22 @@ const CreateSection = () => {
 
         return handleClickS;
     }
-<<<<<<< HEAD
-    const handleClickS = useHandleClickS();
-=======
 
-    const handleClickS = useHandleClickS();
+    const handleClickSubmit = useHandleClickS();
 
 
-    const useFetchProfessors = (professorIds) => {
-        const [professors, setProfessors] = useState([]);
-    
+    const useFetchProfessors = (roleId) => {
         useEffect(() => {
             const jwtToken = Cookies.get('jwt_authorization');
     
-            if (jwtToken && professorIds.length) {
+            if (jwtToken && roleId) {
                 fetch(`http://localhost:8080/users/by-roleId`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${jwtToken}`
                     },
-                    body: JSON.stringify({ ids: professorIds })
+                    body: JSON.stringify({ roleId: roleId })
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -85,16 +81,56 @@ const CreateSection = () => {
                     console.error('Failed to fetch professors:', error);
                 });
             }
-        }, [professorIds]);
-    
-        return professors;
+        }, [roleId]);
     }
->>>>>>> e46ec61ec8702b0a776b07f743214ca3074bf5ce
 
+    const ProfessorList = () => {
+        const professors = useFetchProfessors(2);
+    }
+
+    console.log(ProfessorList);
+
+    
+    const useFetchCourses = () => {
+        useEffect(() => {
+            const jwtToken = Cookies.get('jwt_authorization');
+    
+            if (jwtToken) {
+                fetch(`http://localhost:8080/courses`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Courses data:', data);
+                    setProfessors(data);
+                })
+                .catch(error => {
+                    console.error('Failed to fetch courses:', error);
+                });
+            }
+        }, []);
+    }
+
+    const CoursesList = () => {
+        const courses = useFetchCourses(2);
+    }
+
+    console.log(ProfessorList);
 
     return (
         <div className='wrapper'>
-            <form onSubmit={handleClickS}>
+            {useFetchProfessors(2)}
+            <form onSubmit={handleClickSubmit}>
                 <h1>Create Section</h1>
                 <div className='input-box'>
                     <h2>Input Room Number</h2>

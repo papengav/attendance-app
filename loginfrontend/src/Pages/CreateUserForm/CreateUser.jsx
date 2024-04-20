@@ -3,76 +3,92 @@
 //Purpose: Frontend page for creating new users
 import { HdrAutoOutlined } from "@mui/icons-material";
 import { even } from "check-types";
-import React, { useState, useEffect } from "react";
 import { valid } from "semver";
+import React, { useState, useEffect } from "react";
 import Cookies from 'js-cookie';
+import './CreateUser.css';
 import '../../Components/Styles/GruvboxTheme.css';
 
-//displays the create user UI
+/**
+ * Component to create new users in the Attendance App system.
+ * Allows setting user type, names, and credentials, and communicates
+ * with the backend to store the new user data.
+ */
 function CreateUser() {
+    // Options for user roles
     const options = [
         { label: "Student", value: 3 },
         { label: "Professor", value: 2 },
         { label: "Administrator", value: 1 },
-    ]
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [roleId, setroleID] = useState(3)
-    const [firstName, setFirstname] = useState("")
-    const [lastName, setLastname] = useState("")
-    const [studentCardId, setCardId] = useState("")
-    const [jwt_token, setJwt_token] = useState()
+    ];
 
-    //Method used when user selects a role from the dropdow menu
-    const handleSelect = event => {
-        setroleID(event.target.value)
-    }
+    // State hooks for form inputs and JWT token
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [roleId, setRoleId] = useState(3);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [studentCardId, setCardId] = useState("");
+    const [jwtToken, setJwtToken] = useState("");
+    const [confirmationMessage, setConfirmationMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-    //Used by handleClick method to get the jwt out of the cookies
-    function useFetchJWT() {
-        useEffect(() => {
-            const jwt_tokenT = Cookies.get('jwt_authorization');
-            console.log('JWT Token: ', jwt_tokenT);
-            setJwt_token(jwt_tokenT)
-        }, []);
-    }
+    /**
+     * Fetches the JWT token from cookies once when the component mounts.
+     * This token is used for authenticated requests to the backend.
+     */
+    useEffect(() => {
+        const jwt = Cookies.get('jwt_authorization');
+        setJwtToken(jwt);
+    }, []);
 
-    //method to handle the user clicking the submit button
-    //sends a post to the API
-    function useHandleClick() {
-        useFetchJWT();
+    /**
+     * Handles form submission to create a new user.
+     * Prepares user data and sends a POST request to the backend.
+     * Updates the UI based on the response from the server.
+     */
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const user = { firstName, lastName, studentCardId, username, password, roleId };
 
-        const handleClick = (e) => {
-            e.preventDefault();
-            setroleID(options.map(option => (option.value)))
-            const user = { firstName, lastName, studentCardId, username, password, roleId }
-            console.log(user)
-            console.log("Student's ID: ", studentCardId);
-            console.log(jwt_token)
-
-            const postArgs = {
-                method: "POST",
-                headers: { "Content-Type": "application/json",  "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer " +  jwt_token  },
-                body: JSON.stringify(user)
-            };
-            fetch('http://localhost:8080/users', postArgs).then(() => {
-                console.log("User created");
-            });
+        const postArgs = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + jwtToken
+            },
+            body: JSON.stringify(user)
         };
 
+        fetch('http://localhost:8080/users', postArgs)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create user');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setConfirmationMessage('User successfully created!');
+                console.log("User created", data);
+            })
+            .catch(error => {
+                setErrorMessage('Failed to create user: ' + error.message);
+                console.error("Failed to create user", error);
+            });
+    };
 
-
-        return handleClick;
-    }
-
-    const handleClick = useHandleClick();
+    /**
+     * Renders the user creation form with various fields and a submit button.
+     * Displays a confirmation message upon successful or failed submission.
+     */
     return (
         <div className="wrapper">
-            <form onSubmit={handleClick}>
+            <form onSubmit={handleSubmit}>
                 <h1>Create User</h1>
+                <div className="confirmation-message">{confirmationMessage}</div>
                 <div className="input-box">
                     <h2>Select User Type</h2>
-                    <select onChange={handleSelect} className="form-select">
+                    <select onChange={(e) => setRoleId(e.target.value)} className="form-select">
                         {options.map((option, index) => (
                             <option key={index} value={option.value}>{option.label}</option>
                         ))}
@@ -84,7 +100,7 @@ function CreateUser() {
                         type="text"
                         placeholder="firstname"
                         value={firstName}
-                        onChange={(e) => setFirstname(e.target.value)}
+                        onChange={(e) => setFirstName(e.target.value)}
                         required
                     />
                 </div>
@@ -94,7 +110,7 @@ function CreateUser() {
                         type="text"
                         placeholder="lastname"
                         value={lastName}
-                        onChange={(e) => setLastname(e.target.value)}
+                        onChange={(e) => setLastName(e.target.value)}
                         required
                     />
                 </div>
@@ -128,9 +144,10 @@ function CreateUser() {
                     />
                 </div>
                 <button type="submit">Submit</button>
-                <button type="submit" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
+                <button type="button" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </form>
         </div>
     );
 }
+
 export default CreateUser;
