@@ -9,15 +9,23 @@ package attendanceapp.api.attendancelog;
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCredentialsException;
 import attendanceapp.api.exceptions.InvalidEnrollmentException;
+import attendanceapp.api.exceptions.InvalidSectionException;
+import attendanceapp.api.exceptions.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 //---------------------------------------------------------------
@@ -40,7 +48,7 @@ class AttendanceLogController {
      * @return AttendanceLog or 404 NOT FOUND
      */
     @GetMapping("/{requestedId}")
-    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ") OR " + AuthorityConstants.STUDENT_AUTHORITY)
     public ResponseEntity<AttendanceLog> findById(@PathVariable int requestedId) {
         logger.info("An AttendanceLog was requested");
         logger.trace(String.format("Entering findById with parameters (requestedId = %d)", requestedId));
@@ -56,6 +64,36 @@ class AttendanceLogController {
         else {
             logger.warn("A client attempted to a request an AttendanceLog that does not exist");
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * Get a page from all existing AttendanceLogs associated with a specified User and Section as a List
+     * Accessible to Users with Student role, however they may only access AttendanceLogs with their ID
+     * Default page = 0
+     * Default size = 100
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule
+     * @param studentId ID of associated User
+     * @param sectionId ID of associated Section
+     * @return List of AttendanceLogs within the Page with the associated User and Section
+     */
+    @GetMapping("/by-studentId-and-sectionId")
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<List<AttendanceLog>> findAllByStudentAndSectionId(@PageableDefault(size = 100) Pageable pageable,
+                                                                            @RequestParam int studentId,
+                                                                            @RequestParam int sectionId) {
+        try {
+            Page<AttendanceLog> page = attendanceLogService.findAllByStudentAndSectionId(pageable, studentId, sectionId);
+            return ResponseEntity.ok(page.getContent());
+        }
+        catch (InvalidUserException | InvalidSectionException e) {
+            logger.warn("Invalid request: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        catch (AccessDeniedException e) {
+            logger.warn(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 

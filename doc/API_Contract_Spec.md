@@ -188,6 +188,31 @@ None
 * **Success Response:**
     * Status Code: 200 OK
     * Body: `<AttendanceLog>`
+
+**GET /attendancelogs/by-studentId-and-sectionId**
+---
+Get a List of AttendanceLogs associated with the specified studentId and sectionId \
+Accessible to Users with the Student Role, who may only request AttendanceLogs with their ID
+* **URL Params:**
+None
+* **Request Params**
+    * studentId: int
+    * sectionId: int
+    * page: int (default = 0)
+    * size: int (default = 100)
+    * sort: String (default = "id,asc")
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authroization:
+        Bearer: `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        200 OK
+    * Body: `List<AttendanceLog>`
+
 &nbsp;
 
 # Course

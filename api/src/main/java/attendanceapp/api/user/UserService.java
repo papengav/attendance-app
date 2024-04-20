@@ -46,6 +46,18 @@ public class UserService {
     }
 
     /**
+     * Find a User by their Username
+     *
+     * @param username Username of the requested User
+     * @return User found
+     * @throws InvalidUserException No User associated with the provided username
+     */
+    public User findByUsername(String username) throws InvalidUserException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new InvalidUserException("Requested User does not exist"));
+    }
+
+    /**
      * Construct a page of Users using Spring Data's Pagination feature
      *
      * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
