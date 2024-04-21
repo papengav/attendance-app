@@ -6,154 +6,111 @@ import './CreateSection.css';
 import Cookies from 'js-cookie';
 import '../../Components/Styles/GruvboxTheme.css';
 
+function useFetchJWT() {
+    const [jwtToken, setJwtToken] = useState('');
+    useEffect(() => {
+        const jwt = Cookies.get('jwt_authorization');
+        console.log('JWT Token:', jwt);
+        setJwtToken(jwt);
+    }, []);
+    return jwtToken;
+}
+
 const CreateSection = () => {
-    const [roomNum, setRoomNumber] = useState()
-    const [professorId, setProfessorId] = useState()
-    const [numberOfStudent, setNumStudents] = useState()
-    const [courseId, setCourseID] = useState()
-    const [jwt_token, setJwt_token] = useState()
+    const [roomNum, setRoomNumber] = useState('');
+    const [professorId, setProfessorId] = useState('');
+    const [numberOfStudent, setNumStudents] = useState('');
+    const [courseId, setCourseId] = useState('');
     const [professors, setProfessors] = useState([]);
-    const [courses, setCourse] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const jwtToken = useFetchJWT();
 
-
-    //Used by each handleClick method to get the jwt out of the cookies
-    function useFetchJWT() {
-        useEffect(() => {
-            const jwt_tokenT = Cookies.get('jwt_authorization');
-            console.log('JWT Token: ', jwt_tokenT);
-            setJwt_token(jwt_tokenT)
-        }, []);
-    }
-
-    //Method used when user submits section data to create a section
-    function useHandleClickS() {
-        useFetchJWT();
-
-        const handleClickS = (e) => {
-            e.preventDefault();
-            const section = {roomNum, numberOfStudent, courseId}
-            console.log(section);
-            console.log("Stringified: ", JSON.stringify(section))
-            const postArgs = {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer "+ jwt_token},
-                body: JSON.stringify(section)
-            };
-            fetch('http://localhost:8080/sections', postArgs).then((response) => {
-                console.log("Section created");
-                return response.json()
+    useEffect(() => {
+        if (jwtToken) {
+            // Fetch professors
+            fetch(`http://localhost:8080/users/by-roleId?roleId=2`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
+                }
             })
+            .then(response => response.json())
             .then(data => {
-                alert('Section Created')
-            });
-        };
+                console.log('Professors data:', data);
+                setProfessors(data || []);
+            })
+            .catch(error => console.error('Failed to fetch professors:', error));
 
-        return handleClickS;
-    }
+            // Fetch courses
+            fetch(`http://localhost:8080/courses`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Courses data:', data);
+                setCourses(data || []);
+            })
+            .catch(error => console.error('Failed to fetch courses:', error));
+        }
+    }, [jwtToken]);
 
-    const handleClickSubmit = useHandleClickS();
-
-
-    const useFetchProfessors = (roleId) => {
-        useEffect(() => {
-            const jwtToken = Cookies.get('jwt_authorization');
-    
-            if (jwtToken && roleId) {
-                fetch(`http://localhost:8080/users/by-roleId`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${jwtToken}`
-                    },
-                    body: JSON.stringify({ roleId: roleId })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Professors data:', data);
-                    setProfessors(data);
-                })
-                .catch(error => {
-                    console.error('Failed to fetch professors:', error);
-                });
-            }
-        }, [roleId]);
-    }
-
-    const ProfessorList = () => {
-        const professors = useFetchProfessors(2);
-    }
-
-    console.log(ProfessorList);
-
-    
-    const useFetchCourses = () => {
-        useEffect(() => {
-            const jwtToken = Cookies.get('jwt_authorization');
-    
-            if (jwtToken) {
-                fetch(`http://localhost:8080/courses`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${jwtToken}`
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Courses data:', data);
-                    setProfessors(data);
-                })
-                .catch(error => {
-                    console.error('Failed to fetch courses:', error);
-                });
-            }
-        }, []);
-    }
-
-    const CoursesList = () => {
-        const courses = useFetchCourses(2);
-    }
-
-    console.log(ProfessorList);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const section = { roomNum, numberOfStudent, courseId, professorId };
+        
+        fetch('http://localhost:8080/sections', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${jwtToken}`
+            },
+            body: JSON.stringify(section)
+        })
+        .then(response => response.json())
+        .then(() => {
+            alert('Section Created Successfully');
+        })
+        .catch(error => {
+            alert('Error creating section: ' + error.message);
+        });
+    };
 
     return (
         <div className='wrapper'>
-            {useFetchProfessors(2)}
-            <form onSubmit={handleClickSubmit}>
+            <form onSubmit={handleSubmit}>
                 <h1>Create Section</h1>
                 <div className='input-box'>
                     <h2>Input Room Number</h2>
-                    <input
-                    type= "text"
-                    placeholder='001A'
-                    value={roomNum}
-                    onChange={(e) => setRoomNumber(e.target.value)}
-                    required
-                    />
+                    <input type="text" placeholder="001A" value={roomNum} onChange={(e) => setRoomNumber(e.target.value)} required />
+                </div>
+                <div className='input-box'>
+                    <h2>Select Professor</h2>
+                    <select value={professorId} onChange={(e) => setProfessorId(e.target.value)} required className="form-select">
+                        <option value="">Select a Professor</option>
+                        {professors.map((prof) => (
+                            <option key={prof.id} value={prof.id}>{prof.firstName} {prof.lastName}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className='input-box'>
+                    <h2>Select Course</h2>
+                    <select value={courseId} onChange={(e) => setCourseId(e.target.value)} required className="form-select">
+                        <option value="">Select a Course</option>
+                        {courses.map((course) => (
+                            <option key={course.id} value={course.id}>{course.name}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className='input-box'>
                     <h2>Input Number of Students</h2>
-                    <input
-                    type= "number"
-                    placeholder='1'
-                    value={numberOfStudent}
-                    onChange={(e) => setNumStudents(e.target.value)}
-                    required
-                    />
+                    <input type="number" defaultValue="1" min="0" value={numberOfStudent} onChange={(e) => setNumStudents(e.target.value)} required />
                 </div>
                 <button type='submit'>Submit</button>
-                <button type="button" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </form>
         </div>
     );

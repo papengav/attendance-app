@@ -144,7 +144,6 @@ function CreateUser() {
                     />
                 </div>
                 <button type="submit">Submit</button>
-                <button type="button" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </form>
         </div>
     );

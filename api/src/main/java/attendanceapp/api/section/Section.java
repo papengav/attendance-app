@@ -29,7 +29,7 @@ public class Section {
 
     @Column("room_num")
     @NonNull
-    private int roomNum;
+    private String roomNum;
 
     @Column("num_students")
     @NonNull
