@@ -23,5 +23,5 @@ public class AttendanceLogDTO {
     private String studentCardId;
 
     @NonNull
-    private int roomNum;
+    private String roomNum;
 }

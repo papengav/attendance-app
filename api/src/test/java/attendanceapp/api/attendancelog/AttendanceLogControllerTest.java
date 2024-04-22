@@ -36,7 +36,7 @@ public class AttendanceLogControllerTest {
 
         // Get AttendanceLogDTO body info. This will all be supplied by the client sending in the request normally
         String studentCardId = "ABC123";
-        int roomNum = 1;
+        String roomNum = "1";
 
         // Create request - Takes in a DTO and returns the actual object with server-calculated values
         AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
@@ -58,7 +58,7 @@ public class AttendanceLogControllerTest {
     @Test
     void shouldNotCreateAttendanceLogWhenStudentCardIdDoesNotExist() {
         String studentCardId = "This Doesn't Exist";
-        int roomNum = 1;
+        String roomNum = "1";
 
         AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
         ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);
@@ -72,7 +72,7 @@ public class AttendanceLogControllerTest {
     @Test
     void shouldNotCreateAttendanceLogWhenRoomNumDoesNotExist() {
         String studentCardId = "ABC123";
-        int roomNum = -1;
+        String roomNum = "-1";
 
         AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
         ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);
@@ -86,7 +86,7 @@ public class AttendanceLogControllerTest {
     @Test
     void shouldNotCreateAttendanceLogWhenStudentIsNotEnrolledInSection() {
         String studentCardId = "DEF456";
-        int roomNum = 1;
+        String roomNum = "1";
 
         AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
         ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);

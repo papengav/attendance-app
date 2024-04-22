@@ -8,6 +8,10 @@ package attendanceapp.api.course;
 
 import attendanceapp.api.exceptions.InvalidCourseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 //---------------------------------------------------------------
@@ -29,6 +33,21 @@ public class CourseService {
     public Course findById(int id) throws InvalidCourseException {
          return courseRepository.findById(id)
                 .orElseThrow(() -> new InvalidCourseException("Requested Course does not exist"));
+    }
+
+    /**
+     * Construct a page of Users using Spring Data's Pagination feature
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
+     * @return Page containing found Users
+     */
+    public Page<Course> findAll(Pageable pageable) {
+        return courseRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
+                ));
     }
 
     /**

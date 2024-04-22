@@ -6,26 +6,95 @@ import './EnrollmentForm.css';
 import Cookies from 'js-cookie';
 
 const EnrollmentForm = () => {
+    const [studentId, setStudentId] = useState()
+    const [students, setStudents] = useState([])
     const [sectionId, setSectionId] = useState()
-    const [studetnId, setStudentId] = useState()
-    const [jwt, setJwt_token] = useState()
+    const [sections, setSections] = useState([])
+    const [courses, setCourses] = useState([])
+    const [jwt, setJwtToken] = useState('')
+    const [courseId, setCourseId] = useState('')
 
-    //Used by each handleClick method to get the jwt out of the cookies
-    function useFetchJWT() {
-        useEffect(() => {
-            const jwt_tokenT = Cookies.get('jwt_authorization');
-            console.log('JWT Token: ', jwt_tokenT);
-            setJwt_token(jwt_tokenT)
-        }, []);
+    const setNewCourseId = (newCourseId) => {
+        setCourseId(newCourseId);
+        fetchSections();
     }
+
+    useEffect(() => {
+        const jwtToken = Cookies.get('jwt_authorization');
+        setJwtToken(jwtToken);
+    }, []);
+
+    useEffect(() => {
+        if (jwt) {
+            fetchStudents();
+            fetchCourses();
+        }
+    }, [jwt]);
+
+    const fetchStudents = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/users/by-roleId?roleId=3`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwt}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log(data);
+            setStudents(data || []);
+        } catch (error) {
+            console.error('Failed to fetch students:', error);
+        }
+    };
+
+    const fetchCourses = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/courses`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwt}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setCourses(data || []);
+        } catch (error) {
+            console.error('Failed to fetch courses:', error);
+        }
+    };
+
+    const fetchSections = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/sections`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwt}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log(data);
+            setSections(data || []);
+        } catch (error) {
+            console.error('Failed to fetch sections:', error);
+        }
+    };
 
     //Method used when user submits course data to create an enrollment
     function useHandleClick() {
-        useFetchJWT();
-
         const handleClick = (e) => {
             e.preventDefault();
-            const enrollmentPost = {sectionId, studetnId}
+            const enrollmentPost = {sectionId, studentId}
             console.log("Post list: ", enrollmentPost)
             const postArgs = {
                 method: "POST",
@@ -45,33 +114,40 @@ const EnrollmentForm = () => {
 
         return handleClick;
     }
+
     return (
 
         <div className='wrapper'>
             <form onSubmit={useHandleClick}>
                 <h1>Create Enrollment</h1>
                 <div className='input-box'>
-                    <h2>Section</h2>
-                    <input 
-                    type = 'text'
-                    placeholder='ex: 12'
-                    value ={sectionId}
-                    onChange= {(e) => setSectionId(e.target.value)}
-                    required
-                    />
+                    <h2>Select Course</h2>
+                    <select value={courseId} onChange={(e) => setNewCourseId(e.target.value)} required className="form-select">
+                        <option value="">Select a Course</option>
+                        {courses.map((course) => (
+                            <option key={course.id} value={course.id}>{course.name}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className='input-box'>
-                    <h2>Student ID</h2>
-                    <input
-                    type = 'text'
-                    placeholder='ex: a1b2c3d4'
-                    value = {studetnId}
-                    onChange= {(e) => setStudentId(e.target.value)}
-                    required
-                    />
+                <h2>Select a Section</h2>
+                <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
+                        <option value="">Select a Section</option>
+                        {sections.map((section) => (
+                            <option key={section.id} value={section.id}>{section}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className='input-box'>
+                <h2>Select Student</h2>
+                    <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
+                        <option value="">Select a Student</option>
+                        {students.map((student) => (
+                            <option key={student.id} value={student.id}>{student.firstName} {student.lastName}</option>
+                        ))}
+                    </select>
                 </div>
                 <button type='submit'>Submit</button>
-                <button type="button" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </form>
         </div>
     );

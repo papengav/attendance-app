@@ -21,7 +21,7 @@ import lombok.Setter;
 public class SectionDTO {
 
     @NonNull
-    private int roomNum;
+    private String roomNum;
 
     @NonNull
     private int numberOfStudent;

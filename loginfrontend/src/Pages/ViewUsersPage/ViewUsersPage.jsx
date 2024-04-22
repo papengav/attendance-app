@@ -23,7 +23,6 @@ const ViewUsersPage = () => {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-
     const jwtToken = useFetchJWT();
 
     useEffect(() => {
