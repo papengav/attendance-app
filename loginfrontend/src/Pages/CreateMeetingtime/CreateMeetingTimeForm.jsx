@@ -11,6 +11,15 @@ const CreateMeetingTime = () => {
     const [dayOfWeek, setDayOfWeek] = useState('');
     const [sectionId, setSectionID] = useState('');
     const [jwtToken, setJwtToken] = useState('');
+    const options = [
+        { label: "Monday", value: 2},
+        { label: "Tuesday", value: 3},
+        { label: "Wednesday", value: 4},
+        {label : "Thursday", value: 5},
+        {label: "Friday", value: 6}, 
+        {label: "Saturday", value: 7},
+        {label: "Sunday", value: 1},
+    ];
 
     useEffect(() => {
         const jwt = Cookies.get('jwt_authorization');
@@ -71,13 +80,11 @@ const CreateMeetingTime = () => {
                 </div>
                 <div className='input-box'>
                     <h2>Day of the Week</h2>
-                    <input
-                        type="text"
-                        placeholder="Ex: Monday"
-                        value={dayOfWeek}
-                        onChange={(e) => setDayOfWeek(e.target.value)}
-                        required
-                    />
+                    <select onChange={(e) => setDayOfWeek(e.target.value)} className="form-select">
+                        {options.map((option, index) => (
+                            <option key={index} value={option.value}>{option.label}</option>
+                        ))}
+                    </select>
                 </div>
                 <button type='submit'>Submit</button>
             </form>
