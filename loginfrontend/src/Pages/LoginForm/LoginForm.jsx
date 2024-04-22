@@ -42,7 +42,7 @@ const LoginForm = () => {
             console.log(token);
             setJwtToken(token);
             cookies.set("jwt_authorization", token);
-            window.location.href = "/HomePage";
+            window.location.href = "/layout";
         });
     };
 

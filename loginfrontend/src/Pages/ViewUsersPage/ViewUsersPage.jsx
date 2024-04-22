@@ -23,7 +23,6 @@ const ViewUsersPage = () => {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-
     const jwtToken = useFetchJWT();
 
     useEffect(() => {
@@ -115,6 +114,7 @@ const ViewUsersPage = () => {
             <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
                 <button onclick={handlePreviousButton()}>Previous</button>
                 <button onClick={handleNextButton()}>Next</button>
+                <button type="button" onClick={() => window.history.back()} style={{ marginTop: "10px" }}>Back</button>
             </div>
         </div>
     );

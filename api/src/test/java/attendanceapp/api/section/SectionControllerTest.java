@@ -40,7 +40,7 @@ public class SectionControllerTest {
     void shouldCreateANewSection() {
         HttpHeaders adminHeader = getAdminHeaders(restTemplate);
 
-        int roomNum = 1;
+        String roomNum = "1";
         int numberOfStudents = 10;
         int courseId = 1; // Provided from data.sql
         int professorId = 4;
@@ -65,7 +65,7 @@ public class SectionControllerTest {
     void shouldNotCreateANewSectionIfCourseIdInvalid() {
         HttpHeaders adminHeader = getAdminHeaders(restTemplate);
 
-        int roomNum = 1;
+        String roomNum = "1";
         int numberOfStudents = 10;
         int courseId = 99999; // Not provided in test data - should cause BAD REQUEST
         int professorId = 4;
@@ -84,7 +84,7 @@ public class SectionControllerTest {
     void shouldNotCreateANewSectionIfProfessorIdInvalid() {
         HttpHeaders adminHeader = getAdminHeaders(restTemplate);
 
-        int roomNum = 1;
+        String roomNum = "1";
         int numberOfStudents = 10;
         int courseId = 99999; // Not provided in test data - should cause BAD REQUEST
         int professorId = 999999999;
@@ -103,7 +103,7 @@ public class SectionControllerTest {
     void shouldNotCreateANewSectionIfProfessorIdIsNotAssociatedWithProfessor() {
         HttpHeaders adminHeader = getAdminHeaders(restTemplate);
 
-        int roomNum = 1;
+        String roomNum = "1";
         int numberOfStudents = 10;
         int courseId = 99999; // Not provided in test data - should cause BAD REQUEST
         int professorId = 1; // This is a student
@@ -122,7 +122,7 @@ public class SectionControllerTest {
     void shouldNotCreateANewSectionIfNotRequestByAdmin() {
         HttpHeaders studentHeaders = getStudentHeaders(restTemplate);
 
-        int roomNum = 1;
+        String roomNum = "1";
         int numberOfStudents = 10;
         int courseId = 1; // Provided from data.sql
         int professorId = 4;
@@ -139,7 +139,7 @@ public class SectionControllerTest {
      */
     @Test
     void shouldNotCreateANewSectionIfNotAuthenticated() {
-        int roomNum = 1;
+        String roomNum = "1";
         int numberOfStudents = 10;
         int courseId = 1; // Provided from data.sql
         int professorId = 4;

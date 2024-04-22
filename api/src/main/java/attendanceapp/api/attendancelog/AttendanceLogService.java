@@ -128,7 +128,7 @@ public class AttendanceLogService {
      */
     public AttendanceLog createAttendanceLog(AttendanceLogDTO logRequest) throws InvalidCredentialsException, InvalidEnrollmentException {
         Timestamp timestamp = Timestamp.from(Instant.now());
-        int roomNum = logRequest.getRoomNum();
+        String roomNum = logRequest.getRoomNum();
         User student = getUserByStudentCardId(logRequest.getStudentCardId());
 
         // Get list of student Enrollments
@@ -219,10 +219,10 @@ public class AttendanceLogService {
      * Find a Section associated with a MeetingTime and roomNum
      *
      * @param meetingTime MeetingTime data of when the Section meets
-     * @param roomNum int number of the room the section meets in
+     * @param roomNum string of the room the section meets in
      * @return Section if found
      */
-    private Section getSectionByMeetingTimeAndRoomNum(MeetingTime meetingTime, int roomNum) {
+    private Section getSectionByMeetingTimeAndRoomNum(MeetingTime meetingTime, String roomNum) {
         int sectionId = meetingTime.getSectionId();
         Optional<Section> section = sectionRepository.findById(sectionId);
 
@@ -232,7 +232,7 @@ public class AttendanceLogService {
 
         Section validSection = section.get();
 
-        if (validSection.getRoomNum() != roomNum) {
+        if (!validSection.getRoomNum().equals(roomNum)) {
             throw new InvalidEnrollmentException("User is enrolled in a Section at this time but roomNum does not match");
         }
 
