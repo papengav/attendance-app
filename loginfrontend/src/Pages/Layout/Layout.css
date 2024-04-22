@@ -4,6 +4,7 @@
 
 .sidebar {
   position: fixed; /* Keep sidebar fixed on the left */
+  top: 0;
   left: 0;
   height: fit-content;
   width: 200px; /* Width of the sidebar */

@@ -7,7 +7,7 @@ import '../../Components/Styles/GruvboxTheme.css';
 const Sidebar = () => {
     const handleClickSignOut = () => {
         Cookies.remove("jwt_authorization");
-        window.location.href = "/login";
+        window.location.href = "/";
     };
 
     return (
@@ -18,32 +18,36 @@ const Sidebar = () => {
                     <span className="tooltiptext">Create User</span>
                 </div>
                 <div className="tooltip">
-                    <Link to="viewUsers" className="button" id="viewUsers"></Link>
-                    <span className="tooltiptext">View Users</span>
-                </div>
-                <div className="tooltip">
                     <Link to="createCourse" className="button" id="createCourse"></Link>
                     <span className="tooltiptext">Create Course</span>
                 </div>
-                <div className="tooltip">
+                {/* <div className="tooltip">
                     <Link to="viewCourses" className="button" id="viewCourses"></Link>
                     <span className="tooltiptext">View Courses</span>
-                </div>
+                </div> */}
                 <div className="tooltip">
                     <Link to="createSection" className="button" id="createSection"></Link>
                     <span className="tooltiptext">Create Section</span>
                 </div>
-                <div className="tooltip">
+                {/* <div className="tooltip">
                     <Link to="viewSections" className="button" id="viewSections"></Link>
                     <span className="tooltiptext">View Sections</span>
+                </div> */}
+                <div className="tooltip">
+                    <Link to="createMeetingTime" className="button" id="createMeetingTime"></Link>
+                    <span className="tooltiptext">Create Meeting Time</span>
                 </div>
                 <div className="tooltip">
                     <Link to="createEnrollment" className="button" id="createEnrollment"></Link>
                     <span className="tooltiptext">Create Enrollment</span>
                 </div>
-                <div className="tooltip">
+                {/* <div className="tooltip">
                     <Link to="viewEnrollments" className="button" id="viewEnrollments"></Link>
                     <span className="tooltiptext">View Enrollments</span>
+                </div> */}
+                <div className="tooltip">
+                    <Link to="viewUsers" className="button" id="viewUsers"></Link>
+                    <span className="tooltiptext">View Users</span>
                 </div>
                 <div className="tooltip">
                     <Link to="viewAttendanceLogs" className="button" id="viewAttendanceLogs"></Link>

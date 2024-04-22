@@ -70,7 +70,7 @@
 }
 
 #createUser{
-    background-image: url("../../Components/Assets/buttonBackgrounds/person.png");
+    background-image: url("../../Components/Assets/buttonBackgrounds/CreateUserIcon.jpg");
 }
 
 #viewUsers{
@@ -78,23 +78,19 @@
 }
 
 #createCourse{
-    background-image: url("../../Components/Assets/buttonBackgrounds/person.png");
+    background-image: url("../../Components/Assets/buttonBackgrounds/CreateCourseIcon.jpg");
 }
 
-#viewCourses{
-    background-image: url("../../Components/Assets/buttonBackgrounds/person.png");
+#createMeetingTime{
+    background-image: url("../../Components/Assets/buttonBackgrounds/MeetingTimeIcon.png");
 }
 
 #createSection{
-    background-image: url("../../Components/Assets/buttonBackgrounds/person.png");
-}
-
-#viewSections{
-    background-image: url("../../Components/Assets/buttonBackgrounds/person.png");
+    background-image: url("../../Components/Assets/buttonBackgrounds/SectionIcon.png");
 }
 
 #createEnrollment{
-    background-image: url("../../Components/Assets/buttonBackgrounds/person.png");
+    background-image: url("../../Components/Assets/buttonBackgrounds/EnrollmentIcon.jpg");
 }
 
 #viewAttendanceLogs{
