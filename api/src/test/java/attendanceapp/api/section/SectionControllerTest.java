@@ -223,4 +223,109 @@ public class SectionControllerTest {
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+
+    /**
+     * Ensure that a List of Sections following the request parameters is returned
+     */
+    @Test
+    void shouldReturnAListOfSectionsByCourseId() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 1;
+        int courseId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-courseId")
+                .queryParam("courseId", courseId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody().size()).isEqualTo(size);
+    }
+
+    /**
+     * Ensure that a List of Sections is not returned if the requested courseId is not associated with any existing Courses
+     */
+    @Test
+    void shouldNotReturnAListOfSectionsByCourseIdIfCourseIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+        int courseId = 999999999;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-courseId")
+                .queryParam("courseId", courseId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Ensure that a list of Sections is not returned if not requested by an Admin
+     */
+    @Test
+    void shouldNotReturnAListOfSectionsByCourseIdIfNotRequestedByAdmin() {
+        HttpHeaders headers = getStudentHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+        int courseId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-courseId")
+                .queryParam("courseId", courseId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a list of Sections is not returned if not request is not authenticated
+     */
+    @Test
+    void shouldNotReturnAListOfSectionsByCourseIdIfNotAuthenticated() {
+        HttpHeaders headers = new HttpHeaders(); // empty
+        int page = 0;
+        int size = 2;
+        int courseId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-courseId")
+                .queryParam("courseId", courseId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
 }

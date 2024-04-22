@@ -358,6 +358,28 @@ None
         200 OK
     * Body: `List<Section>`
 
+**GET /sections/by-courseId**
+---
+Get a List of Sections associated with the specified courseId \
+* **URL Params:**
+None
+* **Request Params**
+    * courseId: int
+    * page: int (default = 0)
+    * size: int (default = 100)
+    * sort: String (default = "id,asc")
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authroization:
+        Bearer: `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        200 OK
+    * Body: `List<Section>`
+
 &nbsp;
 
 # MeetingTime

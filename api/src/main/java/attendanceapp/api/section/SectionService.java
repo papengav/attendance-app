@@ -62,6 +62,27 @@ public class SectionService {
     }
 
     /**
+     * Construct a Page of Sections using Spring Data's Pagination feature
+     * Sections in Page must have specified courseId
+     *
+     * @param courseId ID of associated Course
+     * @param pageable Pageable object containing page number, size and Sorting rule
+     * @return Page of sections with specified courseId
+     * @throws InvalidCourseException No Course associated with provided courseId
+     */
+    public Page<Section> findAllByCourseId(int courseId, Pageable pageable) throws InvalidCourseException {
+        validateCourseId(courseId);
+
+        return sectionRepository.findAllByCourseId(
+                courseId,
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
+                ));
+    }
+
+    /**
      * Create a new Section
      *
      * @param sectionRequest SectionDTO containing data for new Section

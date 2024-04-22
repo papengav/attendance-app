@@ -9,7 +9,6 @@ package attendanceapp.api.section;
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCourseException;
 import attendanceapp.api.exceptions.InvalidUserException;
-import attendanceapp.api.user.User;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +73,19 @@ public class SectionController {
         return ResponseEntity.ok(page.getContent());
     }
 
+    @GetMapping("by-courseId")
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<List<Section>> findAllByCourseId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int courseId) {
+        try {
+            Page<Section> page = sectionService.findAllByCourseId(courseId, pageable);
+            return ResponseEntity.ok(page.getContent());
+        }
+        catch (InvalidCourseException e) {
+            logger.warn("Invalid Request: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     /**
      * Create a new Section. Accessible only to Administrators.
      *
@@ -101,5 +113,4 @@ public class SectionController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }
