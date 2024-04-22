@@ -49,9 +49,6 @@ const CreateSection = () => {
 
         return handleClickS;
     }
-<<<<<<< HEAD
-    const handleClickS = useHandleClickS();
-=======
 
     const handleClickS = useHandleClickS();
 
@@ -89,7 +86,6 @@ const CreateSection = () => {
     
         return professors;
     }
->>>>>>> e46ec61ec8702b0a776b07f743214ca3074bf5ce
 
 
     return (
