@@ -93,6 +93,10 @@
     background-image: url("../../Components/Assets/buttonBackgrounds/EnrollmentIcon.jpg");
 }
 
+#viewEnrollments{
+    background-image: url("../../Components/Assets/buttonBackgrounds/person.png");
+}
+
 #viewAttendanceLogs{
     background-image: url("../../Components/Assets/buttonBackgrounds/calander.png");
 }

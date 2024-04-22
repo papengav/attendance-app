@@ -16,9 +16,9 @@ const EnrollmentForm = () => {
 
     const setNewCourseId = (newCourseId) => {
         setCourseId(newCourseId);
-        fetchSections();
+        if (newCourseId) fetchSectionsByCourseId(newCourseId);
     }
-
+    
     useEffect(() => {
         const jwtToken = Cookies.get('jwt_authorization');
         setJwtToken(jwtToken);
@@ -70,9 +70,16 @@ const EnrollmentForm = () => {
         }
     };
 
-    const fetchSections = async () => {
+    const fetchSectionsByCourseId = async (courseId) => {
+        if (!courseId) return;
+    
+        const url = new URL('http://localhost:8080/sections/by-courseId');
+        url.searchParams.append('courseId', courseId);
+        url.searchParams.append('page', 0);
+        url.searchParams.append('size', 100);
+    
         try {
-            const response = await fetch(`http://localhost:8080/sections`, {
+            const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -83,42 +90,46 @@ const EnrollmentForm = () => {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log(data);
+            console.log('Sections data:', data);
             setSections(data || []);
         } catch (error) {
             console.error('Failed to fetch sections:', error);
         }
     };
+    
 
     //Method used when user submits course data to create an enrollment
-    function useHandleClick() {
-        const handleClick = (e) => {
-            e.preventDefault();
-            const enrollmentPost = {sectionId, studentId}
-            console.log("Post list: ", enrollmentPost)
-            const postArgs = {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive", "Authorization": "Bearer "+ jwt},
-                body: JSON.stringify(enrollmentPost)
-            };
-            fetch('http://localhost:8080/enrollments', postArgs).then((response) => {
-                console.log("Enrollment created");
-                return response.json();
-            })
-            .then(data => {
-                const sectionID = data.id; 
-                console.log("meeting time ID: ", sectionID);
-                alert('Enrollment Created')
-            });
-        };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const enrollmentPost = { sectionId, studentId };
 
-        return handleClick;
-    }
+        try {
+            const response = await fetch('http://localhost:8080/enrollments', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwt}`,
+                    "Accept-Encoding": "gzip, deflate, br",
+                    "Connection": "keep-alive"
+                },
+                body: JSON.stringify(enrollmentPost)
+            });
+
+            if (!response.ok) throw new Error('Failed to create enrollment');
+
+            const data = await response.json();
+            console.log("Enrollment created, ID: ", data.id);
+            alert('Enrollment Created Successfully');
+        } catch (error) {
+            console.error("Error creating enrollment: ", error);
+            alert(`Error creating enrollment: ${error.message}`);
+        }
+    };
 
     return (
 
         <div className='wrapper'>
-            <form onSubmit={useHandleClick}>
+            <form onSubmit={handleSubmit}>
                 <h1>Create Enrollment</h1>
                 <div className='input-box'>
                     <h2>Select Course</h2>
@@ -134,7 +145,7 @@ const EnrollmentForm = () => {
                 <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
                         <option value="">Select a Section</option>
                         {sections.map((section) => (
-                            <option key={section.id} value={section.id}>{section}</option>
+                            <option key={section.id} value={section.id}>{section.roomNum}</option>
                         ))}
                     </select>
                 </div>
