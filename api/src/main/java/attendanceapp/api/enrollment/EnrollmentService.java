@@ -13,6 +13,8 @@ import attendanceapp.api.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EnrollmentService {
@@ -32,6 +34,16 @@ public class EnrollmentService {
     public Enrollment findById(int id) throws InvalidEnrollmentException {
         return enrollmentRepository.findById(id)
                 .orElseThrow(() -> new InvalidEnrollmentException("Requested Enrollment does not exist"));
+    }
+
+    /**
+     * Find all of a Student's enrollments
+     *
+     * @param id ID of the desired student
+     * @return List of Enrollment
+     */
+    public List<Enrollment> findAllByStudentId(int id) {
+        return enrollmentRepository.findAllByStudentId(id);
     }
 
     /**

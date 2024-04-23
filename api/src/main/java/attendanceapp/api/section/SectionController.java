@@ -15,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -73,6 +75,13 @@ public class SectionController {
         return ResponseEntity.ok(page.getContent());
     }
 
+    /**
+     * Get a Page of Sections associated with a specified courseId
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule
+     * @param courseId ID associated with desired Course
+     * @return List of Sections within the Page
+     */
     @GetMapping("by-courseId")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<List<Section>> findAllByCourseId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int courseId) {
@@ -83,6 +92,32 @@ public class SectionController {
         catch (InvalidCourseException e) {
             logger.warn("Invalid Request: " + e.getMessage());
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Get a Page of Sections associated with a specified studentId
+     * studentId correlates to userIds in the system
+     * matches made via Enrollments table
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule
+     * @param studentId ID associated with desired User / Student
+     * @return List of Sections within the Page
+     */
+    @GetMapping("by-user-enrollment")
+    @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ") OR " + AuthorityConstants.STUDENT_AUTHORITY)
+    public ResponseEntity<List<Section>> findAllByStudentId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int studentId) {
+        try {
+            Page<Section> page = sectionService.findAllByStudentId(studentId, pageable);
+            return ResponseEntity.ok(page.getContent());
+        }
+        catch (InvalidUserException e) {
+            logger.warn("Invalid request: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        catch (AccessDeniedException e) {
+            logger.warn(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
