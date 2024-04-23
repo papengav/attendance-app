@@ -228,6 +228,108 @@ public class SectionControllerTest {
      * Ensure that a List of Sections following the request parameters is returned
      */
     @Test
+    void shouldReturnAListOfSectionsByStudentId() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 1;
+        int studentId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-studentId")
+                .queryParam("studentId", studentId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody().size()).isEqualTo(size);
+    }
+
+    /**
+     * Ensure that a List of Sections is not returned if the requested studentId  is not associated with any existing Users
+     */
+    @Test
+    void shouldNotReturnAListOfSectionsByCourseIdIfStudentIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+        int studentId = 999999999;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-studentId")
+                .queryParam("studentId", studentId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void shouldNotReturnAListOfSectionsByStudentIdIfRequestedByStudentForDataThatIsNotTheirs() {
+        HttpHeaders headers = getStudentHeaders(restTemplate);
+        int page = 0;
+        int size = 2;
+        int studentId = 2;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-studentId")
+                .queryParam("studentId", studentId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a list of Sections is not returned if not request is not authenticated
+     */
+    @Test
+    void shouldNotReturnAListOfSectionsByStudentIdIfNotAuthenticated() {
+        HttpHeaders headers = new HttpHeaders(); // empty
+        int page = 0;
+        int size = 2;
+        int studentId = 1;
+
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-studentId")
+                .queryParam("studentId", studentId)
+                .queryParam("page", page)
+                .queryParam("size", size);
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<List<Section>> getResponse = restTemplate.exchange(
+                ucb.toUriString(),
+                HttpMethod.GET,
+                getRequest,
+                new ParameterizedTypeReference<List<Section>>() {
+                });
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a List of Sections following the request parameters is returned
+     */
+    @Test
     void shouldReturnAListOfSectionsByCourseId() {
         HttpHeaders headers = getAdminHeaders(restTemplate);
         int page = 0;
