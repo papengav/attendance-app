@@ -52,7 +52,7 @@ public class User implements UserDetails {
 
     @Column("role_id")
     @NonNull
-    int roleId;
+    private int roleId;
 
 //----------------------------------------------------------------------------------------------
 // UserDetails interface provided by Spring Security to build upon Users for various Auth features

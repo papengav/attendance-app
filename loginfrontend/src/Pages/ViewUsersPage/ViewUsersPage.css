@@ -38,18 +38,6 @@ Purpose: Styling for ViewUsersPage.jsx
     color: #fabd2f;
   }
   
-  .user-table tr:nth-child(even) {
-    background-color: #282828;
-  }
-  
-  .user-table tr:hover {
-    background-color: #665c54;
-  }
-  
-  .user-table tr:nth-child(odd) {
-    background-color: #3c3836;
-  }
-  
   .user-table td {
     font-family: 'Courier New', Courier, monospace;
   }

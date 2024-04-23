@@ -14,7 +14,6 @@ import lombok.*;
 
 @AllArgsConstructor
 @Getter
-@Setter
 public class CourseDTO {
 
     @NonNull

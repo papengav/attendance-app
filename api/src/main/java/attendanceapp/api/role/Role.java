@@ -17,7 +17,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table(name = "roles", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 @AllArgsConstructor
 @Getter
-@Setter
 public class Role {
    @Id
    @Column("id")

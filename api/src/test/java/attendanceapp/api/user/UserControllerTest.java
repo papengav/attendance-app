@@ -52,7 +52,7 @@ public class UserControllerTest {
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
         HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
 
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
+        ResponseEntity<UserResponse> createResponse = restTemplate.postForEntity("/users", request, UserResponse.class);
 
         // Assert HTTP status code
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -74,7 +74,7 @@ public class UserControllerTest {
 
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
         HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
+        ResponseEntity<UserResponse> createResponse = restTemplate.postForEntity("/users", request, UserResponse.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -95,7 +95,7 @@ public class UserControllerTest {
 
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
         HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
+        ResponseEntity<UserResponse> createResponse = restTemplate.postForEntity("/users", request, UserResponse.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -116,7 +116,7 @@ public class UserControllerTest {
 
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
         HttpEntity<UserDTO> request = new HttpEntity<>(newUser, headers);
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", request, User.class);
+        ResponseEntity<UserResponse> createResponse = restTemplate.postForEntity("/users", request, UserResponse.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
@@ -135,7 +135,7 @@ public class UserControllerTest {
 
         UserDTO newUser = new UserDTO(firstName, lastName, studentCardId, username, password, roleId);
         // No auth headers included in request
-        ResponseEntity<User> createResponse = restTemplate.postForEntity("/users", newUser, User.class);
+        ResponseEntity<UserResponse> createResponse = restTemplate.postForEntity("/users", newUser, UserResponse.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
@@ -154,11 +154,11 @@ public class UserControllerTest {
                 .queryParam("size", size);
 
         HttpEntity<Void> getRequest = new HttpEntity<>(headers);
-        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+        ResponseEntity<List<UserResponse>> getResponse = restTemplate.exchange(
                 ucb.toUriString(),
                 HttpMethod.GET,
                 getRequest,
-                new ParameterizedTypeReference<List<User>>() {
+                new ParameterizedTypeReference<List<UserResponse>>() {
         });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -179,11 +179,11 @@ public class UserControllerTest {
                 .queryParam("size", size);
 
         HttpEntity<Void> getRequest = new HttpEntity<>(headers);
-        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+        ResponseEntity<List<UserResponse>> getResponse = restTemplate.exchange(
                 ucb.toUriString(),
                 HttpMethod.GET,
                 getRequest,
-                new ParameterizedTypeReference<List<User>>() {
+                new ParameterizedTypeReference<List<UserResponse>>() {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -203,11 +203,11 @@ public class UserControllerTest {
                 .queryParam("size", size);
 
         HttpEntity<Void> getRequest = new HttpEntity<>(headers);
-        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+        ResponseEntity<List<UserResponse>> getResponse = restTemplate.exchange(
                 ucb.toUriString(),
                 HttpMethod.GET,
                 getRequest,
-                new ParameterizedTypeReference<List<User>>() {
+                new ParameterizedTypeReference<List<UserResponse>>() {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -229,11 +229,11 @@ public class UserControllerTest {
                 .queryParam("size", size);
 
         HttpEntity<Void> getRequest = new HttpEntity<>(headers);
-        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+        ResponseEntity<List<UserResponse>> getResponse = restTemplate.exchange(
                 ucb.toUriString(),
                 HttpMethod.GET,
                 getRequest,
-                new ParameterizedTypeReference<List<User>>() {
+                new ParameterizedTypeReference<List<UserResponse>>() {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -256,11 +256,11 @@ public class UserControllerTest {
                 .queryParam("size", size);
 
         HttpEntity<Void> getRequest = new HttpEntity<>(headers);
-        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+        ResponseEntity<List<UserResponse>> getResponse = restTemplate.exchange(
                 ucb.toUriString(),
                 HttpMethod.GET,
                 getRequest,
-                new ParameterizedTypeReference<List<User>>() {
+                new ParameterizedTypeReference<List<UserResponse>>() {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -282,11 +282,11 @@ public class UserControllerTest {
                 .queryParam("size", size);
 
         HttpEntity<Void> getRequest = new HttpEntity<>(headers);
-        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+        ResponseEntity<List<UserResponse>> getResponse = restTemplate.exchange(
                 ucb.toUriString(),
                 HttpMethod.GET,
                 getRequest,
-                new ParameterizedTypeReference<List<User>>() {
+                new ParameterizedTypeReference<List<UserResponse>>() {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -308,11 +308,11 @@ public class UserControllerTest {
                 .queryParam("size", size);
 
         HttpEntity<Void> getRequest = new HttpEntity<>(headers);
-        ResponseEntity<List<User>> getResponse = restTemplate.exchange(
+        ResponseEntity<List<UserResponse>> getResponse = restTemplate.exchange(
                 ucb.toUriString(),
                 HttpMethod.GET,
                 getRequest,
-                new ParameterizedTypeReference<List<User>>() {
+                new ParameterizedTypeReference<List<UserResponse>>() {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);

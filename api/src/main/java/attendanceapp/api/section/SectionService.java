@@ -14,6 +14,7 @@ import attendanceapp.api.exceptions.InvalidUserException;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
 import attendanceapp.api.user.User;
+import attendanceapp.api.user.UserResponse;
 import attendanceapp.api.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -118,7 +119,7 @@ public class SectionService {
      * @throws InvalidRoleException User does not have Professor Role
      */
     private void validateProfessorId(int professorId) throws InvalidUserException, InvalidRoleException {
-        User user = userService.findById(professorId);
+        UserResponse user = userService.findById(professorId);
         // This should never throw an error
         Role userRole = roleRepository.findById(user.getRoleId())
                 .orElseThrow(() -> new InvalidRoleException("User somehow has a role that does not exist"));

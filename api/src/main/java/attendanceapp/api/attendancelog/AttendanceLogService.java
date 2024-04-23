@@ -19,6 +19,7 @@ import attendanceapp.api.section.SectionService;
 import attendanceapp.api.user.User;
 import attendanceapp.api.user.UserRepository;
 import attendanceapp.api.user.UserService;
+import attendanceapp.api.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -86,7 +87,7 @@ public class AttendanceLogService {
      * @throws InvalidUserException User does not exist or does not have Student Role
      */
     private void validateStudent(int id) throws InvalidUserException {
-        User user = userService.findById(id);
+        UserResponse user = userService.findById(id);
         Role role = roleRepository.findById(user.getRoleId())
                 // Should be impossible
                 .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
@@ -98,7 +99,7 @@ public class AttendanceLogService {
         // If the request is coming from a Student, make sure they're requesting data only related to them
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User requester = userService.findByUsername(username);
+        UserResponse requester = userService.findByUsername(username);
         int requesterId = requester.getId();
         Role requesterRole = roleRepository.findById(requester.getRoleId())
                 .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
