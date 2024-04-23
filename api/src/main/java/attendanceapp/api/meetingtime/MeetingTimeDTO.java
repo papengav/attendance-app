@@ -17,7 +17,6 @@ import lombok.Setter;
 
 @RequiredArgsConstructor
 @Getter
-@Setter
 public class MeetingTimeDTO {
 
     @NonNull

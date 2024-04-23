@@ -14,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +23,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 
 //---------------------------------------------------------------
@@ -49,12 +46,12 @@ class UserController {
      */
     @GetMapping("/{requestedId}")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
-    public ResponseEntity<User> findById(@PathVariable int requestedId) {
+    public ResponseEntity<UserResponse> findById(@PathVariable int requestedId) {
         try {
             logger.info("A User was requested");
             logger.trace(String.format("Entering findById with parameters (requestedId = %d)", requestedId));
 
-            User user = userService.findById(requestedId);
+            UserResponse user = userService.findById(requestedId);
             return ResponseEntity.ok(user);
         }
         catch (InvalidUserException e) {
@@ -73,8 +70,8 @@ class UserController {
      */
     @GetMapping
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
-    public ResponseEntity<List<User>> findAll(@PageableDefault(size = 100) Pageable pageable) {
-        Page<User> page = userService.findAll(pageable);
+    public ResponseEntity<List<UserResponse>> findAll(@PageableDefault(size = 100) Pageable pageable) {
+        Page<UserResponse> page = userService.findAll(pageable);
         return ResponseEntity.ok(page.getContent());
     }
 
@@ -89,9 +86,9 @@ class UserController {
      */
     @GetMapping("/by-roleId")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
-    public ResponseEntity<List<User>> findAllByRoleId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int roleId) {
+    public ResponseEntity<List<UserResponse>> findAllByRoleId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int roleId) {
         try {
-            Page<User> page = userService.findAllByRoleId(roleId, pageable);
+            Page<UserResponse> page = userService.findAllByRoleId(roleId, pageable);
             return ResponseEntity.ok(page.getContent());
         }
         catch (InvalidRoleException e) {
@@ -109,9 +106,9 @@ class UserController {
      */
     @PostMapping
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
-    public ResponseEntity<User> createUser(@RequestBody UserDTO newUserRequest, UriComponentsBuilder ucb) {
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserDTO newUserRequest, UriComponentsBuilder ucb) {
         try {
-            User savedUser = userService.createUser(newUserRequest);
+            UserResponse savedUser = userService.createUser(newUserRequest);
             URI locationOfNewUser = ucb
                     .path("/users/{id}")
                     .buildAndExpand(savedUser.getId())

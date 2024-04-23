@@ -8,6 +8,7 @@ import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
 import attendanceapp.api.section.SectionService;
 import attendanceapp.api.user.User;
+import attendanceapp.api.user.UserResponse;
 import attendanceapp.api.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,7 @@ public class EnrollmentService {
      * @throws InvalidUserException Provided ID not associated with any existing Users or User is not a Student
      */
     private void validateUser(int id) throws InvalidUserException {
-        User user = userService.findById(id);
+        UserResponse user = userService.findById(id);
         Role role = roleRepository.findById(user.getRoleId())
                 .orElseThrow(() -> new InvalidRoleException("This will never happen"));
 

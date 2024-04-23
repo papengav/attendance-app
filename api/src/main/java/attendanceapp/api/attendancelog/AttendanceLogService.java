@@ -16,6 +16,11 @@ import attendanceapp.api.section.Section;
 import attendanceapp.api.section.SectionRepository;
 import attendanceapp.api.user.User;
 import attendanceapp.api.user.UserRepository;
+<<<<<<< Updated upstream
+=======
+import attendanceapp.api.user.UserResponse;
+import attendanceapp.api.user.UserService;
+>>>>>>> Stashed changes
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +43,77 @@ public class AttendanceLogService {
     private final AttendanceLogRepository attendanceLogRepository;
     private final MeetingTimeRepository meetingTimeRepository;
     private final SectionRepository sectionRepository;
+<<<<<<< Updated upstream
+=======
+    private final SectionService sectionService;
+    private final RoleRepository roleRepository;
+
+    /**
+     * Construct a page of AttendanceLogs using Spring Data's Pagination feature
+     * AttendanceLogs must be associated with specified studentId (User ID) and sectionId
+     *
+     * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
+     * @param studentId ID associated with the desired student/user
+     * @param sectionId ID associated with the desired section
+     * @return Page containing found AttendanceLogs
+     * @throws InvalidUserException studentId not associated with any existing User or User does not have Student Role
+     * @throws InvalidSectionException sectionId not associated with any existing Section
+     */
+    public Page<AttendanceLog> findAllByStudentAndSectionId(Pageable pageable, int studentId, int sectionId)
+    throws InvalidUserException, InvalidSectionException {
+        validateStudent(studentId);
+        validateSection(sectionId);
+
+        return attendanceLogRepository.findAllByStudentIdAndSectionId(
+                studentId,
+                sectionId,
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
+                ));
+    }
+
+    /**
+     * Validate that a User associated with the provided ID exists
+     * Validate that the User has the Student Role
+     *
+     * @param id ID of the desired User
+     * @throws InvalidUserException User does not exist or does not have Student Role
+     */
+    private void validateStudent(int id) throws InvalidUserException {
+        UserResponse user = userService.findById(id);
+        Role role = roleRepository.findById(user.getRoleId())
+                // Should be impossible
+                .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
+
+        if (!role.getName().equals("Student")) {
+            throw new InvalidUserException("Requested User is not a Student");
+        }
+
+        // If the request is coming from a Student, make sure they're requesting data only related to them
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserResponse requester = userService.findByUsername(username);
+        int requesterId = requester.getId();
+        Role requesterRole = roleRepository.findById(requester.getRoleId())
+                .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
+
+        if (requesterRole.getName().equals("Student") && requesterId != user.getId()) {
+            throw new AccessDeniedException(String.format("Student with ID %d attempted to access %d's AttendanceLogs", requesterId, id));
+        }
+    }
+
+    /**
+     * Validate that a Section associated with the provided ID exists
+     *
+     * @param id ID of the desired Section
+     * @throws InvalidSectionException Section does not exist
+     */
+    private void validateSection(int id) throws InvalidSectionException {
+        sectionService.findById(id);
+    }
+>>>>>>> Stashed changes
 
     /**
      * Validate and create an AttendanceLog

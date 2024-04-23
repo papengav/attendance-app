@@ -37,7 +37,7 @@ None
 &nbsp;
 
 # User
-* User object:
+* UserResponse object:
 ```
 {
     id: int,
@@ -45,7 +45,6 @@ None
     lastName: String,
     studentCardId: String,
     username: String,
-    password: String,
     roleId: int
 }
 ```

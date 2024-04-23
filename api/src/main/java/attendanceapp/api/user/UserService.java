@@ -40,24 +40,52 @@ public class UserService {
      * @return User found
      * @throws InvalidUserException No User associated with the provided ID
      */
-    public User findById(int id) throws InvalidUserException {
-        return userRepository.findById(id)
+    public UserResponse findById(int id) throws InvalidUserException {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new InvalidUserException("Requested User does not exist"));
+
+        return new UserResponse.UserResponseBuilder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .studentCardId(user.getStudentCardId())
+                .username(user.getUsername())
+                .roleId(user.getRoleId())
+                .build();
     }
 
     /**
+<<<<<<< Updated upstream
+=======
+     * Find a User by their Username
+     *
+     * @param username Username of the requested User
+     * @return User found
+     * @throws InvalidUserException No User associated with the provided username
+     */
+    public UserResponse findByUsername(String username) throws InvalidUserException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new InvalidUserException("Requested User does not exist"));
+
+        return convertUserToUserResponse(user);
+    }
+
+    /**
+>>>>>>> Stashed changes
      * Construct a page of Users using Spring Data's Pagination feature
      *
      * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
      * @return Page containing found Users
      */
-    public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(
+    public Page<UserResponse> findAll(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
                         pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
                 ));
+
+        return convertUserPageToUserResponsePage(userPage);
     }
 
     /**
@@ -68,16 +96,56 @@ public class UserService {
      * @param pageable Pageable object containing page number, size and Sorting rule with default ids asc
      * @return Page containing found Users
      */
-    public Page<User> findAllByRoleId(int roleId, Pageable pageable) {
+    public Page<UserResponse> findAllByRoleId(int roleId, Pageable pageable) {
         getRole(roleId);
 
-        return userRepository.findAllByRoleId(
+        Page<User> userPage = userRepository.findAllByRoleId(
                 roleId,
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
                         pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
                 ));
+
+        return convertUserPageToUserResponsePage(userPage);
+    }
+
+    /**
+     * Map User objects within a Page to a Page of UserResponse objects
+     * Hides confidential User data from clients
+     *
+     * @param userPage Page of User
+     * @return Page of UserResponse
+     */
+    private Page<UserResponse> convertUserPageToUserResponsePage(Page<User> userPage) {
+        return userPage.map(user ->
+                new UserResponse.UserResponseBuilder()
+                        .id(user.getId())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .studentCardId(user.getStudentCardId())
+                        .username(user.getUsername())
+                        .roleId(user.getRoleId())
+                        .build()
+        );
+    }
+
+    /**
+     * Create new UserResponse from a User object
+     * Hides confidential User data from clients
+     *
+     * @param user User
+     * @return UserResponse
+     */
+    private UserResponse convertUserToUserResponse(User user) {
+        return new UserResponse.UserResponseBuilder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .studentCardId(user.getStudentCardId())
+                .username(user.getUsername())
+                .roleId(user.getRoleId())
+                .build();
     }
 
     /**
@@ -88,14 +156,14 @@ public class UserService {
      * @throws InvalidRoleException roleId not associated with any Role
      * @throws MissingStudentCardIdException Requested to create student but didn't provide a studentCardId
      */
-    public User createUser(UserDTO userRequest) throws InvalidRoleException, MissingStudentCardIdException {
+    public UserResponse createUser(UserDTO userRequest) throws InvalidRoleException, MissingStudentCardIdException {
         Role role = getRole(userRequest.getRoleId());
         String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
 
         verifyStudentCardId(userRequest.getStudentCardId(), role); // Make sure if request is for a Student that a valid studentCardId has been provided
         User newUser = new User(null, userRequest.getFirstName(), userRequest.getLastName(), userRequest.getStudentCardId(), userRequest.getUsername(), encodedPassword, userRequest.getRoleId());
 
-        return userRepository.save(newUser);
+        return convertUserToUserResponse(userRepository.save(newUser));
     }
 
     /**
