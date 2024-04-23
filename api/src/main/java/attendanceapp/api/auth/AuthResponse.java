@@ -8,7 +8,6 @@ package attendanceapp.api.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 //---------------------------------------------------------------
 // Provide standard for response to authentication requests

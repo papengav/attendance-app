@@ -7,22 +7,33 @@ import attendanceapp.api.exceptions.InvalidUserException;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
 import attendanceapp.api.section.SectionService;
-import attendanceapp.api.user.User;
 import attendanceapp.api.user.UserResponse;
 import attendanceapp.api.user.UserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class EnrollmentService {
 
     private final EnrollmentRepository enrollmentRepository;
-    private final SectionService sectionService;
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final SectionService sectionService;
+
+    // Need custom constructor since Section Service create a dependency cycle
+    // @Lazy can't be used if Lombok generate constructor
+    // @Lazy necessary because it stops SectionService from being fully constructed until it is needed
+    public EnrollmentService(EnrollmentRepository enrollmentRepository,
+                             UserService userService,
+                             RoleRepository roleRepository,
+                             @Lazy SectionService sectionService) {
+        this.enrollmentRepository = enrollmentRepository;
+        this.userService = userService;
+        this.roleRepository = roleRepository;
+        this.sectionService = sectionService;
+    }
 
     /**
      * Find an Enrollment by its ID

@@ -10,7 +10,9 @@ package attendanceapp.api.course;
 // An entity to represent the version of Courses used for data transfer to the controller from clients.
 //----------------------------------------------------------------------------------------------
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 
 @AllArgsConstructor
 @Getter

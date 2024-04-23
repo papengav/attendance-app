@@ -16,9 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Optional;
 
@@ -176,6 +178,38 @@ public class UserService {
     private void verifyStudentCardId(String studentCardId, Role role) throws MissingStudentCardIdException {
         if (studentCardId.isEmpty() && role.getName().equals("Student")) {
             throw new MissingStudentCardIdException("User request for User with Role: 'Student' must contain studentCardId");
+        }
+    }
+
+    /**
+     * Validate that a User associated with the provided ID exists
+     * Validate that the User has the Student role
+     * Validate that if a Student is requesting the data, they are only requesting their own data
+     *
+     * @param id ID of the desired User
+     * @throws InvalidUserException User does not exist, is not a student, or is not requesting their own data
+     * @throws AccessDeniedException A User with the Student role sent the request for data that is not theirs
+     */
+    public void validateStudent(int id) throws InvalidUserException, AccessDeniedException {
+        UserResponse user = findById(id);
+        Role role = roleRepository.findById(user.getRoleId())
+                // Should be impossible
+                .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
+
+        if (!role.getName().equals("Student")) {
+            throw new InvalidUserException("Requested User is not a Student");
+        }
+
+        // If the request is coming from a Student, make sure they're requesting data only related to them
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserResponse requester = findByUsername(username);
+        int requesterId = requester.getId();
+        Role requesterRole = roleRepository.findById(requester.getRoleId())
+                .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
+
+        if (requesterRole.getName().equals("Student") && requesterId != user.getId()) {
+            throw new AccessDeniedException(String.format("Student with ID %d attempted to access data belonging to User with ID %d", requesterId, id));
         }
     }
 }

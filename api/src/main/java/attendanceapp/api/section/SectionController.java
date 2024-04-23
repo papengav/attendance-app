@@ -104,7 +104,7 @@ public class SectionController {
      * @param studentId ID associated with desired User / Student
      * @return List of Sections within the Page
      */
-    @GetMapping("by-user-enrollment")
+    @GetMapping("by-studentId")
     @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ") OR " + AuthorityConstants.STUDENT_AUTHORITY)
     public ResponseEntity<List<Section>> findAllByStudentId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int studentId) {
         try {

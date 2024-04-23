@@ -9,7 +9,6 @@ package attendanceapp.api.enrollment;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 
 //----------------------------------------------------------------------------------------------

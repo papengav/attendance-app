@@ -9,7 +9,6 @@ package attendanceapp.api.attendancelog;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 //----------------------------------------------------------------------------------------------
 // An entity to represent the version of Attendance Logs used for data transfer to the controller from clients.

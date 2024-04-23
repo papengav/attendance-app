@@ -6,8 +6,8 @@
 
 package attendanceapp.api.auth;
 
-import attendanceapp.api.jwt.JwtService;
 import attendanceapp.api.exceptions.InvalidRoleException;
+import attendanceapp.api.jwt.JwtService;
 import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
 import attendanceapp.api.user.User;

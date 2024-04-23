@@ -9,7 +9,6 @@ package attendanceapp.api.enrollment;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 //----------------------------------------------------------------------------------------------
 // An interface that allows Enrollments to be queried to and from the database.

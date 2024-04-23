@@ -9,7 +9,6 @@ package attendanceapp.api.auth;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 //----------------------------------------------------------------------------------------------
 // An entity to represent the authentication data used for data transfer to the controller from clients.

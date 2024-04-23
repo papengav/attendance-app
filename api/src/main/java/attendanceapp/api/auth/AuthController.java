@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 //---------------------------------------------------------------
 // Provide mappings for clients to interact with AttendanceLogs.
 //---------------------------------------------------------------

@@ -6,12 +6,14 @@
 
 package attendanceapp.api.attendancelog;
 
-import attendanceapp.api.exceptions.*;
 import attendanceapp.api.enrollment.Enrollment;
 import attendanceapp.api.enrollment.EnrollmentRepository;
+import attendanceapp.api.exceptions.InvalidCredentialsException;
+import attendanceapp.api.exceptions.InvalidEnrollmentException;
+import attendanceapp.api.exceptions.InvalidSectionException;
+import attendanceapp.api.exceptions.InvalidUserException;
 import attendanceapp.api.meetingtime.MeetingTime;
 import attendanceapp.api.meetingtime.MeetingTimeRepository;
-import attendanceapp.api.role.Role;
 import attendanceapp.api.role.RoleRepository;
 import attendanceapp.api.section.Section;
 import attendanceapp.api.section.SectionRepository;
@@ -19,15 +21,11 @@ import attendanceapp.api.section.SectionService;
 import attendanceapp.api.user.User;
 import attendanceapp.api.user.UserRepository;
 import attendanceapp.api.user.UserService;
-import attendanceapp.api.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -66,7 +64,7 @@ public class AttendanceLogService {
      */
     public Page<AttendanceLog> findAllByStudentAndSectionId(Pageable pageable, int studentId, int sectionId)
     throws InvalidUserException, InvalidSectionException {
-        validateStudent(studentId);
+        userService.validateStudent(studentId);
         validateSection(sectionId);
 
         return attendanceLogRepository.findAllByStudentIdAndSectionId(
@@ -77,36 +75,6 @@ public class AttendanceLogService {
                         pageable.getPageSize(),
                         pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))
                 ));
-    }
-
-    /**
-     * Validate that a User associated with the provided ID exists
-     * Validate that the User has the Student Role
-     *
-     * @param id ID of the desired User
-     * @throws InvalidUserException User does not exist or does not have Student Role
-     */
-    private void validateStudent(int id) throws InvalidUserException {
-        UserResponse user = userService.findById(id);
-        Role role = roleRepository.findById(user.getRoleId())
-                // Should be impossible
-                .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
-
-        if (!role.getName().equals("Student")) {
-            throw new InvalidUserException("Requested User is not a Student");
-        }
-
-        // If the request is coming from a Student, make sure they're requesting data only related to them
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UserResponse requester = userService.findByUsername(username);
-        int requesterId = requester.getId();
-        Role requesterRole = roleRepository.findById(requester.getRoleId())
-                .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
-
-        if (requesterRole.getName().equals("Student") && requesterId != user.getId()) {
-            throw new AccessDeniedException(String.format("Student with ID %d attempted to access %d's AttendanceLogs", requesterId, id));
-        }
     }
 
     /**

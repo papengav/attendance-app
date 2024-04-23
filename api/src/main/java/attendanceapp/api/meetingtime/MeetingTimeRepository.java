@@ -9,7 +9,6 @@ package attendanceapp.api.meetingtime;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 //----------------------------------------------------------------------------------------------
 // An interface that allows MeetingTimes to be queried to and from the database.
