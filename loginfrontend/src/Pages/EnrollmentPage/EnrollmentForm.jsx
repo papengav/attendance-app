@@ -127,7 +127,6 @@ const EnrollmentForm = () => {
     };
 
     return (
-
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
                 <h1>Create Enrollment</h1>

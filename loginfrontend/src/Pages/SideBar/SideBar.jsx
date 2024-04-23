@@ -41,17 +41,10 @@ const Sidebar = () => {
                     <Link to="createEnrollment" className="button" id="createEnrollment"></Link>
                     <span className="tooltiptext">Create Enrollment</span>
                 </div>
-<<<<<<< Updated upstream
-                {/* <div className="tooltip">
-                    <Link to="viewEnrollments" className="button" id="viewEnrollments"></Link>
-                    <span className="tooltiptext">View Enrollments</span>
-                </div> */}
                 <div className="tooltip">
                     <Link to="viewUsers" className="button" id="viewUsers"></Link>
                     <span className="tooltiptext">View Users</span>
                 </div>
-=======
->>>>>>> Stashed changes
                 <div className="tooltip">
                     <Link to="viewAttendanceLogs" className="button" id="viewAttendanceLogs"></Link>
                     <span className="tooltiptext">View Attendance Logs</span>
