@@ -29,8 +29,9 @@ None
         ```
         {
             message: "Authentication successful",
-            token: <JWT>
-            role: String
+            token: <JWT>,
+            roleId: Integer,
+            userId: Integer
         }
         ```
 
