@@ -27,6 +27,13 @@ const CreateMeetingTime = () => {
         { label: "Sunday", value: 1 },
     ];
 
+    // Effect to fetch sections relevant to a selected student
+    useEffect(() => {
+        if (studentId) {
+            fetchSections(studentId);
+        }
+    }, [studentId]);
+
     // Effect hook to retrieve JWT token from cookies on component mount
     useEffect(() => {
         const jwt = Cookies.get('jwt_authorization'); // Fetch JWT token from cookies
@@ -65,11 +72,45 @@ const CreateMeetingTime = () => {
         });
     };
 
+    // Async function to fetch sections based on the student ID
+    const fetchSections = async (studentId) => {
+        if (!studentId) return;
+    
+        const url = new URL('http://localhost:8080/sections/by-studentId');
+        url.searchParams.append('studentId', studentId);
+    
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setSections(data || []);
+        } catch (error) {
+            console.error('Failed to fetch sections:', error);
+        }
+    };
+
     // JSX to render the form UI
     return (
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
                 <h1>Create Meeting Time</h1>
+                <div className='input-box'>
+                <h2>Select a Section</h2>
+                <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
+                    <option value="">Select a Section</option>
+                    {sections.map((section) => (
+                        <option key={section.id} value={section.id}>{section.roomNum}</option>
+                    ))}
+                </select>
+                </div>
                 <div className='input-box'>
                     <h2>Start Time</h2>
                     <input
@@ -90,13 +131,13 @@ const CreateMeetingTime = () => {
                 </div>
                 <div className='input-box'>
                     <h2>Day of the Week</h2>
-                    <select onChange={(e) => setDayOfWeek(e.target.value)} className="form-select"> // Dropdown for selecting day of the week
+                    <select onChange={(e) => setDayOfWeek(e.target.value)} className="form-select">
                         {options.map((option, index) => (
                             <option key={index} value={option.value}>{option.label}</option> // Map options to dropdown items
                         ))}
                     </select>
                 </div>
-                <button type='submit'>Submit</button> // Button to submit the form
+                <button type='submit'>Submit</button>
             </form>
         </div>
     );
