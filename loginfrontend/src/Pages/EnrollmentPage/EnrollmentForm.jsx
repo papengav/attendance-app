@@ -15,8 +15,8 @@ const EnrollmentForm = () => {
     const [sectionId, setSectionId] = useState('');
     const [sections, setSections] = useState([]);
     const [courses, setCourses] = useState([]);
-    const [jwt, setJwtToken] = useState('');
     const [courseId, setCourseId] = useState('');
+    const [jwt, setJwtToken] = useState('');
 
     // Function to update course ID and fetch sections for that course
     const setNewCourseId = (newCourseId) => {

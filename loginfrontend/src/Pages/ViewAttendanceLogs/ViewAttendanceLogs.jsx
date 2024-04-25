@@ -21,6 +21,12 @@ const ViewAttendanceLogs = () => {
     const [pageSize, setPageSize] = useState(10);
     const jwtToken = useFetchJWT();  // Custom hook to fetch JWT from cookies
 
+    // Function to update course ID and fetch sections for that course
+    const setNewCourseId = (newCourseId) => {
+        setCourseId(newCourseId);
+        if (newCourseId) fetchSectionsByCourseId(newCourseId);
+    };
+
     // Custom hook to fetch and set JWT token
     function useFetchJWT() {
         const [jwtToken, setJwtToken] = useState('');
@@ -160,25 +166,6 @@ const ViewAttendanceLogs = () => {
     function createTable(attendanceLogs) {
       return (
         <div>
-            <h1>View Attendance Logs</h1>
-            <div className='input-box'>
-                <h2>Select Student</h2>
-                <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
-                    <option value="">Select a Student</option>
-                    {students.map((student) => (
-                        <option key={student.id} value={student.id}>{student.firstName} {student.lastName}</option>
-                    ))}
-                </select>
-            </div>
-            <div className='input-box'>
-                <h2>Select a Section</h2>
-                <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
-                    <option value="">Select a Section</option>
-                    {sections.map((section) => (
-                        <option key={section.id} value={section.id}>{section.roomNum}</option>
-                    ))}
-                </select>
-            </div>
             <table className="user-table">
                 <thead>
                     <tr>
@@ -208,6 +195,25 @@ const ViewAttendanceLogs = () => {
     // Main component render
     return (
         <div className='wrapper'>
+            <h1>View Attendance Logs</h1>
+            <div className='input-box'>
+                    <h2>Select Course</h2>
+                    <select value={courseId} onChange={(e) => setNewCourseId(e.target.value)} required className="form-select">
+                        <option value="">Select a Course</option>
+                        {courses.map((course) => (
+                            <option key={course.id} value={course.id}>{course.name}</option>
+                        ))}
+                    </select>
+                </div>
+            <div className='input-box'>
+                <h2>Select a Section</h2>
+                <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
+                    <option value="">Select a Section</option>
+                    {sections.map((section) => (
+                        <option key={section.id} value={section.id}>{section.roomNum}</option>
+                    ))}
+                </select>
+            </div>
             {createTable(attendanceLogs)}
             <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
                 <button onClick={handlePreviousButton}>Previous</button>

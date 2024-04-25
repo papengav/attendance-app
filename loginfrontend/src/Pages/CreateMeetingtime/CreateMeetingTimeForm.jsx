@@ -17,6 +17,8 @@ const CreateMeetingTime = () => {
     const [jwtToken, setJwtToken] = useState(''); // State for storing the JWT token
     const [studentId, setStudentId] = useState('');
     const [sections, setSections] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [courseId, setCourseId] = useState('');
 
     // Options for the day of the week dropdown
     const options = [
@@ -29,12 +31,17 @@ const CreateMeetingTime = () => {
         { label: "Sunday", value: 1 },
     ];
 
-    // Effect to fetch sections relevant to a selected student
+    // Function to update course ID and fetch sections for that course
+    const setNewCourseId = (newCourseId) => {
+        setCourseId(newCourseId);
+        if (newCourseId) fetchSectionsByCourseId(newCourseId);
+    };
+
+    // Fetch JWT from cookies when component mounts
     useEffect(() => {
-        if (studentId) {
-            fetchSections(studentId);
-        }
-    }, [studentId]);
+        const jwtToken = Cookies.get('jwt_authorization');
+        setJwtToken(jwtToken);
+    }, []);
 
     // Effect hook to retrieve JWT token from cookies on component mount
     useEffect(() => {
@@ -42,6 +49,13 @@ const CreateMeetingTime = () => {
         setJwtToken(jwt); // Set the JWT token state
         console.log('JWT Token:', jwt); // Log JWT token for debugging
     }, []);
+
+    // Fetch students and courses when JWT is available
+    useEffect(() => {
+        if (jwt) {
+            fetchCourses();
+        }
+    }, [jwt]);
 
     // Handler for form submission
     const handleSubmit = (e) => {
@@ -74,12 +88,32 @@ const CreateMeetingTime = () => {
         });
     };
 
-    // Async function to fetch sections based on the student ID
-    const fetchSections = async (studentId) => {
-        if (!studentId) return;
+    // Async function to fetch courses from backend
+    const fetchCourses = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/courses`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setCourses(data || []);
+        } catch (error) {
+            console.error('Failed to fetch courses:', error);
+        }
+    };
+
+    // Fetch sections based on selected course
+    const fetchSectionsByCourseId = async (courseId) => {
+        if (!courseId) return;
     
-        const url = new URL('http://localhost:8080/sections/by-studentId');
-        url.searchParams.append('studentId', studentId);
+        const url = new URL('http://localhost:8080/sections/by-courseId');
+        url.searchParams.append('courseId', courseId);
     
         try {
             const response = await fetch(url, {
@@ -104,6 +138,15 @@ const CreateMeetingTime = () => {
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
                 <h1>Create Meeting Time</h1>
+                <div className='input-box'>
+                    <h2>Select Course</h2>
+                    <select value={courseId} onChange={(e) => setNewCourseId(e.target.value)} required className="form-select">
+                        <option value="">Select a Course</option>
+                        {courses.map((course) => (
+                            <option key={course.id} value={course.id}>{course.name}</option>
+                        ))}
+                    </select>
+                </div>
                 <div className='input-box'>
                 <h2>Select a Section</h2>
                 <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
