@@ -21,12 +21,6 @@ const ViewAttendanceLogs = () => {
     const [pageSize, setPageSize] = useState(10);
     const jwtToken = useFetchJWT();  // Custom hook to fetch JWT from cookies
 
-    // Function to update course ID and fetch sections for that course
-    const setNewCourseId = (newCourseId) => {
-        setCourseId(newCourseId);
-        if (newCourseId) fetchSectionsByCourseId(newCourseId);
-    };
-
     // Custom hook to fetch and set JWT token
     function useFetchJWT() {
         const [jwtToken, setJwtToken] = useState('');
@@ -142,35 +136,54 @@ const ViewAttendanceLogs = () => {
     function convertDateTime(dateTimeString) {
         // Create a new Date object using the dateTime string
         const date = new Date(dateTimeString);
-    
+
         // Get the month and ensure it is in MM format
         const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed, add one
-    
+
         // Get the day and ensure it is in DD format
         const day = ('0' + date.getDate()).slice(-2);
-    
+
         // Get the year and convert it to YY format
         const year = date.getFullYear().toString().slice(-2);
-    
+
         // Get the hours and ensure it is in HH format
         const hours = ('0' + date.getHours()).slice(-2);
-    
+
         // Get the minutes and ensure it is in MM format
         const minutes = ('0' + date.getMinutes()).slice(-2);
-    
+
         // Construct the formatted date string in "MM/DD/YY - HH/MM/SS" format
         return `${month}/${day}/${year} - ${hours}:${minutes}`;
-    }    
+    }
 
     // Function to render the attendance log table
     function createTable(attendanceLogs) {
       return (
         <div>
+            <h1>View Attendance Logs</h1>
+            <div className='input-box'>
+                <h2>Select Student</h2>
+                <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
+                    <option value="">Select a Student</option>
+                    {students.map((student) => (
+                        <option key={student.id} value={student.id}>{student.firstName} {student.lastName}</option>
+                    ))}
+                </select>
+            </div>
+            <div className='input-box'>
+                <h2>Select a Section</h2>
+                <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
+                    <option value="">Select a Section</option>
+                    {sections.map((section) => (
+                        <option key={section.id} value={section.id}>{section.roomNum}</option>
+                    ))}
+                </select>
+            </div>
             <table className="user-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Student ID</th>
+                        <th>Student Id</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
                         <th>Excused</th>
@@ -182,7 +195,7 @@ const ViewAttendanceLogs = () => {
                             <td>{log.id}</td>
                             <td>{log.studentId}</td>
                             <td>{log.sectionId}</td>
-                            <td>{convertDateTime(log.dateTime)}</td>
+                            <td>{log.dateTime}</td>
                             <td>{log.excused}</td>
                         </tr>
                     ))}
@@ -195,25 +208,6 @@ const ViewAttendanceLogs = () => {
     // Main component render
     return (
         <div className='wrapper'>
-            <h1>View Attendance Logs</h1>
-            <div className='input-box'>
-                    <h2>Select Course</h2>
-                    <select value={courseId} onChange={(e) => setNewCourseId(e.target.value)} required className="form-select">
-                        <option value="">Select a Course</option>
-                        {courses.map((course) => (
-                            <option key={course.id} value={course.id}>{course.name}</option>
-                        ))}
-                    </select>
-                </div>
-            <div className='input-box'>
-                <h2>Select a Section</h2>
-                <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
-                    <option value="">Select a Section</option>
-                    {sections.map((section) => (
-                        <option key={section.id} value={section.id}>{section.roomNum}</option>
-                    ))}
-                </select>
-            </div>
             {createTable(attendanceLogs)}
             <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
                 <button onClick={handlePreviousButton}>Previous</button>
