@@ -195,7 +195,7 @@ const ViewAttendanceLogs = () => {
                             <td>{log.id}</td>
                             <td>{log.studentId}</td>
                             <td>{log.sectionId}</td>
-                            <td>{log.dateTime}</td>
+                            <td>{convertDateTime(log.dateTime)}</td>
                             <td>{log.excused}</td>
                         </tr>
                     ))}
