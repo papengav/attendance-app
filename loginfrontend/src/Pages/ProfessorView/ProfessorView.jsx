@@ -19,6 +19,7 @@ const ProfessorView = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const jwtToken = useFetchJWT();  // Custom hook to fetch JWT from cookies
+    const [user, setUser] = useState({});
 
     // Custom hook to fetch and set JWT token
     function useFetchJWT() {
@@ -50,6 +51,31 @@ const ProfessorView = () => {
             fetchAttendanceLogs();
         }
     }, [sectionId, studentId]);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (studentId) {
+                try {
+                    const response = await fetch(`http://localhost:8080/users/${studentId}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${jwtToken}`
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const userData = await response.json();
+                    setUser(userData || {}); // Set user data
+                } catch (error) {
+                    console.error('Failed to fetch user data:', error);
+                }
+            }
+        };
+    
+        fetchUserData();
+    }, [studentId, jwtToken]);
 
     function handleClickSignOut() {
         const allCookies = Cookies.get(); // Retrieve all cookies as an object
@@ -189,8 +215,7 @@ const ProfessorView = () => {
             <table className="user-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Student ID</th>
+                        <th>Student</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
                         <th>Excused</th>
@@ -199,8 +224,7 @@ const ProfessorView = () => {
                 <tbody>
                     {attendanceLogs.map(log => (
                         <tr key={log.id}>
-                            <td>{log.id}</td>
-                            <td>{log.studentId}</td>
+                            <td>{user.firstName} {user.lastName}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
                             <td>{log.excused}</td>

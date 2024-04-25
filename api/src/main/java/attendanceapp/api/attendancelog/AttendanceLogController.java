@@ -85,6 +85,7 @@ class AttendanceLogController {
                                                                             @RequestParam int sectionId) {
         try {
             Page<AttendanceLog> page = attendanceLogService.findAllByStudentAndSectionId(pageable, studentId, sectionId);
+            logger.info("A list of AttendanceLogs was requested");
             return ResponseEntity.ok(page.getContent());
         }
         catch (InvalidUserException | InvalidSectionException e) {

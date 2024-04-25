@@ -72,6 +72,7 @@ public class SectionController {
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<List<Section>> findAll(@PageableDefault(size = 100) Pageable pageable) {
         Page<Section> page = sectionService.findAll(pageable);
+        logger.info("A list of all Sections was requested");
         return ResponseEntity.ok(page.getContent());
     }
 
@@ -87,6 +88,7 @@ public class SectionController {
     public ResponseEntity<List<Section>> findAllByCourseId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int courseId) {
         try {
             Page<Section> page = sectionService.findAllByCourseId(courseId, pageable);
+            logger.info("A list of Sections was requested");
             return ResponseEntity.ok(page.getContent());
         }
         catch (InvalidCourseException e) {
@@ -109,6 +111,7 @@ public class SectionController {
     public ResponseEntity<List<Section>> findAllByStudentId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int studentId) {
         try {
             Page<Section> page = sectionService.findAllByStudentId(studentId, pageable);
+            logger.info("A list of Sections was requested");
             return ResponseEntity.ok(page.getContent());
         }
         catch (InvalidUserException e) {

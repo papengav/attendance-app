@@ -44,7 +44,7 @@ class UserController {
      * @return User or 404 NOT FOUND
      */
     @GetMapping("/{requestedId}")
-    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ") OR " + AuthorityConstants.PROFESSOR_AUTHORITY)
     public ResponseEntity<UserResponse> findById(@PathVariable int requestedId) {
         try {
             logger.info("A User was requested");
@@ -71,6 +71,7 @@ class UserController {
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<List<UserResponse>> findAll(@PageableDefault(size = 100) Pageable pageable) {
         Page<UserResponse> page = userService.findAll(pageable);
+        logger.info("A list of Users was requested");
         return ResponseEntity.ok(page.getContent());
     }
 
@@ -88,6 +89,7 @@ class UserController {
     public ResponseEntity<List<UserResponse>> findAllByRoleId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int roleId) {
         try {
             Page<UserResponse> page = userService.findAllByRoleId(roleId, pageable);
+            logger.info("A list of Users was requested");
             return ResponseEntity.ok(page.getContent());
         }
         catch (InvalidRoleException e) {

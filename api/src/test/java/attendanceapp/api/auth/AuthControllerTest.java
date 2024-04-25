@@ -38,7 +38,7 @@ public class AuthControllerTest {
         ResponseEntity<String> createResponse = restTemplate.postForEntity("/login", newAuth, String.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(createResponse.getBody()).contains("Student");
+        assertThat(createResponse.getBody()).contains("Authentication successful");
     }
 
     /**

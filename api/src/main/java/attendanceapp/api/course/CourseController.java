@@ -68,6 +68,7 @@ public class CourseController {
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<List<Course>> findAll(@PageableDefault(size = 100) Pageable pageable) {
         Page<Course> page = courseService.findAll(pageable);
+        logger.info("A list of all Courses was requested");
         return ResponseEntity.ok(page.getContent());
     }
 

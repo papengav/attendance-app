@@ -24,4 +24,4 @@ INSERT INTO enrollments (section_id, student_id) VALUES
 (1, 1);
 
 INSERT INTO meeting_times (section_id, day_of_week, start_time, end_time) VALUES
-(1, DAY_OF_WEEK(CURRENT_DATE()), CURRENT_TIME() + 10 MINUTE, CURRENT_TIME() + 1 HOUR);
+(1, DAY_OF_WEEK(CURRENT_DATE()), CURRENT_TIME() + 10 MINUTE, CURRENT_TIME() + 1 MINUTE);

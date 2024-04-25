@@ -154,8 +154,6 @@ const StudentView = () => {
             <table className="user-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Student ID</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
                         <th>Excused</th>
@@ -164,8 +162,6 @@ const StudentView = () => {
                 <tbody>
                     {attendanceLogs.map(log => (
                         <tr key={log.id}>
-                            <td>{log.id}</td>
-                            <td>{log.studentId}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
                             <td>{log.excused}</td>
