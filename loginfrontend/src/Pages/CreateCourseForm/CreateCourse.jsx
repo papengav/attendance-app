@@ -67,7 +67,7 @@ const CreateCourse = () => {
                         required
                     />
                 </div>
-                <button type='submit'>Submit</button> // Button to submit the form
+                <button type='submit'>Submit</button>
             </form>
         </div>
     );

@@ -6,19 +6,17 @@ Purpose: Page to view attendance logs in our database per student per section
 
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import './ViewAttendanceLogs.css';
 import '../../Components/Styles/GruvboxTheme.css';
 
-const ViewAttendanceLogs = () => {
+const StudentView = () => {
     // State to store various pieces of data necessary for the component
     const [attendanceLogs, setAttendanceLogs] = useState([]);
-    const [studentId, setStudentId] = useState('');
     const [sectionId, setSectionId] = useState('');
-    const [students, setStudents] = useState([]);
     const [sections, setSections] = useState([]);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [pageSize, setPageSize] = useState(10);
+    const [studentId, setStudentId] = useState();
     const jwtToken = useFetchJWT();  // Custom hook to fetch JWT from cookies
 
     // Custom hook to fetch and set JWT token
@@ -27,16 +25,11 @@ const ViewAttendanceLogs = () => {
         useEffect(() => {
             const jwt = Cookies.get('jwt_authorization');
             setJwtToken(jwt);
+            const id = Cookies.get('studentId')
+            setStudentId(id); 
         }, []);
         return jwtToken;
     }
-
-    // Effect to fetch students if JWT token is available
-    useEffect(() => {
-        if (jwtToken) {
-            fetchStudents();
-        }
-    }, [jwtToken]);
 
     // Effect to fetch sections relevant to a selected student
     useEffect(() => {
@@ -70,26 +63,6 @@ const ViewAttendanceLogs = () => {
             setTotalPages(data.content.length / pageSize);
         } catch (error) {
             console.error('Failed to fetch attendance logs:', error);
-        }
-    };
-
-    // Async function to fetch students
-    const fetchStudents = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/users/by-roleId?roleId=3`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwtToken}`
-                }
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            setStudents(data || []);
-        } catch (error) {
-            console.error('Failed to fetch students:', error);
         }
     };
 
@@ -133,6 +106,14 @@ const ViewAttendanceLogs = () => {
         }
     }
 
+    function handleClickSignOut() {
+        const allCookies = Cookies.get(); // Retrieve all cookies as an object
+        Object.keys(allCookies).forEach(cookieName => {
+            Cookies.remove(cookieName); // Remove each cookie by name
+        });
+        window.location.href = "/";
+    }
+
     function convertDateTime(dateTimeString) {
         // Create a new Date object using the dateTime string
         const date = new Date(dateTimeString);
@@ -161,15 +142,6 @@ const ViewAttendanceLogs = () => {
       return (
         <div>
             <h1>View Attendance Logs</h1>
-            <div className='input-box'>
-                <h2>Select Student</h2>
-                <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
-                    <option value="">Select a Student</option>
-                    {students.map((student) => (
-                        <option key={student.id} value={student.id}>{student.firstName} {student.lastName}</option>
-                    ))}
-                </select>
-            </div>
             <div className='input-box'>
                 <h2>Select a Section</h2>
                 <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
@@ -213,8 +185,11 @@ const ViewAttendanceLogs = () => {
                 <button onClick={handlePreviousButton}>Previous</button>
                 <button onClick={handleNextButton}>Next</button>
             </div>
+            <div className="sidbar-bottom">
+                    <button className="signoutButton" onClick={handleClickSignOut}>Sign Out</button>
+            </div>
         </div>
     );
 };
 
-export default ViewAttendanceLogs;
+export default StudentView;

@@ -12,10 +12,13 @@ import './SideBar.css';
 import '../../Components/Styles/GruvboxTheme.css';
 
 const Sidebar = () => {
-    const handleClickSignOut = () => {
-        Cookies.remove("jwt_authorization");
+    function handleClickSignOut() {
+        const allCookies = Cookies.get(); // Retrieve all cookies as an object
+        Object.keys(allCookies).forEach(cookieName => {
+            Cookies.remove(cookieName); // Remove each cookie by name
+        });
         window.location.href = "/";
-    };
+    }
 
     return (
         <div className="sidebar" style={{ backgroundColor: '#282828', width: '172px' }}>

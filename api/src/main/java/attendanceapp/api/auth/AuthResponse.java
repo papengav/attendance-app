@@ -17,5 +17,6 @@ import lombok.Getter;
 public class AuthResponse {
     private String message;
     private String token;
-    private String role;
+    private Integer roleId;
+    private Integer userId;
 }

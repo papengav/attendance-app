@@ -84,7 +84,7 @@ class UserController {
      * @return List of Users within the Page with the specified roleId
      */
     @GetMapping("/by-roleId")
-    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ")" + " OR " + AuthorityConstants.PROFESSOR_AUTHORITY)
     public ResponseEntity<List<UserResponse>> findAllByRoleId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int roleId) {
         try {
             Page<UserResponse> page = userService.findAllByRoleId(roleId, pageable);

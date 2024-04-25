@@ -79,7 +79,7 @@ class AttendanceLogController {
      * @return List of AttendanceLogs within the Page with the associated User and Section
      */
     @GetMapping("/by-studentId-and-sectionId")
-    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ")" + " OR (" + AuthorityConstants.PROFESSOR_AUTHORITY + ") OR " + AuthorityConstants.STUDENT_AUTHORITY)
     public ResponseEntity<List<AttendanceLog>> findAllByStudentAndSectionId(@PageableDefault(size = 100) Pageable pageable,
                                                                             @RequestParam int studentId,
                                                                             @RequestParam int sectionId) {

@@ -15,6 +15,8 @@ import ViewEnrollments from './Pages/ViewEnrollmentsPage/ViewEnrollments';
 import CreateMeetingTime from './Pages/CreateMeetingtime/CreateMeetingTimeForm';
 import ViewAttendaceLogs from './Pages/ViewAttendanceLogs/ViewAttendanceLogs';
 import NoPage from './Pages/NoPage/NoPage';
+import ProfessorView from './Pages/ProfessorView/ProfessorView';
+import StudentView from './Pages/StudentView/StudentView';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
           <Route path="viewEnrollments" element={<ViewEnrollments/>} />
           <Route path="viewAttendanceLogs" element={<ViewAttendaceLogs/>} />
         </Route>
+        <Route path = "/professorView" element={<ProfessorView/>} />
+        <Route path = "/studentView" element={<StudentView/>} />
         <Route path="*" element={<NoPage />} />
       </Routes>
     </BrowserRouter>

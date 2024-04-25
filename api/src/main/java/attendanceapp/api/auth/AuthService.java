@@ -55,6 +55,6 @@ public class AuthService {
         Role role = roleRepository.findById(user.getRoleId())
                 .orElseThrow(() -> new InvalidRoleException("User exists but there was an error with their Role"));
 
-        return new AuthResponse("Authentication successful", jwtToken, role.getName());
+        return new AuthResponse("Authentication successful", jwtToken, role.getId(), user.getId());
     }
 }

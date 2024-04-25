@@ -46,7 +46,7 @@ public class AuthController {
         }
         catch (InvalidRoleException e) {
             logger.warn("Valid User attempted to login but somehow has a role that doesn't exist");
-            return ResponseEntity.internalServerError().body(new AuthResponse(e.getMessage(), null, null));
+            return ResponseEntity.internalServerError().body(new AuthResponse(e.getMessage(), null, null, null));
         }
     }
 }

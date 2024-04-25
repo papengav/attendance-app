@@ -43,14 +43,29 @@ const LoginForm = () => {
                 return response.json(); // Process the JSON response
             } else {
                 alert('Incorrect login credentials'); // Notify user of incorrect credentials
+                throw new Error('Login failed: incorrect credentials.');
             }
         })
         .then(data => {
             const token = data.token; // Extract JWT token from response
+            const role = data.roleId;
+            const userId = data.userId;
             console.log("User Logged In", token);
             setJwtToken(token); // Update state with the JWT token
             cookies.set("jwt_authorization", token, { path: '/' }); // Store JWT token in cookies
-            window.location.href = "/layout"
+
+            if(role == 1){
+                window.location.href = "/layout"
+            }
+            if(role == 2){
+                window.location.href = "/professorView"
+            }
+            if(role == 3){
+                cookies.set("studentId", userId);
+                window.location.href = "/studentView"
+            }
+        }).catch(error => {
+            console.log(error);
         })
     };
 

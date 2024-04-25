@@ -105,7 +105,7 @@ public class SectionController {
      * @return List of Sections within the Page
      */
     @GetMapping("by-studentId")
-    @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ") OR " + AuthorityConstants.STUDENT_AUTHORITY)
+    @PreAuthorize("(" + AuthorityConstants.ADMIN_AUTHORITY + ") OR (" + AuthorityConstants.STUDENT_AUTHORITY + ")" + " OR " + AuthorityConstants.PROFESSOR_AUTHORITY)
     public ResponseEntity<List<Section>> findAllByStudentId(@PageableDefault(size = 100) Pageable pageable, @RequestParam int studentId) {
         try {
             Page<Section> page = sectionService.findAllByStudentId(studentId, pageable);

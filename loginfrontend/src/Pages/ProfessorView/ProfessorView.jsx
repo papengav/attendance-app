@@ -6,10 +6,9 @@ Purpose: Page to view attendance logs in our database per student per section
 
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import './ViewAttendanceLogs.css';
 import '../../Components/Styles/GruvboxTheme.css';
 
-const ViewAttendanceLogs = () => {
+const ProfessorView = () => {
     // State to store various pieces of data necessary for the component
     const [attendanceLogs, setAttendanceLogs] = useState([]);
     const [studentId, setStudentId] = useState('');
@@ -51,6 +50,14 @@ const ViewAttendanceLogs = () => {
             fetchAttendanceLogs();
         }
     }, [sectionId, studentId]);
+
+    function handleClickSignOut() {
+        const allCookies = Cookies.get(); // Retrieve all cookies as an object
+        Object.keys(allCookies).forEach(cookieName => {
+            Cookies.remove(cookieName); // Remove each cookie by name
+        });
+        window.location.href = "/";
+    }
 
     // Async function to fetch attendance logs from the API
     const fetchAttendanceLogs = async () => {
@@ -213,8 +220,11 @@ const ViewAttendanceLogs = () => {
                 <button onClick={handlePreviousButton}>Previous</button>
                 <button onClick={handleNextButton}>Next</button>
             </div>
+            <div className="sidbar-bottom">
+                    <button className="signoutButton" onClick={handleClickSignOut}>Sign Out</button>
+            </div>
         </div>
     );
 };
 
-export default ViewAttendanceLogs;
+export default ProfessorView;
