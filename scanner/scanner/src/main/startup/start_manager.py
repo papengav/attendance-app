@@ -25,42 +25,34 @@ class start_manager:
         if (-1 == self.room_num):
             exit("Room number error")
 
-        # start a swipe listener
-        # start a swipe parser
-
-        # while(true)
         while (True):
             card_ready = self.swipe_listen.scanner_listen()
 
-        # if 0
             if (b'0' == card_ready):
                 continue
-        #    nothing
-        # if 1
+
             elif (b'1' == card_ready):
                 http_resp = self.handle_card()
                 if (http_resp != -1):
-                    print("New http response:  ", http_resp)
+                    print("New http response:  ", http_resp, "\n\n")
+                    pass
 
             elif (-1 == card_ready):
                 break
 
     def handle_card(self):
-            # call nfc-list
             card_data = self.swipe_listen.nfc_list()
             if (-1 == card_data.find("UID")):
                 return -1
 
-            print("\n\nCARD DATA\n", card_data, "\n\n")
+            # print("CARD DATA\n", card_data)
 
-            # parse returned string
             uid = self.swipe_p.parse_string(card_data)
-            print("\n\nUID\n", uid, "\n\n")
+            # print("UID\n", uid)
 
-            # form info into a JSON string message
             message = self.swipe_assembler.assemble_msg(uid, self.room_num)
-            print("\n\nURL\n", message[0], "\n\n")
+            # print("URL\n", message[0])
 
-            # send message
-            http_resp = self.sender.send_message(message)
+            http_resp = self.sender.send_message(message).status_code
+            self.swipe_listen.response_phy(str(http_resp))
             return http_resp
