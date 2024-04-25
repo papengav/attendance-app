@@ -52,7 +52,7 @@ const ViewUsersPage = () => {
             })
             .then(data => {
                   setUsers(data || []);
-                  setTotalPages(data.totalPages);
+                  setTotalPages(data.content.length / pageSize);
                 console.log('Data fetched:', data);
             })
             .catch(error => {
@@ -60,12 +60,18 @@ const ViewUsersPage = () => {
             });
     };
 
-    function handleNextButton() {
-      
+    function handlePreviousButton() {
+        if (page > 0) {
+            const currPage = page;
+            setPage(currPage - 1);
+        }
     }
 
-    function handlePreviousButton() {
-      
+    function handleNextButton() {
+        if (page < totalPages + 1) {
+            const currPage = page;
+            setPage(currPage + 1);
+        }
     }
 
     function createTable(Users) {     
@@ -112,8 +118,8 @@ const ViewUsersPage = () => {
         <div className='wrapper'>
             {createTable(users)}
             <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
-                <button onclick={handlePreviousButton()}>Previous</button>
-                <button onClick={handleNextButton()}>Next</button>
+                <button onClick={handlePreviousButton}>Previous</button>
+                <button onClick={handleNextButton}>Next</button>
             </div>
         </div>
     );

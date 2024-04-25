@@ -1,51 +1,60 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and managament software
 //Purpose: Frontend page for users to login. Currently the home page.
+
+// Import necessary React components and hooks, styles, and other utilities
 import React, { useState } from 'react';
-import './LoginForm.css';
-import { FaUser, FaLock } from "react-icons/fa";
-import Cookies from "universal-cookie";
-import { withRouter, useHistory } from 'react-router-dom';
+import './LoginForm.css'; // Styles specific to the LoginForm
+import { FaUser, FaLock } from "react-icons/fa"; // Icons for user interface
+import Cookies from "universal-cookie"; // Library to manage cookies
 
-
-//Displays the login UI
+/**
+ * LoginForm component manages user authentication. It captures user inputs for username
+ * and password, submits them to the server, and handles the response.
+ */
 const LoginForm = () => {
     const cookies = new Cookies();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [jwtToken, setJwtToken] = useState('');
+    const [username, setUsername] = useState(''); // State for username input
+    const [password, setPassword] = useState(''); // State for password input
+    const [jwtToken, setJwtToken] = useState(''); // State for storing the JWT token
 
-    //method used when user submits login credentials
-    //saves the jwt from the API and routes the user to the home page upon succesful login
+    /**
+     * Handles the click event of the login form submission. 
+     * Submits the user credentials to the server and processes the response.
+     */
     const handleClick = (e) => {
         e.preventDefault();
-        const User = { username, password };
-        console.log(User);
+        const User = { username, password }; // Prepare user data for submission
         const postArgs = {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Accept-Encoding": "gzip, deflate, br", "Connection": "keep-alive"},
-            body: JSON.stringify(User)
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive"
+            },
+            body: JSON.stringify(User) // Convert user data into JSON string
         };
-        fetch('http://localhost:8080/login', postArgs).then(response => {
-            console.log(response)
+
+        // Perform the POST request to the login endpoint
+        fetch('http://localhost:8080/login', postArgs)
+        .then(response => {
             const contentType = response.headers.get('content-type');
-            if(response.status != 404 && contentType.includes('application/json')) {
-                return response.json();
-            }
-            else {
-                alert('Incorrect loggin credentials');
+            if (response.status !== 404 && contentType && contentType.includes('application/json')) {
+                return response.json(); // Process the JSON response
+            } else {
+                alert('Incorrect login credentials'); // Notify user of incorrect credentials
             }
         })
         .then(data => {
-            console.log("User Logged In");
-            const token = data.token; 
-            console.log(token);
-            setJwtToken(token);
-            cookies.set("jwt_authorization", token);
-            window.location.href = "/layout";
-        });
+            const token = data.token; // Extract JWT token from response
+            console.log("User Logged In", token);
+            setJwtToken(token); // Update state with the JWT token
+            cookies.set("jwt_authorization", token, { path: '/' }); // Store JWT token in cookies
+            window.location.href = "/layout"
+        })
     };
 
+    // Render the login form
     return (
         <div className='wrapper'>
             <form onSubmit={handleClick}>
@@ -55,7 +64,7 @@ const LoginForm = () => {
                         type="text"
                         placeholder='Username'
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)} // Update username state on change
                         required
                     />
                     <FaUser className='icon' />
@@ -65,7 +74,7 @@ const LoginForm = () => {
                         type="password"
                         placeholder='Password'
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)} // Update password state on change
                         required
                     />
                     <FaLock className='icon' />
@@ -76,4 +85,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default LoginForm; // Export LoginForm for use in other parts of the application

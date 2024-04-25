@@ -1,3 +1,10 @@
+/*
+Name: Dylan Brodie
+Project: Attendance App - This is a full stack attendance tracking and managament software
+Purpose: This component is for our buttons to be kept on the side of the screen
+        no matter what page you are in
+*/
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';

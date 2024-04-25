@@ -1,50 +1,58 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and management software
 //Purpose: Frontend page for users to create courses.
+
+// Importing necessary modules and styles
 import React, { useState, useEffect } from 'react';
-import './CreateCourse.css';
-import Cookies from 'js-cookie';
-import '../../Components/Styles/GruvboxTheme.css';
+import './CreateCourse.css'; // CSS styles specific to this component
+import Cookies from 'js-cookie'; // Library to handle cookies
+import '../../Components/Styles/GruvboxTheme.css'; // Theme CSS import
 
+// CreateCourse component definition
 const CreateCourse = () => {
-    const [name, setName] = useState('');
-    const [jwt, setJwt] = useState('');
+    // State hooks for managing course name and JWT
+    const [name, setName] = useState(''); // State for storing the course name input
+    const [jwt, setJwt] = useState(''); // State for storing the JWT token
 
+    // Effect hook to get the JWT token from cookies when the component mounts
     useEffect(() => {
-        const jwtToken = Cookies.get('jwt_authorization');
-        console.log('JWT:', jwtToken);
-        setJwt(jwtToken);
+        const jwtToken = Cookies.get('jwt_authorization'); // Retrieve JWT token from cookies
+        console.log('JWT:', jwtToken); // Log the JWT for debugging
+        setJwt(jwtToken); // Update the JWT state with the retrieved token
     }, []);
 
+    // Handler for form submission
     const handleSubmit = (e) => {
-        e.preventDefault();
-        const course = { name };
-        console.log('Submitting course:', course);
+        e.preventDefault(); // Prevent default form submission behavior
+        const course = { name }; // Create a course object with the name from state
+        console.log('Submitting course:', course); // Log the course object being submitted for debugging
 
+        // Making a POST request to create a new course
         fetch('http://localhost:8080/courses', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + jwt
+                "Authorization": "Bearer " + jwt // Include the JWT in the authorization header
             },
-            body: JSON.stringify(course)
+            body: JSON.stringify(course) // Send the course object as JSON in the request body
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to create course');
+                throw new Error('Failed to create course'); // Throw an error if the response is not OK
             }
-            return response.json();
+            return response.json(); // Parse the JSON response
         })
         .then(data => {
-            console.log('Course created:', data);
-            alert('Course Created Successfully');
+            console.log('Course created:', data); // Log the success data for debugging
+            alert('Course Created Successfully'); // Show a success message to the user
         })
         .catch(error => {
-            console.error('Failed to create course:', error);
-            alert('Failed to create course: ' + error.message);
+            console.error('Failed to create course:', error); // Log the error if the request fails
+            alert('Failed to create course: ' + error.message); // Show an error message to the user
         });
     };
 
+    // JSX for rendering the Create Course form
     return (
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
@@ -55,14 +63,14 @@ const CreateCourse = () => {
                         type='text'
                         placeholder='Ex: Algebra'
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => setName(e.target.value)} // Update state on input change
                         required
                     />
                 </div>
-                <button type='submit'>Submit</button>
+                <button type='submit'>Submit</button> // Button to submit the form
             </form>
         </div>
     );
 };
 
-export default CreateCourse;
+export default CreateCourse; // Export the component for use in other parts of the app

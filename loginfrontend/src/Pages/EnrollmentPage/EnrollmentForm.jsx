@@ -1,29 +1,36 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and managament software
 //Purpose: Frontend page for Admins to create enrollments for Students.
+
+// Import necessary modules and CSS
 import React, { useState, useEffect } from 'react';
-import './EnrollmentForm.css';
-import Cookies from 'js-cookie';
+import './EnrollmentForm.css'; // Styles specific to this form
+import Cookies from 'js-cookie'; // Library to handle cookies
 
+// EnrollmentForm component definition
 const EnrollmentForm = () => {
-    const [studentId, setStudentId] = useState()
-    const [students, setStudents] = useState([])
-    const [sectionId, setSectionId] = useState()
-    const [sections, setSections] = useState([])
-    const [courses, setCourses] = useState([])
-    const [jwt, setJwtToken] = useState('')
-    const [courseId, setCourseId] = useState('')
+    // State hooks to manage form fields and fetched data
+    const [studentId, setStudentId] = useState('');
+    const [students, setStudents] = useState([]);
+    const [sectionId, setSectionId] = useState('');
+    const [sections, setSections] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [jwt, setJwtToken] = useState('');
+    const [courseId, setCourseId] = useState('');
 
+    // Function to update course ID and fetch sections for that course
     const setNewCourseId = (newCourseId) => {
         setCourseId(newCourseId);
         if (newCourseId) fetchSectionsByCourseId(newCourseId);
-    }
-    
+    };
+
+    // Fetch JWT from cookies when component mounts
     useEffect(() => {
         const jwtToken = Cookies.get('jwt_authorization');
         setJwtToken(jwtToken);
     }, []);
 
+    // Fetch students and courses when JWT is available
     useEffect(() => {
         if (jwt) {
             fetchStudents();
@@ -31,6 +38,7 @@ const EnrollmentForm = () => {
         }
     }, [jwt]);
 
+    // Async function to fetch students from backend
     const fetchStudents = async () => {
         try {
             const response = await fetch(`http://localhost:8080/users/by-roleId?roleId=3`, {
@@ -44,13 +52,13 @@ const EnrollmentForm = () => {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log(data);
             setStudents(data || []);
         } catch (error) {
             console.error('Failed to fetch students:', error);
         }
     };
 
+    // Async function to fetch courses from backend
     const fetchCourses = async () => {
         try {
             const response = await fetch(`http://localhost:8080/courses`, {
@@ -70,13 +78,12 @@ const EnrollmentForm = () => {
         }
     };
 
+    // Fetch sections based on selected course
     const fetchSectionsByCourseId = async (courseId) => {
         if (!courseId) return;
     
         const url = new URL('http://localhost:8080/sections/by-courseId');
         url.searchParams.append('courseId', courseId);
-        url.searchParams.append('page', 0);
-        url.searchParams.append('size', 100);
     
         try {
             const response = await fetch(url, {
@@ -90,15 +97,13 @@ const EnrollmentForm = () => {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log('Sections data:', data);
             setSections(data || []);
         } catch (error) {
             console.error('Failed to fetch sections:', error);
         }
     };
     
-
-    //Method used when user submits course data to create an enrollment
+    // Handle form submission to create an enrollment
     const handleSubmit = async (e) => {
         e.preventDefault();
         const enrollmentPost = { sectionId, studentId };
@@ -108,9 +113,7 @@ const EnrollmentForm = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwt}`,
-                    "Accept-Encoding": "gzip, deflate, br",
-                    "Connection": "keep-alive"
+                    "Authorization": `Bearer ${jwt}`
                 },
                 body: JSON.stringify(enrollmentPost)
             });
@@ -126,6 +129,7 @@ const EnrollmentForm = () => {
         }
     };
 
+    // JSX to render the form with dynamic dropdowns
     return (
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
@@ -140,8 +144,8 @@ const EnrollmentForm = () => {
                     </select>
                 </div>
                 <div className='input-box'>
-                <h2>Select a Section</h2>
-                <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
+                    <h2>Select a Section</h2>
+                    <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} required className="form-select">
                         <option value="">Select a Section</option>
                         {sections.map((section) => (
                             <option key={section.id} value={section.id}>{section.roomNum}</option>
@@ -149,7 +153,7 @@ const EnrollmentForm = () => {
                     </select>
                 </div>
                 <div className='input-box'>
-                <h2>Select Student</h2>
+                    <h2>Select Student</h2>
                     <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
                         <option value="">Select a Student</option>
                         {students.map((student) => (
@@ -161,6 +165,6 @@ const EnrollmentForm = () => {
             </form>
         </div>
     );
-
 }
-export default EnrollmentForm;
+
+export default EnrollmentForm; // Export the component for use in other parts of the application

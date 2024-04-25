@@ -1,56 +1,48 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and managament software
 //Purpose: Frontend page for creating new users
-import { HdrAutoOutlined } from "@mui/icons-material";
-import { even } from "check-types";
-import { valid } from "semver";
-import React, { useState, useEffect } from "react";
-import Cookies from 'js-cookie';
-import './CreateUser.css';
-import '../../Components/Styles/GruvboxTheme.css';
+
+// Importing necessary libraries and stylesheets
+import { useState, useEffect } from "react";
+import Cookies from 'js-cookie'; // Library to handle cookies for auth
+import './CreateUser.css'; // Component specific styles
+import '../../Components/Styles/GruvboxTheme.css'; // Global theme styles
 
 /**
- * Component to create new users in the Attendance App system.
- * Allows setting user type, names, and credentials, and communicates
- * with the backend to store the new user data.
+ * The CreateUser component allows creating new users with different roles
+ * and manages user input as well as communication with the backend API.
  */
 function CreateUser() {
-    // Options for user roles
+    // Predefined user role options
     const options = [
         { label: "Student", value: 3 },
         { label: "Professor", value: 2 },
         { label: "Administrator", value: 1 },
     ];
 
-    // State hooks for form inputs and JWT token
+    // State variables to store user inputs and system messages
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [roleId, setRoleId] = useState(3);
+    const [roleId, setRoleId] = useState(3); // Default to Student
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [studentCardId, setCardId] = useState("");
-    const [jwtToken, setJwtToken] = useState("");
+    const [jwtToken, setJwtToken] = useState(""); // JWT for auth
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    /**
-     * Fetches the JWT token from cookies once when the component mounts.
-     * This token is used for authenticated requests to the backend.
-     */
+    // Fetch the JWT token when the component mounts and set it to state
     useEffect(() => {
         const jwt = Cookies.get('jwt_authorization');
         setJwtToken(jwt);
     }, []);
 
-    /**
-     * Handles form submission to create a new user.
-     * Prepares user data and sends a POST request to the backend.
-     * Updates the UI based on the response from the server.
-     */
+    // Handle form submission for creating a new user
     const handleSubmit = (e) => {
         e.preventDefault();
         const user = { firstName, lastName, studentCardId, username, password, roleId };
 
+        // Configuration for the POST request
         const postArgs = {
             method: "POST",
             headers: {
@@ -60,6 +52,7 @@ function CreateUser() {
             body: JSON.stringify(user)
         };
 
+        // Send POST request to backend API
         fetch('http://localhost:8080/users', postArgs)
             .then(response => {
                 if (!response.ok) {
@@ -77,10 +70,7 @@ function CreateUser() {
             });
     };
 
-    /**
-     * Renders the user creation form with various fields and a submit button.
-     * Displays a confirmation message upon successful or failed submission.
-     */
+    // JSX for rendering the form
     return (
         <div className="wrapper">
             <form onSubmit={handleSubmit}>
@@ -149,4 +139,4 @@ function CreateUser() {
     );
 }
 
-export default CreateUser;
+export default CreateUser; // Export the component for use elsewhere in the application

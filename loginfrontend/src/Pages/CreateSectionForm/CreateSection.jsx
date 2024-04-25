@@ -1,39 +1,46 @@
 //Name: Sam Miller
 //Project: Attendance App - This is a full stack attendance tracking and management software
 //Purpose: Frontend page for users to create sections.
+
+// Import necessary modules and styles
 import React, { useState, useEffect } from 'react';
-import './CreateSection.css';
-import Cookies from 'js-cookie';
-import '../../Components/Styles/GruvboxTheme.css';
+import './CreateSection.css'; // CSS for this component
+import Cookies from 'js-cookie'; // Library to handle cookies
+import '../../Components/Styles/GruvboxTheme.css'; // Theme CSS import
 
+// CreateSection component definition
 const CreateSection = () => {
-    const [roomNum, setRoomNumber] = useState('');
-    const [professorId, setProfessorId] = useState('');
-    const [numberOfStudent, setNumStudents] = useState('');
-    const [courseId, setCourseId] = useState('');
-    const [professors, setProfessors] = useState([]);
-    const [courses, setCourses] = useState([]);
-    const [jwtToken, setJwtToken] = useState('');
+    // State hooks for managing form data and API data
+    const [roomNum, setRoomNumber] = useState(''); // State for room number input
+    const [professorId, setProfessorId] = useState(''); // State for selected professor ID
+    const [numberOfStudent, setNumStudents] = useState(''); // State for the number of students
+    const [courseId, setCourseId] = useState(''); // State for selected course ID
+    const [professors, setProfessors] = useState([]); // State to store professors fetched from the API
+    const [courses, setCourses] = useState([]); // State to store courses fetched from the API
+    const [jwtToken, setJwtToken] = useState(''); // State to store the JWT token
 
+    // Fetch JWT from cookies when component mounts
     useEffect(() => {
         const jwt = Cookies.get('jwt_authorization');
         setJwtToken(jwt);
     }, []);
 
+    // Fetch professors and courses if JWT token is available
     useEffect(() => {
         if (jwtToken) {
             fetchProfessors();
             fetchCourses();
         }
-    }, [jwtToken]);
+    }, [jwtToken]); // Re-run this effect when jwtToken changes
 
+    // Function to fetch professor data from the API
     const fetchProfessors = async () => {
         try {
             const response = await fetch(`http://localhost:8080/users/by-roleId?roleId=2`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwtToken}`
+                    "Authorization": `Bearer ${jwtToken}` // Use JWT for authorization
                 }
             });
             if (!response.ok) {
@@ -46,13 +53,14 @@ const CreateSection = () => {
         }
     };
 
+    // Function to fetch course data from the API
     const fetchCourses = async () => {
         try {
             const response = await fetch(`http://localhost:8080/courses`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwtToken}`
+                    "Authorization": `Bearer ${jwtToken}` // Use JWT for authorization
                 }
             });
             if (!response.ok) {
@@ -65,17 +73,19 @@ const CreateSection = () => {
         }
     };
 
+    // Handler for form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        const section = { roomNum, numberOfStudent, courseId, professorId };
+        const section = { roomNum, numberOfStudent, courseId, professorId }; // Gather all form data into an object
         
+        // POST request to create a new section
         fetch('http://localhost:8080/sections', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${jwtToken}`
+                "Authorization": `Bearer ${jwtToken}` // Use JWT for authorization
             },
-            body: JSON.stringify(section)
+            body: JSON.stringify(section) // Send section data as JSON
         })
         .then(response => {
             if (!response.ok) {
@@ -84,13 +94,14 @@ const CreateSection = () => {
             return response.json();
         })
         .then(() => {
-            alert('Section Created Successfully');
+            alert('Section Created Successfully'); // Show success message
         })
         .catch(error => {
-            alert('Error creating section: ' + error.message);
+            alert('Error creating section: ' + error.message); // Show error message
         });
     };
 
+    // JSX for rendering the section creation form
     return (
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
@@ -127,4 +138,4 @@ const CreateSection = () => {
     );
 };
 
-export default CreateSection;
+export default CreateSection; // Export the component for use in other parts of the app
