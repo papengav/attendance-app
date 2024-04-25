@@ -34,3 +34,10 @@ class swipe_listener:
         output = self.usb.read()
 
         return output
+
+    # Send an HTTP response code over USB for microcontroller to respond to
+    # @param code: HTTP response code to be sent
+    def response_phy(self, code):
+        code = bytes(code, "utf-8")
+
+        self.usb.write(code)
