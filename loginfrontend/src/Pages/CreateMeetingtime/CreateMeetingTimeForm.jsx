@@ -15,6 +15,8 @@ const CreateMeetingTime = () => {
     const [dayOfWeek, setDayOfWeek] = useState(''); // State for selecting the day of the week
     const [sectionId, setSectionId] = useState(''); // State for section ID
     const [jwtToken, setJwtToken] = useState(''); // State for storing the JWT token
+    const [studentId, setStudentId] = useState('');
+    const [sections, setSections] = useState([]);
 
     // Options for the day of the week dropdown
     const options = [
