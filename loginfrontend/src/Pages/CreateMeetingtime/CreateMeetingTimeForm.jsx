@@ -52,10 +52,10 @@ const CreateMeetingTime = () => {
 
     // Fetch students and courses when JWT is available
     useEffect(() => {
-        if (jwt) {
+        if (jwtToken) {
             fetchCourses();
         }
-    }, [jwt]);
+    }, [jwtToken]);
 
     // Handler for form submission
     const handleSubmit = (e) => {
