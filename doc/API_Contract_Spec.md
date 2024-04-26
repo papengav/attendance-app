@@ -3,6 +3,7 @@
 |-----|-------------|-------------------
 | 200 | OK          | Succesful request.
 | 201 | CREATED     | New resource created, generally indicates a successful POST.
+| 204 | NO CONTENT  | Successful DELETE request
 | 400 | BAD REQUEST | Client error regarding request contents. Request should not be repeated.
 | 403 | FORBIDDEN   | Client is either unauthenticated or not authorized to access the requested resource. Request should not be repeated.
 | 404 | NOT FOUND   | Client has requested a resource that cannot be found.
@@ -135,6 +136,22 @@ None
     * Status Code:
         200 OK
     * Body: `List<User>`
+
+**DELETE /users/{id}**
+---
+Delete a User
+* **URL Params:**
+    * {id} = ID of requested User
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authroization:
+        Bearer: `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        204 NO CONTENT
 
 &nbsp;
 

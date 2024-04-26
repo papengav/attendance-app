@@ -128,4 +128,23 @@ class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * Delete a User
+     *
+     * @param id ID of User to delete
+     * @return 204 NO-CONTENT or appropriate error code
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<Void> deleteById(@PathVariable int id) {
+        try {
+            userService.hardDelete(id);
+            return ResponseEntity.noContent().build();
+        }
+        catch (InvalidUserException e) {
+            logger.warn("Invalid request" + e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

@@ -12,10 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static attendanceapp.api.utils.HeadersGenerator.getAdminHeaders;
 import static attendanceapp.api.utils.HeadersGenerator.getStudentHeaders;
@@ -316,5 +319,82 @@ public class UserControllerTest {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a User is deleted
+     */
+    @Test
+    @DirtiesContext
+    void shouldDeleteAUser() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int id = 5; // Need to specify a user that can be deleted without FK violations
+
+        HttpEntity<Void> deleteRequest = new HttpEntity<>(headers);
+        ResponseEntity<Void> deleteResponse = restTemplate.exchange(
+                "/users/" + id,
+                HttpMethod.DELETE,
+                deleteRequest,
+                new ParameterizedTypeReference<Void>() {
+                });
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Ensure that a User is not deleted if the ID is not associated with an existing User
+     */
+    @Test
+    void shouldNotDeleteAUserIfIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int id = 999999999;
+
+        HttpEntity<Void> deleteRequest = new HttpEntity<>(headers);
+        ResponseEntity<Void> deleteResponse = restTemplate.exchange(
+                "/users/" + id,
+                HttpMethod.DELETE,
+                deleteRequest,
+                new ParameterizedTypeReference<Void>() {
+                });
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Ensure that a User is not deleted if the request is coming from a non-admin User
+     */
+    @Test
+    void shouldNotDeleteAUserIfNotRequestedByAdmin() {
+        HttpHeaders headers = getStudentHeaders(restTemplate);
+        int id = 5;
+
+        HttpEntity<Void> deleteRequest = new HttpEntity<>(headers);
+        ResponseEntity<Void> deleteResponse = restTemplate.exchange(
+                "/users/" + id,
+                HttpMethod.DELETE,
+                deleteRequest,
+                new ParameterizedTypeReference<Void>() {
+                });
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a User is not deleted if the request is unauthenticated
+     */
+    @Test
+    void shouldNotDeleteAUserIfUnauthenticated() {
+        HttpHeaders headers = new HttpHeaders();
+        int id = 999999999;
+
+        HttpEntity<Void> deleteRequest = new HttpEntity<>(headers);
+        ResponseEntity<Void> deleteResponse = restTemplate.exchange(
+                "/users/" + id,
+                HttpMethod.DELETE,
+                deleteRequest,
+                new ParameterizedTypeReference<Void>() {
+                });
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }
