@@ -12,7 +12,8 @@ INSERT INTO users (first_name, last_name, student_card_id, username, password, r
 ('Gavin', 'Papenthien', 'ABC123', 'papengav', '$2a$12$JeEd1mOtw8w7SRuApO2KNe958L3iqiTFJYW2IxL3YXyfacoare4Cy', 3),
 ('Sam', 'Miller', 'DEF456', 'millerSam', '$2a$12$JeEd1mOtw8w7SRuApO2KNe958L3iqiTFJYW2IxL3YXyfacoare4Cy', 3),
 ('admin', 'admin', '', 'admin', '$2a$12$JeEd1mOtw8w7SRuApO2KNe958L3iqiTFJYW2IxL3YXyfacoare4Cy', 1),
-('professor', 'professor', '', 'professor', '$2a$12$JeEd1mOtw8w7SRuApO2KNe958L3iqiTFJYW2IxL3YXyfacoare4Cy', 2);
+('professor', 'professor', '', 'professor', '$2a$12$JeEd1mOtw8w7SRuApO2KNe958L3iqiTFJYW2IxL3YXyfacoare4Cy', 2),
+('I', 'will', 'be', 'deleted', '$2a$12$JeEd1mOtw8w7SRuApO2KNe958L3iqiTFJYW2IxL3YXyfacoare4Cy', 3);
 
 INSERT INTO courses (name, section_count) VALUES
 ('SE3330', 2);

@@ -212,4 +212,18 @@ public class UserService {
             throw new AccessDeniedException(String.format("Student with ID %d attempted to access data belonging to User with ID %d", requesterId, id));
         }
     }
+
+    /**
+     * Hard delete a User from the database
+     * Check if the User exists first
+     *
+     * @param id User ID
+     * @throws InvalidUserException User does not exist
+     */
+    public void hardDelete(int id) throws InvalidUserException {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new InvalidUserException("User does not exist"));
+
+        userRepository.delete(user);
+    }
 }
