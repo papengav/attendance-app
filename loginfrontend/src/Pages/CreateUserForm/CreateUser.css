@@ -19,12 +19,3 @@ Purpose: Styling of the CreateUser.js file
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-
-.confirmation-message {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: green;
-    text-align: center;
-}
-

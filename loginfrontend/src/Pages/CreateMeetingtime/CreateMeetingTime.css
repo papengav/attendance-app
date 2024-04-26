@@ -1,0 +1,5 @@
+.day-checkbox {
+    display: inline-block;
+    margin-right: 10px; /* Space out the checkboxes horizontally */
+    font-size: 16px; /* Larger text for better readability */
+}

@@ -3,7 +3,7 @@
 //Purpose: Frontend page for users to login. Currently the home page.
 
 // Import necessary React components and hooks, styles, and other utilities
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginForm.css'; // Styles specific to the LoginForm
 import { FaUser, FaLock } from "react-icons/fa"; // Icons for user interface
 import Cookies from "universal-cookie"; // Library to manage cookies
@@ -17,6 +17,18 @@ const LoginForm = () => {
     const [username, setUsername] = useState(''); // State for username input
     const [password, setPassword] = useState(''); // State for password input
     const [jwtToken, setJwtToken] = useState(''); // State for storing the JWT token
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
+    useEffect(() => {
+        if (feedbackMessage) {
+            const timer = setTimeout(() => {
+                setFeedbackMessage('');
+            }, 5000);  // Clears feedback after 5 seconds
+    
+            return () => clearTimeout(timer);
+        }
+    }, [feedbackMessage]);
 
     /**
      * Handles the click event of the login form submission. 
@@ -42,7 +54,9 @@ const LoginForm = () => {
             if (response.status !== 404 && contentType && contentType.includes('application/json')) {
                 return response.json(); // Process the JSON response
             } else {
-                alert('Incorrect login credentials'); // Notify user of incorrect credentials
+                // Update feedback message on failure
+                setFeedbackMessage(`Error logging in!`);
+                setIsError(true);
                 throw new Error('Login failed: incorrect credentials.');
             }
         })
@@ -53,6 +67,8 @@ const LoginForm = () => {
             console.log("User Logged In", token);
             setJwtToken(token); // Update state with the JWT token
             cookies.set("jwt_authorization", token, { path: '/' }); // Store JWT token in cookies
+            setFeedbackMessage('Login successful!');
+            setIsError(false);
 
             if(role == 1){
                 window.location.href = "/layout"
@@ -65,7 +81,8 @@ const LoginForm = () => {
                 window.location.href = "/studentView"
             }
         }).catch(error => {
-            console.log(error);
+            setFeedbackMessage(`Login failed: ${error.message}`);
+            setIsError(true);
         })
     };
 
@@ -74,6 +91,11 @@ const LoginForm = () => {
         <div className='wrapper'>
             <form onSubmit={handleClick}>
                 <h1>Login</h1>
+                {feedbackMessage && (
+                <div className={`feedback-message ${isError ? 'error-message' : 'success-message'}`}>
+                    {feedbackMessage}
+                </div>
+                )}
                 <div className='input-box'>
                     <input
                         type="text"

@@ -13,6 +13,18 @@ const CreateCourse = () => {
     // State hooks for managing course name and JWT
     const [name, setName] = useState(''); // State for storing the course name input
     const [jwt, setJwt] = useState(''); // State for storing the JWT token
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
+    useEffect(() => {
+        if (feedbackMessage) {
+            const timer = setTimeout(() => {
+                setFeedbackMessage('');
+            }, 5000);  // Clears feedback after 5 seconds
+    
+            return () => clearTimeout(timer);
+        }
+    }, [feedbackMessage]);
 
     // Effect hook to get the JWT token from cookies when the component mounts
     useEffect(() => {
@@ -42,13 +54,13 @@ const CreateCourse = () => {
             }
             return response.json(); // Parse the JSON response
         })
-        .then(data => {
-            console.log('Course created:', data); // Log the success data for debugging
-            alert('Course Created Successfully'); // Show a success message to the user
+        .then(() => {
+            setFeedbackMessage(`Course created successfully!`);
+            setIsError(false);
         })
         .catch(error => {
-            console.error('Failed to create course:', error); // Log the error if the request fails
-            alert('Failed to create course: ' + error.message); // Show an error message to the user
+            setFeedbackMessage(`Error creating course: ${error.message}`);
+            setIsError(true);
         });
     };
 
@@ -57,6 +69,11 @@ const CreateCourse = () => {
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
                 <h1>Create Course</h1>
+                {feedbackMessage && (
+                <div className={`feedback-message ${isError ? 'error-message' : 'success-message'}`}>
+                    {feedbackMessage}
+                </div>
+                )}
                 <div className='input-box'>
                     <h2>Course Name</h2>
                     <input 

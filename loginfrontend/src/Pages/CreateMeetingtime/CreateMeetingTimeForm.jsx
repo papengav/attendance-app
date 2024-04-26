@@ -19,6 +19,20 @@ const CreateMeetingTime = () => {
     const [sections, setSections] = useState([]);
     const [courses, setCourses] = useState([]);
     const [courseId, setCourseId] = useState('');
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+    const [daysOfWeek, setDaysOfWeek] = useState([]);
+
+// Handler for checkbox changes
+    const handleDayChange = (day) => {
+        setDaysOfWeek(prevDays => {
+            if (prevDays.includes(day)) {
+                return prevDays.filter(d => d !== day); // Remove day if already included
+            } else {
+                return [...prevDays, day]; // Add day if not included
+            }
+        });
+    };
 
     // Options for the day of the week dropdown
     const options = [
@@ -31,11 +45,15 @@ const CreateMeetingTime = () => {
         { label: "Sunday", value: 1 },
     ];
 
-    // Function to update course ID and fetch sections for that course
-    const setNewCourseId = (newCourseId) => {
-        setCourseId(newCourseId);
-        if (newCourseId) fetchSectionsByCourseId(newCourseId);
-    };
+    useEffect(() => {
+        if (feedbackMessage) {
+            const timer = setTimeout(() => {
+                setFeedbackMessage('');
+            }, 5000);  // Clears feedback after 5 seconds
+    
+            return () => clearTimeout(timer);
+        }
+    }, [feedbackMessage]);
 
     // Fetch JWT from cookies when component mounts
     useEffect(() => {
@@ -57,35 +75,10 @@ const CreateMeetingTime = () => {
         }
     }, [jwtToken]);
 
-    // Handler for form submission
-    const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent default form submission action
-        const meetingTime = { startTime, endTime, dayOfWeek, sectionId }; // Gather form data into an object
-        console.log('Submitting meeting time:', meetingTime); // Log the meeting time data for debugging
-
-        // Perform a POST request to create a new meeting time
-        fetch('http://localhost:8080/meetingtimes', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + jwtToken // Include JWT token in the Authorization header
-            },
-            body: JSON.stringify(meetingTime) // Convert meeting time data to JSON string
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to create meeting time'); // Handle HTTP errors
-            }
-            return response.json(); // Parse JSON response
-        })
-        .then(data => {
-            console.log('Meeting Time created:', data); // Log success message
-            alert('Meeting Time Created Successfully'); // Show success alert
-        })
-        .catch(error => {
-            console.error('Failed to create meeting time:', error); // Log errors
-            alert('Failed to create meeting time: ' + error.message); // Show error alert
-        });
+    // Function to update course ID and fetch sections for that course
+    const setNewCourseId = (newCourseId) => {
+        setCourseId(newCourseId);
+        if (newCourseId) fetchSectionsByCourseId(newCourseId);
     };
 
     // Async function to fetch courses from backend
@@ -133,11 +126,47 @@ const CreateMeetingTime = () => {
         }
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        daysOfWeek.forEach(day => {
+            const meetingTime = { startTime, endTime, dayOfWeek: day, sectionId };
+            console.log('Submitting meeting time:', meetingTime);
+    
+            fetch('http://localhost:8080/meetingtimes', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + jwtToken
+                },
+                body: JSON.stringify(meetingTime)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create meeting time');
+                }
+                return response.json();
+            })
+            .then(() => {
+                setFeedbackMessage(prev => prev + `Meeting time created successfully for ${day}!\n`);
+                setIsError(false);
+            })
+            .catch(error => {
+                setFeedbackMessage(`Error creating meeting time: ${error.message}`);
+                setIsError(true);
+            });
+        });
+    };
+
     // JSX to render the form UI
     return (
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
                 <h1>Create Meeting Time</h1>
+                {feedbackMessage && (
+                <div className={`feedback-message ${isError ? 'error-message' : 'success-message'}`}>
+                    {feedbackMessage}
+                </div>
+                )}
                 <div className='input-box'>
                     <h2>Select Course</h2>
                     <select value={courseId} onChange={(e) => setNewCourseId(e.target.value)} required className="form-select">
@@ -174,15 +203,22 @@ const CreateMeetingTime = () => {
                         required
                     />
                 </div>
-                <div className='input-box'>
-                    <h2>Day of the Week</h2>
-                    <select onChange={(e) => setDayOfWeek(e.target.value)} className="form-select">
-                        {options.map((option, index) => (
-                            <option key={index} value={option.value}>{option.label}</option> // Map options to dropdown items
-                        ))}
-                    </select>
+                <div className='day-checkbox'>
+                    <h2>Meeting Days</h2>
+                    {options.map((option) => (
+                        <label key={option.value} className="day-checkbox">
+                            <input
+                                type="checkbox"
+                                checked={daysOfWeek.includes(option.value)}
+                                onChange={() => handleDayChange(option.value)}
+                            />
+                            {option.label}
+                        </label>
+                    ))}
                 </div>
-                <button type='submit'>Submit</button>
+                <div>
+                    <button type='submit'>Submit</button>
+                </div>
             </form>
         </div>
     );

@@ -28,8 +28,18 @@ function CreateUser() {
     const [lastName, setLastName] = useState("");
     const [studentCardId, setCardId] = useState("");
     const [jwtToken, setJwtToken] = useState(""); // JWT for auth
-    const [confirmationMessage, setConfirmationMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
+    useEffect(() => {
+        if (feedbackMessage) {
+            const timer = setTimeout(() => {
+                setFeedbackMessage('');
+            }, 5000);  // Clears feedback after 5 seconds
+    
+            return () => clearTimeout(timer);
+        }
+    }, [feedbackMessage]);
 
     // Fetch the JWT token when the component mounts and set it to state
     useEffect(() => {
@@ -61,12 +71,12 @@ function CreateUser() {
                 return response.json();
             })
             .then(data => {
-                setConfirmationMessage('User successfully created!');
-                console.log("User created", data);
+                setFeedbackMessage(`User created successfully!`);
+                setIsError(false);
             })
             .catch(error => {
-                setErrorMessage('Failed to create user: ' + error.message);
-                console.error("Failed to create user", error);
+                setFeedbackMessage(`Error creating user: ${error.message}`);
+                setIsError(true);
             });
     };
 
@@ -75,7 +85,11 @@ function CreateUser() {
         <div className="wrapper">
             <form onSubmit={handleSubmit}>
                 <h1>Create User</h1>
-                <div className="confirmation-message">{confirmationMessage}</div>
+                {feedbackMessage && (
+                <div className={`feedback-message ${isError ? 'error-message' : 'success-message'}`}>
+                    {feedbackMessage}
+                </div>
+                )}
                 <div className="input-box">
                     <h2>Select User Type</h2>
                     <select onChange={(e) => setRoleId(e.target.value)} className="form-select">

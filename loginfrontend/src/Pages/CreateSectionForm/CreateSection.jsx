@@ -18,6 +18,18 @@ const CreateSection = () => {
     const [professors, setProfessors] = useState([]); // State to store professors fetched from the API
     const [courses, setCourses] = useState([]); // State to store courses fetched from the API
     const [jwtToken, setJwtToken] = useState(''); // State to store the JWT token
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
+    useEffect(() => {
+        if (feedbackMessage) {
+            const timer = setTimeout(() => {
+                setFeedbackMessage('');
+            }, 5000);  // Clears feedback after 5 seconds
+    
+            return () => clearTimeout(timer);
+        }
+    }, [feedbackMessage]);
 
     // Fetch JWT from cookies when component mounts
     useEffect(() => {
@@ -94,10 +106,12 @@ const CreateSection = () => {
             return response.json();
         })
         .then(() => {
-            alert('Section Created Successfully'); // Show success message
+            setFeedbackMessage(`Section created successfully!`);
+            setIsError(false);
         })
         .catch(error => {
-            alert('Error creating section: ' + error.message); // Show error message
+            setFeedbackMessage(`Error creating section: ${error.message}`);
+            setIsError(true);
         });
     };
 
@@ -106,6 +120,11 @@ const CreateSection = () => {
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
                 <h1>Create Section</h1>
+                {feedbackMessage && (
+                <div className={`feedback-message ${isError ? 'error-message' : 'success-message'}`}>
+                    {feedbackMessage}
+                </div>
+                )}
                 <div className='input-box'>
                     <h2>Input Room Number</h2>
                     <input type="text" placeholder="001A" value={roomNum} onChange={(e) => setRoomNumber(e.target.value)} required />
