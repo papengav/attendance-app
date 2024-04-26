@@ -10,12 +10,10 @@ import Cookies from 'js-cookie'; // Library for handling cookies
 // Define the CreateMeetingTime component
 const CreateMeetingTime = () => {
     // State hooks for storing form data and JWT token
-    const [startTime, setStartTime] = useState(''); // State for start time of the meeting
-    const [endTime, setEndTime] = useState(''); // State for end time of the meeting
-    const [dayOfWeek, setDayOfWeek] = useState(''); // State for selecting the day of the week
-    const [sectionId, setSectionId] = useState(''); // State for section ID
-    const [jwtToken, setJwtToken] = useState(''); // State for storing the JWT token
-    const [studentId, setStudentId] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const [sectionId, setSectionId] = useState('');
+    const [jwtToken, setJwtToken] = useState('');
     const [sections, setSections] = useState([]);
     const [courses, setCourses] = useState([]);
     const [courseId, setCourseId] = useState('');
@@ -36,13 +34,14 @@ const CreateMeetingTime = () => {
 
     // Options for the day of the week dropdown
     const options = [
-        { label: "Monday", value: 2 },
-        { label: "Tuesday", value: 3 },
-        { label: "Wednesday", value: 4 },
-        { label: "Thursday", value: 5 },
-        { label: "Friday", value: 6 }, 
-        { label: "Saturday", value: 7 },
-        { label: "Sunday", value: 1 },
+        { label: "Monday", value: 1 },
+        { label: "Tuesday", value: 2 },
+        { label: "Wednesday", value: 3 },
+        { label: "Thursday", value: 4 },
+        { label: "Friday", value: 5 }, 
+        { label: "Saturday", value: 6 },
+        { label: "Sunday", value: 7 },
+
     ];
 
     useEffect(() => {
@@ -128,11 +127,18 @@ const CreateMeetingTime = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        daysOfWeek.forEach(day => {
+        if (daysOfWeek.length === 0) {
+            setFeedbackMessage("Error: No day selected for meeting time!");
+            setIsError(true);
+            return; // Exit the function early if no days are selected
+        }
+        let successfulDays = []; // To hold the days for which the meeting time was successfully created
+    
+        Promise.all(daysOfWeek.map(day => {
             const meetingTime = { startTime, endTime, dayOfWeek: day, sectionId };
             console.log('Submitting meeting time:', meetingTime);
     
-            fetch('http://localhost:8080/meetingtimes', {
+            return fetch('http://localhost:8080/meetingtimes', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -147,13 +153,28 @@ const CreateMeetingTime = () => {
                 return response.json();
             })
             .then(() => {
-                setFeedbackMessage(prev => prev + `Meeting time created successfully for ${day}!\n`);
-                setIsError(false);
-            })
-            .catch(error => {
-                setFeedbackMessage(`Error creating meeting time: ${error.message}`);
-                setIsError(true);
+                const dayLabel = options.find(option => option.value === day)?.label || 'Unknown day';
+                successfulDays.push(dayLabel); // Add the successful day's label
             });
+        }))
+        .then(() => {
+            if (successfulDays.length > 0) {
+                // Sort successfulDays based on the order in options
+                successfulDays.sort((a, b) => {
+                    let indexA = options.findIndex(opt => opt.label === a);
+                    let indexB = options.findIndex(opt => opt.label === b);
+                    return indexA - indexB;
+                });
+    
+                // Format the success message to include all successful days
+                const formattedDays = successfulDays.join(", ");
+                setFeedbackMessage(`Meeting time successfully created for: ${formattedDays}`);
+                setIsError(false);
+            }
+        })
+        .catch(error => {
+            setFeedbackMessage(`Error creating meeting time: ${error.message}`);
+            setIsError(true);
         });
     };
 
@@ -185,7 +206,7 @@ const CreateMeetingTime = () => {
                     ))}
                 </select>
                 </div>
-                <div className='input-box'>
+                <div className='input-box' required>
                     <h2>Start Time</h2>
                     <input
                         type="time"
@@ -194,7 +215,7 @@ const CreateMeetingTime = () => {
                         required
                     />
                 </div>
-                <div className='input-box'>
+                <div className='input-box' required>
                     <h2>End Time</h2>
                     <input
                         type="time"
@@ -203,7 +224,7 @@ const CreateMeetingTime = () => {
                         required
                     />
                 </div>
-                <div className='day-checkbox'>
+                <div className='day-checkbox' required>
                     <h2>Meeting Days</h2>
                     {options.map((option) => (
                         <label key={option.value} className="day-checkbox">

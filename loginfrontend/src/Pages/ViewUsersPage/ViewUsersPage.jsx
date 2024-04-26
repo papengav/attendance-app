@@ -68,7 +68,7 @@ const ViewUsersPage = () => {
     }
 
     function handleNextButton() {
-        if (page < totalPages + 1) {
+        if (page < totalPages) {
             const currPage = page;
             setPage(currPage + 1);
         }

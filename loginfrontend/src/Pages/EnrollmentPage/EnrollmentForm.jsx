@@ -17,6 +17,18 @@ const EnrollmentForm = () => {
     const [courses, setCourses] = useState([]);
     const [courseId, setCourseId] = useState('');
     const [jwt, setJwtToken] = useState('');
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
+    useEffect(() => {
+        if (feedbackMessage) {
+            const timer = setTimeout(() => {
+                setFeedbackMessage('');
+            }, 5000);  // Clears feedback after 5 seconds
+    
+            return () => clearTimeout(timer);
+        }
+    }, [feedbackMessage]);
 
     // Function to update course ID and fetch sections for that course
     const setNewCourseId = (newCourseId) => {
@@ -121,11 +133,11 @@ const EnrollmentForm = () => {
             if (!response.ok) throw new Error('Failed to create enrollment');
 
             const data = await response.json();
-            console.log("Enrollment created, ID: ", data.id);
-            alert('Enrollment Created Successfully');
+            setFeedbackMessage("Enrollment created successfully");
+            setIsError(false);
         } catch (error) {
-            console.error("Error creating enrollment: ", error);
-            alert(`Error creating enrollment: ${error.message}`);
+            setFeedbackMessage(`Error creating enrollment: ${error.message}`);
+            setIsError(false);
         }
     };
 
@@ -134,6 +146,11 @@ const EnrollmentForm = () => {
         <div className='wrapper'>
             <form onSubmit={handleSubmit}>
                 <h1>Create Enrollment</h1>
+                {feedbackMessage && (
+                <div className={`feedback-message ${isError ? 'error-message' : 'success-message'}`}>
+                    {feedbackMessage}
+                </div>
+                )}
                 <div className='input-box'>
                     <h2>Select Course</h2>
                     <select value={courseId} onChange={(e) => setNewCourseId(e.target.value)} required className="form-select">
