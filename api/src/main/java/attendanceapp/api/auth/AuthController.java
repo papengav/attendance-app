@@ -44,9 +44,5 @@ public class AuthController {
             logger.warn("Invalid credentials in login with request: " + newAuthRequest);
             return ResponseEntity.notFound().build();
         }
-        catch (InvalidRoleException e) {
-            logger.warn("Valid User attempted to login but somehow has a role that doesn't exist");
-            return ResponseEntity.internalServerError().body(new AuthResponse(e.getMessage(), null, null, null));
-        }
     }
 }

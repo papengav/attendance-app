@@ -105,7 +105,7 @@ public class SectionControllerTest {
 
         String roomNum = "1";
         int numberOfStudents = 10;
-        int courseId = 99999; // Not provided in test data - should cause BAD REQUEST
+        int courseId = 1;
         int professorId = 1; // This is a student
 
         SectionDTO newSection = new SectionDTO(roomNum, numberOfStudents, courseId, professorId);
@@ -429,5 +429,18 @@ public class SectionControllerTest {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a Section is not returned if the ID does not correspond to any existing Sections
+     */
+    @Test
+    void shouldNotReturnASectionIfIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int id = 999999999;
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<String> getResponse = restTemplate.exchange("/sections/" + id, HttpMethod.GET, getRequest, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

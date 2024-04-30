@@ -16,6 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,12 @@ public class UserControllerTest {
 
         // Assert HTTP status code
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        // Verify location header points to created object
+        URI locationOfNewUser = createResponse.getHeaders().getLocation();
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<String> getResponse = restTemplate.exchange(locationOfNewUser, HttpMethod.GET, getRequest, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     /**
@@ -396,5 +403,18 @@ public class UserControllerTest {
                 });
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that a User is not returned if the ID does not correspond to any existing Users
+     */
+    @Test
+    void shouldNotReturnAUserIfIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int id = 999999999;
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<String> getResponse = restTemplate.exchange("/users/" + id, HttpMethod.GET, getRequest, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

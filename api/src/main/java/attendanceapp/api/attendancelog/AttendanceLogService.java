@@ -49,7 +49,6 @@ public class AttendanceLogService {
     private final MeetingTimeRepository meetingTimeRepository;
     private final SectionRepository sectionRepository;
     private final SectionService sectionService;
-    private final RoleRepository roleRepository;
 
     /**
      * Construct a page of AttendanceLogs using Spring Data's Pagination feature
@@ -195,11 +194,7 @@ public class AttendanceLogService {
         int sectionId = meetingTime.getSectionId();
         Optional<Section> section = sectionRepository.findById(sectionId);
 
-        if (section.isEmpty()) {
-            throw new InvalidEnrollmentException("User is somehow enrolled in a Section that doesn't exist");
-        }
-
-        Section validSection = section.get();
+        Section validSection = section.get(); // In theory could throw an error, but should be impossible
 
         if (!validSection.getRoomNum().equals(roomNum)) {
             throw new InvalidEnrollmentException("User is enrolled in a Section at this time but roomNum does not match");

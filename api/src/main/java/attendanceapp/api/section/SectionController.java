@@ -7,8 +7,7 @@
 package attendanceapp.api.section;
 
 import attendanceapp.api.auth.AuthorityConstants;
-import attendanceapp.api.exceptions.InvalidCourseException;
-import attendanceapp.api.exceptions.InvalidUserException;
+import attendanceapp.api.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +53,7 @@ public class SectionController {
             Section requestedSection = sectionService.findById(id);
             return ResponseEntity.ok().body(requestedSection);
         }
-        catch (InvalidCourseException e) {
+        catch (InvalidSectionException e) {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }
@@ -118,7 +117,7 @@ public class SectionController {
             logger.warn("Invalid request: " + e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        catch (AccessDeniedException e) {
+        catch (InvalidAuthorization e) {
             logger.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -146,7 +145,7 @@ public class SectionController {
             logger.trace(String.format("Created Section: %s", savedSection));
             return ResponseEntity.created(locationOfNewSection).body(savedSection);
         }
-        catch (InvalidCourseException | InvalidUserException e) {
+        catch (InvalidCourseException | InvalidUserException | InvalidRoleException e) {
             logger.warn("Invalid Request: " + e.getMessage());
             return ResponseEntity.badRequest().build();
         }

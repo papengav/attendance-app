@@ -101,6 +101,34 @@ public class AttendanceLogControllerTest {
     }
 
     /**
+     * Ensure that an AttendanceLog is not created if the student associated with studentCardId has no Enrollments
+     */
+    @Test
+    void shouldNotCreateAttendanceLogWhenStudentHasNoEnrollments() {
+        String studentCardId = "no";
+        String roomNum = "1";
+
+        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
+        ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Ensure that an AttendanceLog is not created when all configuration is valid, but the Section is not currently meeting
+     */
+    @Test
+    void shouldNotCreateAttendanceLogWhenValidEnrolledSectionNotCurrentlyMeeting() {
+        String studentCardId = "DEF456";
+        String roomNum = "10";
+
+        AttendanceLogDTO newLog = new AttendanceLogDTO(studentCardId, roomNum);
+        ResponseEntity<AttendanceLog> createResponse = restTemplate.postForEntity("/attendancelogs", newLog, AttendanceLog.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * Ensure that a List of AttendanceLogs following the request parameters is returned
      */
     @Test
@@ -221,7 +249,7 @@ public class AttendanceLogControllerTest {
         int studentId = 2; // Not student 1, should throw error
         int sectionId = 1;
 
-        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/attendancelosg/by-studentId-and-sectionId")
+        UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/attendancelogs/by-studentId-and-sectionId")
                 .queryParam("studentId", studentId)
                 .queryParam("sectionId", sectionId)
                 .queryParam("page", page)
@@ -264,5 +292,18 @@ public class AttendanceLogControllerTest {
                 });
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Ensure that an AttendanceLog is not returned if the ID does not correspond to any existing AttendanceLogs
+     */
+    @Test
+    void shouldNotReturnAnAttendanceLogIfIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int id = 999999999;
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<String> getResponse = restTemplate.exchange("/attendancelogs/" + id, HttpMethod.GET, getRequest, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

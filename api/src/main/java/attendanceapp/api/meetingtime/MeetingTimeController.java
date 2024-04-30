@@ -9,6 +9,7 @@ package attendanceapp.api.meetingtime;
 import attendanceapp.api.auth.AuthorityConstants;
 import attendanceapp.api.exceptions.InvalidCourseException;
 import attendanceapp.api.exceptions.InvalidDayOfWeekException;
+import attendanceapp.api.exceptions.InvalidMeetingTimeException;
 import attendanceapp.api.exceptions.InvalidSectionException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class MeetingTimeController {
             MeetingTime requestedMeetingTime = meetingTimeService.findById(id);
             return ResponseEntity.ok().body(requestedMeetingTime);
         }
-        catch (InvalidCourseException e) {
+        catch (InvalidMeetingTimeException e) {
             logger.warn(e.getMessage());
             return ResponseEntity.notFound().build();
         }

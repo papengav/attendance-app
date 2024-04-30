@@ -6,6 +6,7 @@
 
 package attendanceapp.api.user;
 
+import attendanceapp.api.exceptions.InvalidAuthorization;
 import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.exceptions.InvalidUserException;
 import attendanceapp.api.exceptions.MissingStudentCardIdException;
@@ -190,7 +191,7 @@ public class UserService {
      * @throws InvalidUserException User does not exist, is not a student, or is not requesting their own data
      * @throws AccessDeniedException A User with the Student role sent the request for data that is not theirs
      */
-    public void validateStudent(int id) throws InvalidUserException, AccessDeniedException {
+    public void validateStudent(int id) throws InvalidUserException, InvalidAuthorization {
         UserResponse user = findById(id);
         Role role = roleRepository.findById(user.getRoleId())
                 // Should be impossible
@@ -209,7 +210,7 @@ public class UserService {
                 .orElseThrow(() -> new InvalidRoleException("User exists but has invalid Role?"));
 
         if (requesterRole.getName().equals("Student") && requesterId != user.getId()) {
-            throw new AccessDeniedException(String.format("Student with ID %d attempted to access data belonging to User with ID %d", requesterId, id));
+            throw new InvalidAuthorization(String.format("Student with ID %d attempted to access data belonging to User with ID %d", requesterId, id));
         }
     }
 

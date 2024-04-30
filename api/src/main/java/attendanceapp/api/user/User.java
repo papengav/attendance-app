@@ -27,7 +27,6 @@ import java.util.List;
 @Table(name = "users", schema = "#{@environment.getProperty('attendanceapp.schema')}")
 @AllArgsConstructor
 @Getter
-@Setter
 public class User implements UserDetails {
     @Id
     @Column("id")

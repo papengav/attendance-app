@@ -7,10 +7,7 @@
 package attendanceapp.api.attendancelog;
 
 import attendanceapp.api.auth.AuthorityConstants;
-import attendanceapp.api.exceptions.InvalidCredentialsException;
-import attendanceapp.api.exceptions.InvalidEnrollmentException;
-import attendanceapp.api.exceptions.InvalidSectionException;
-import attendanceapp.api.exceptions.InvalidUserException;
+import attendanceapp.api.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +89,7 @@ class AttendanceLogController {
             logger.warn("Invalid request: " + e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        catch (AccessDeniedException e) {
+        catch (InvalidAuthorization e) {
             logger.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

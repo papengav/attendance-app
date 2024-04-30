@@ -156,4 +156,17 @@ public class CourseControllerTest {
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+
+    /**
+     * Ensure that a Course is not returned if the ID does not correspond to any existing Courses
+     */
+    @Test
+    void shouldNotReturnACourseIfIdInvalid() {
+        HttpHeaders headers = getAdminHeaders(restTemplate);
+        int id = 999999999;
+
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<String> getResponse = restTemplate.exchange("/courses/" + id, HttpMethod.GET, getRequest, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
