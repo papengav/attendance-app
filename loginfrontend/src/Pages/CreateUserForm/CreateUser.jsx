@@ -177,7 +177,7 @@ const pushIdRedo = (user) => {
     
 
         //send post to the API
-        fetch('http://localhost:8080/users/${ID}', postArgs)
+        fetch(`http://localhost:8080/users/${ID}`, postArgs)
         .then(data => {
             setFeedbackMessage(`User undone successfully!`);
             setIsErrorUndo(false);
