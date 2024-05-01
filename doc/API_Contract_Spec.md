@@ -523,3 +523,19 @@ None
 * **Success Response:**
     * Status Code: 200 OK
     * Body: `<Enrollment>`
+
+**DELETE /enrollments/{id}**
+---
+Delete an Enrollment
+* **URL Params:**
+    * {id} = ID of requested Enrollment
+* **Headers:**
+    * Content-Type:
+        application/json
+    * Authroization:
+        Bearer: `<JWT>`
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        204 NO CONTENT
