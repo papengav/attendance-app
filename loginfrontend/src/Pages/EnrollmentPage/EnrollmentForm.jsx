@@ -21,8 +21,10 @@ const EnrollmentForm = () => {
     const [isError, setIsError] = useState(false);
     const [isErrorUndo, setIsErrorUndo] = useState(false);
     const [isErrorRedo, setIsErrorRedo] = useState(false);
-    const [userStack, setUserStack] = useState([]); // State variable to store user stack
-    const [userStackRedo, setUserStackRedo] = useState([]); // State variable to store undone user stack
+    const [userStack, setUserStack] = useState([]); // State variable to store enrollment stack
+    const [userStackRedo, setUserStackRedo] = useState([]); // State variable to store undone enrollment stack
+    const [idStack, setIdStack] = useState([]); //state variable to store enrollment IDs
+    const [idStackRedo, setIdStackRedo] = useState([]); //state variable to store undone enrollment IDs
     
 
     useEffect(() => {
@@ -88,6 +90,38 @@ const popUserRedo = () => {
     });
 
     return poppedUser; // Return the popped user
+};
+// Pop a user from the stack and return the popped user
+const popId = () => {
+    let poppedUser; // Define poppedUser outside the setUserStack callback
+
+    setIdStack(prevStack => {
+        const newStack = [...prevStack];
+        poppedUser = newStack.pop(); // Store the popped user
+        return newStack; // Return the modified stack without the popped user
+    });
+
+    return poppedUser; // Return the popped user
+};
+    // Push a user onto the stack
+const pushId = (user) => {
+    setIdStack(prevStack => [...prevStack, user]);
+};
+// Pop a user from the stack and return the popped user
+const popIdRedo = () => {
+    let poppedUser; // Define poppedUser outside the setUserStack callback
+
+    setIdStackRedo(prevStack => {
+        const newStack = [...prevStack];
+        poppedUser = newStack.pop(); // Store the popped user
+        return newStack; // Return the modified stack without the popped user
+    });
+
+    return poppedUser; // Return the popped user
+};
+    // Push a user onto the stack
+const pushIdRedo = (user) => {
+    setIdStackRedo(prevStack => [...prevStack, user]);
 };
 
     // Async function to fetch students from backend
@@ -174,8 +208,10 @@ const popUserRedo = () => {
             if (!response.ok) throw new Error('Failed to create enrollment');
 
             const data = await response.json();
+            const ID = data.id // fixx this
             setFeedbackMessage("Enrollment created successfully");
             setIsError(false);
+            pushId(ID)
         } catch (error) {
             setFeedbackMessage(`Error creating enrollment: ${error.message}`);
             setIsError(false);
@@ -185,7 +221,9 @@ const popUserRedo = () => {
     const handleUndo = (e) => {
         e.preventDefault();
         const enrollmentTemp = popUser()
+        const ID = popId()
         pushUserRedo(enrollmentTemp)
+        pushIdRedo(ID)
         const undo = {}
         //config post
         const postArgs = {
@@ -214,6 +252,8 @@ const popUserRedo = () => {
         e.preventDefault();
         const enrollmentPost = popUserRedo()
         pushUser(enrollmentPost);
+        const ID = popIdRedo()
+        pushId(ID)
 
         try {
             const response = await fetch('http://localhost:8080/enrollments', {

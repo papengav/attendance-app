@@ -211,7 +211,6 @@ const ViewAttendanceLogs = () => {
                         <th>Student</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
-                        <th>Excused</th>
                     </tr>
                 </thead>
                 <tbody>
