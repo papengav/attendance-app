@@ -81,4 +81,22 @@ public class EnrollmentController {
         }
     }
 
+    /**
+     * Delete an Enrollment
+     *
+     * @param id ID of Enrollment to delete
+     * @return 204 NO-CONTENT or appropriate error code
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
+    public ResponseEntity<Void> deleteById(@PathVariable int id) {
+        try {
+            enrollmentService.hardDelete(id);
+            return ResponseEntity.noContent().build();
+        }
+        catch (InvalidEnrollmentException e) {
+            logger.warn("Invalid request: " + e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
