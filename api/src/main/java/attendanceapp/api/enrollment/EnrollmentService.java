@@ -99,4 +99,18 @@ public class EnrollmentService {
             throw new InvalidUserException("User is not a Student");
         }
     }
+
+    /**
+     * Hard delete an Enrollment from the database
+     * Check if Enrollment exists first
+     *
+     * @param id ID of Enrollment to delete
+     * @throws InvalidEnrollmentException Enrollment does not exist
+     */
+    public void hardDelete(int id) throws InvalidEnrollmentException {
+        Enrollment enrollment = enrollmentRepository.findById(id)
+                .orElseThrow(() -> new InvalidEnrollmentException("Enrollment does not exist"));
+
+        enrollmentRepository.delete(enrollment);
+    }
 }
