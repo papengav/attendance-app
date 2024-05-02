@@ -219,7 +219,6 @@ const ViewAttendanceLogs = () => {
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
-                            <td>{log.excused}</td>
                         </tr>
                     ))}
                 </tbody>
