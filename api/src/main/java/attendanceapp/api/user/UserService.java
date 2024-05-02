@@ -6,6 +6,9 @@
 
 package attendanceapp.api.user;
 
+import attendanceapp.api.command.Invoker;
+import attendanceapp.api.command.Command;
+import attendanceapp.api.command.CreateUserCommand;
 import attendanceapp.api.exceptions.InvalidAuthorization;
 import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.exceptions.InvalidUserException;
@@ -35,6 +38,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Invoker invoker;
 
     /**
      * Find a User by their ID
@@ -136,6 +140,7 @@ public class UserService {
 
     /**
      * Validate and create a User
+     * Unconventional implementation because particular assignment homework calls for Command-Pattern undo/redo implementation
      *
      * @param userRequest UserDTO containing data related to the new User
      * @return User if it was created
@@ -149,7 +154,14 @@ public class UserService {
         verifyStudentCardId(userRequest.getStudentCardId(), role); // Make sure if request is for a Student that a valid studentCardId has been provided
         User newUser = new User(null, userRequest.getFirstName(), userRequest.getLastName(), userRequest.getStudentCardId(), userRequest.getUsername(), encodedPassword, userRequest.getRoleId());
 
-        return convertUserToUserResponse(userRepository.save(newUser));
+        Command createUserCommand = new CreateUserCommand(newUser, userRepository);
+        createUserCommand.execute();
+        invoker.done.push(createUserCommand);
+
+        // Need command pattern to actually save the user, but the ID isn't assigned until saved to the UserRepo
+        // And the User cannot be extracted back out of the command
+        // So need to grab the user somehow in order to return data to the client
+        return convertUserToUserResponse(userRepository.findByUsername(newUser.getUsername()).orElseThrow(() -> new InvalidUserException("Error")));
     }
 
     /**
@@ -159,7 +171,7 @@ public class UserService {
      * @return Role if it exists
      * @throws InvalidRoleException No existing Role associated with roleId
      */
-    private Role getRole(int roleId) throws InvalidRoleException {
+    public Role getRole(int roleId) throws InvalidRoleException {
         Optional<Role> roleOptional = roleRepository.findById(roleId);
 
         if (roleOptional.isEmpty()) {
@@ -176,7 +188,7 @@ public class UserService {
      * @param role role for the new user
      * @throws MissingStudentCardIdException Requested to create a student but didn't provide a studentCardId
      */
-    private void verifyStudentCardId(String studentCardId, Role role) throws MissingStudentCardIdException {
+    public void verifyStudentCardId(String studentCardId, Role role) throws MissingStudentCardIdException {
         if (studentCardId.isEmpty() && role.getName().equals("Student")) {
             throw new MissingStudentCardIdException("User request for User with Role: 'Student' must contain studentCardId");
         }

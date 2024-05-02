@@ -6,6 +6,9 @@
 
 package attendanceapp.api.course;
 
+import attendanceapp.api.command.Command;
+import attendanceapp.api.command.CreateCourseCommand;
+import attendanceapp.api.command.Invoker;
 import attendanceapp.api.exceptions.InvalidCourseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final Invoker invoker;
 
     /**
      * Find a Course by its ID
@@ -60,6 +64,10 @@ public class CourseService {
     public Course createCourse(CourseDTO courseRequest) {
         Course newCourse = new Course(courseRequest.getName(), 0);
 
-        return courseRepository.save(newCourse);
+        Command createCourseCommand = new CreateCourseCommand(newCourse, courseRepository);
+        createCourseCommand.execute();
+        invoker.done.push(createCourseCommand);
+
+        return courseRepository.findByName(newCourse.getName());
     }
 }

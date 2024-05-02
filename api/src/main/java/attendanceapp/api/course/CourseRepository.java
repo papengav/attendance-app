@@ -14,4 +14,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 //----------------------------------------------------------------------------------------------
 public interface CourseRepository extends CrudRepository<Course, Integer>, PagingAndSortingRepository<Course, Integer> {
 
+    /**
+     * Custom query to search for a Course by its name
+     *
+     * @param name Name of the Course
+     * @return Course if found
+     */
+    Course findByName(String name);
 }

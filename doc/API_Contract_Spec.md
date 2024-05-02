@@ -38,6 +38,35 @@ None
 
 &nbsp;
 
+# Commands
+**POST /commands/undo**
+----
+Undo the most recent CRUD operation on Users and Courses
+* **URL Params:**
+None
+* **Headers:**
+    * Content-Type:
+        application/json
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        200 OK
+
+**POST /commands/redo**
+----
+Redo the most recent undone CRUD operation on Users and Courses
+* **URL Params:**
+None
+* **Headers:**
+    * Content-Type:
+        application/json
+* **Body:**
+None
+* **Success Response:**
+    * Status Code:
+        200 OK
+
 # User
 * UserResponse object:
 ```
