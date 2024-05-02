@@ -21,4 +21,12 @@ public interface EnrollmentRepository extends CrudRepository<Enrollment, Integer
      * @return List of found Enrollments
      */
     List<Enrollment> findAllByStudentId(int studentId);
+
+    /**
+     * Custom query to find all Enrollments for a Section
+     *
+     * @param sectionId ID of the section
+     * @return List of found Enrollments
+     */
+    List<Enrollment> findAllBySectionId(int sectionId);
 }

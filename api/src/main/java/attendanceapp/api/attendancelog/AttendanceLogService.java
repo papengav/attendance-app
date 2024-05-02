@@ -109,7 +109,7 @@ public class AttendanceLogService {
         Section section = getSectionByMeetingTimeAndRoomNum(meetingTime, roomNum);
         
         // Create and return AttendanceLog
-        AttendanceLog newLog = new AttendanceLog(student.getId(), section.getId(), timestamp);
+        AttendanceLog newLog = new AttendanceLog(student.getId(), section.getId(), timestamp, false);
 
         return attendanceLogRepository.save(newLog);
     }

@@ -23,4 +23,12 @@ public interface MeetingTimeRepository extends CrudRepository<MeetingTime, Integ
      */
     List<MeetingTime> findAllBySectionId(int sectionId);
 
+    /**
+     * Custom query to find all MeetingTimes that fall on a specified day of the week
+     *
+     * @param dayOfWeek int representing the day of the week
+     * @return List<MeetingTime> that fall on the specified day of the week
+     */
+    List<MeetingTime> findAllByDayOfWeek(int dayOfWeek);
+
 }

@@ -51,7 +51,8 @@ CREATE TABLE attendance_logs
     student_id INT REFERENCES users(id),
     section_id INT REFERENCES sections(id),
     date_time TIMESTAMP,
-    excused BOOLEAN
+    excused BOOLEAN,
+    is_absent BOOLEAN
 );
 
 CREATE TABLE enrollments

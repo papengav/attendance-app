@@ -44,4 +44,8 @@ public class AttendanceLog {
 
         @Column("excused")
         private Boolean excused;
+
+        @Column("is_absent")
+        @NonNull
+        private boolean absent;
 }

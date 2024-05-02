@@ -6,7 +6,6 @@
 
 package attendanceapp.api.attendancelog;
 
-import attendanceapp.api.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +21,6 @@ import java.util.List;
 import static attendanceapp.api.utils.HeadersGenerator.getAdminHeaders;
 import static attendanceapp.api.utils.HeadersGenerator.getStudentHeaders;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.setAllowComparingPrivateFields;
 
 //----------------------------------------------------------------------------------------------
 // A testing class to test for proper functionality and outputs of endpoints from AttendanceLogController
