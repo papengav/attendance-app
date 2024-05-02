@@ -63,6 +63,63 @@ const CreateCourse = () => {
             setIsError(true);
         });
     };
+    
+    // Handles undoing the most recent course on the stack
+    const handleUndo = (e) => {
+        e.preventDefault();
+        //config post
+        const postArgs = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + jwt
+            },
+            body: JSON.stringify()
+        };
+    
+
+        //send post to the API
+        fetch(`http://localhost:8080/commands/undo`, postArgs)
+        .then(data => {
+            setFeedbackMessage(`Course undone successfully!`);
+            
+        })
+        .catch(error => {
+            setFeedbackMessage(`Error undoing course: ${error.message}`);
+            
+        });
+    }
+    // Handles redoing the most recent course on the stack
+    const handleRedo = (e) => {
+        e.preventDefault();
+        // Configuration for the POST request
+        const postArgs = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + jwt
+            },
+            body: JSON.stringify()
+        };
+
+        // Send POST request to backend API
+        fetch('http://localhost:8080/commands/redo', postArgs)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create course');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setFeedbackMessage(`course created successfully!`);
+                setIsError(false);
+            })
+            .catch(error => {
+                setFeedbackMessage(`course created successfully`);
+                setIsError(true);
+            });
+    }
+
 
     // JSX for rendering the Create Course form
     return (
@@ -84,7 +141,13 @@ const CreateCourse = () => {
                         required
                     />
                 </div>
-                <button type='submit'>Submit</button>
+                <div>
+                <button type="submit">Submit</button>
+                </div>
+                <div>
+                    <button onClick={handleUndo}>Undo</button>
+                    <button onClick={handleRedo}>Redo</button>
+                </div>
             </form>
         </div>
     );

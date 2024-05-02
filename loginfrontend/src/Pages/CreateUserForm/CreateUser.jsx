@@ -30,12 +30,7 @@ function CreateUser() {
     const [jwtToken, setJwtToken] = useState(""); // JWT for auth
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [isError, setIsError] = useState(false);
-    const [isErrorUndo, setIsErrorUndo] = useState(false);
-    const [isErrorRedo, setIsErrorRedo] = useState(false);
-    const [userStack, setUserStack] = useState([]); // State variable to store user stack
-    const [userStackRedo, setUserStackRedo] = useState([]); // State variable to store undone user stack
-    const [idStack, setIdStack] = useState([]); //state variable to store user IDs
-    const [idStackRedo, setIdStackRedo] = useState([]); //state variable to store undone user IDs
+    
 
     useEffect(() => {
         if (feedbackMessage) {
@@ -53,79 +48,10 @@ function CreateUser() {
         setJwtToken(jwt);
     }, []);
 
-    // Push a user onto the stack
-const pushUser = (user) => {
-    setUserStack(prevStack => [...prevStack, user]);
-};
-
-// Pop a user from the stack and return the popped user
-const popUser = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setUserStack(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-    // Push a user onto the stack
-const pushUserRedo = (user) => {
-    setUserStackRedo(prevStack => [...prevStack, user]);
-};
-
-// Pop a user from the stack and return the popped user
-const popUserRedo = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setUserStackRedo(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-// Pop a user from the stack and return the popped user
-const popId = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setIdStack(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-    // Push a user onto the stack
-const pushId = (user) => {
-    setIdStack(prevStack => [...prevStack, user]);
-};
-// Pop a user from the stack and return the popped user
-const popIdRedo = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setIdStackRedo(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-    // Push a user onto the stack
-const pushIdRedo = (user) => {
-    setIdStackRedo(prevStack => [...prevStack, user]);
-};
-
-
     // Handle form submission for creating a new user
     const handleSubmit = (e) => {
         e.preventDefault();
         const user = { firstName, lastName, studentCardId, username, password, roleId };
-        pushUser(user);
 
         // Configuration for the POST request
         const postArgs = {
@@ -148,8 +74,6 @@ const pushIdRedo = (user) => {
             .then(data => {
                 setFeedbackMessage(`User created successfully!`);
                 setIsError(false);
-                const ID = data.id//fix this
-                pushId(ID)
             })
             .catch(error => {
                 setFeedbackMessage(`Error creating user: ${error.message}`);
@@ -161,13 +85,9 @@ const pushIdRedo = (user) => {
     // Handles undoing the most recent user on the stack
     const handleUndo = (e) => {
         e.preventDefault();
-        const user = popUser()
-        const ID = popId()
-        pushIdRedo(ID)
-        pushUserRedo(user)
         //config post
         const postArgs = {
-            method: "DELETE",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + jwtToken
@@ -177,23 +97,19 @@ const pushIdRedo = (user) => {
     
 
         //send post to the API
-        fetch(`http://localhost:8080/users/${ID}`, postArgs)
+        fetch(`http://localhost:8080/commands/undo`, postArgs)
         .then(data => {
             setFeedbackMessage(`User undone successfully!`);
-            setIsErrorUndo(false);
+            
         })
         .catch(error => {
             setFeedbackMessage(`Error undoing user: ${error.message}`);
-            setIsErrorUndo(true);
+            
         });
     }
     // Handles redoing the most recent user on the stack
     const handleRedo = (e) => {
         e.preventDefault();
-        const user = popUserRedo()
-        pushUser(user)
-        const ID = popIdRedo()
-        pushId(ID)
         // Configuration for the POST request
         const postArgs = {
             method: "POST",
@@ -201,11 +117,11 @@ const pushIdRedo = (user) => {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + jwtToken
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify()
         };
 
         // Send POST request to backend API
-        fetch('http://localhost:8080/users', postArgs)
+        fetch('http://localhost:8080/commands/redo', postArgs)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to create user');
@@ -217,7 +133,7 @@ const pushIdRedo = (user) => {
                 setIsError(false);
             })
             .catch(error => {
-                setFeedbackMessage(`Error creating user: ${error.message}`);
+                setFeedbackMessage(`User created successfully`);
                 setIsError(true);
             });
     }
