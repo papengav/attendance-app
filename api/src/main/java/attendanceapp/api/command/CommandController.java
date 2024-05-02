@@ -38,7 +38,11 @@ public class CommandController {
     @PostMapping("/undo")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<Void> undo() {
-        if (invoker.undo()) {
+        if (!invoker.done.isEmpty()) {
+            Command command = invoker.done.pop();
+            command.unExecute();
+            invoker.unDone.push(command);
+
             logger.info("A resource management process was undone");
             return ResponseEntity.ok().build();
         }
@@ -57,7 +61,11 @@ public class CommandController {
     @PostMapping("/redo")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<Void> redo() {
-        if (invoker.redo()) {
+        if (!invoker.unDone.isEmpty()) {
+            Command command = invoker.unDone.pop();
+            command.execute();
+            invoker.done.push(command);
+
             logger.info("A resource management process was redone");
             return ResponseEntity.ok().build();
         }
