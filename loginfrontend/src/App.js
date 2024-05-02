@@ -15,8 +15,9 @@ import ViewEnrollments from './Pages/ViewEnrollmentsPage/ViewEnrollments';
 import CreateMeetingTime from './Pages/CreateMeetingtime/CreateMeetingTimeForm';
 import ViewAttendaceLogs from './Pages/ViewAttendanceLogs/ViewAttendanceLogs';
 import NoPage from './Pages/NoPage/NoPage';
-import ProfessorView from './Pages/ProfessorView/ProfessorView';
 import StudentView from './Pages/StudentView/StudentView';
+import ProfessorViewAttendanceLogs from './Pages/ProfessorView/ProfessorViewAttendanceLogs';
+import ViewAbsences from './Pages/ViewAbsences/viewAbsences'
 
 function App() {
   return (
@@ -33,9 +34,11 @@ function App() {
           <Route path="createEnrollment" element={<EnrollmentForm />} />
           <Route path="viewEnrollments" element={<ViewEnrollments/>} />
           <Route path="viewAttendanceLogs" element={<ViewAttendaceLogs/>} />
+          <Route path="viewAbsences" element={<ViewAbsences/>} />
         </Route>
-        <Route path = "/professorView" element={<ProfessorView/>} />
-        <Route path = "/studentView" element={<StudentView/>} />
+        <Route path="/professorViewAttendanceLogs" element={<ProfessorViewAttendanceLogs/>} />
+        <Route path="/viewAbsences" element={<ViewAbsences/>} />
+        <Route path="/studentView" element={<StudentView/>} />
         <Route path="*" element={<NoPage />} />
       </Routes>
     </BrowserRouter>

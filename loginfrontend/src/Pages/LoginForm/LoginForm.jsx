@@ -74,7 +74,7 @@ const LoginForm = () => {
                 window.location.href = "/layout"
             }
             if(role == 2){
-                window.location.href = "/professorView"
+                window.location.href = "/professorViewAttendanceLogs"
             }
             if(role == 3){
                 cookies.set("studentId", userId);

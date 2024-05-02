@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import '../../Components/Styles/GruvboxTheme.css';
 
-const ProfessorView = () => {
+const ProfessorViewAttendanceLogs = () => {
     // State to store various pieces of data necessary for the component
     const [attendanceLogs, setAttendanceLogs] = useState([]);
     const [studentId, setStudentId] = useState('');
@@ -88,28 +88,19 @@ const ProfessorView = () => {
     // Async function to fetch attendance logs from the API
     const fetchAttendanceLogs = async () => {
         try {
-            const url = new URL('http://localhost:8080/attendancelogs/by-studentId-and-sectionId');
-            url.searchParams.append('studentId', studentId);
-            url.searchParams.append('sectionId', sectionId);
-    
-            const response = await fetch(url, {
+            const response = await fetch(`http://localhost:8080/attendancelogs/by-studentId-and-sectionId?studentId=${studentId}&sectionId=${sectionId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${jwtToken}`
                 }
             });
-    
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            
-            // Filter the data to only include logs where is_absent is true
-            const absentLogs = data.filter(log => log.absent === true);
-            setAttendanceLogs(absentLogs);
-            setTotalPages(Math.ceil(absentLogs.length / pageSize)); // Calculate total pages based on filtered data
-
+            setAttendanceLogs(data || []);
+            setTotalPages(data.content.length / pageSize);
         } catch (error) {
             console.error('Failed to fetch attendance logs:', error);
         }
@@ -175,6 +166,10 @@ const ProfessorView = () => {
         }
     }
 
+    function handleViewAbsencesButton() {
+        window.location.href = '/viewAbsences'
+    }
+
     function convertDateTime(dateTimeString) {
         // Create a new Date object using the dateTime string
         const date = new Date(dateTimeString);
@@ -202,7 +197,7 @@ const ProfessorView = () => {
     function createTable(attendanceLogs) {
       return (
         <div>
-            <h1>View Absent Logs</h1>
+            <h1>View Attendance Logs</h1>
             <div className='input-box'>
                 <h2>Select Student</h2>
                 <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
@@ -227,7 +222,6 @@ const ProfessorView = () => {
                         <th>Student</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
-                        <th>Absent</th>
                         <th>Excused</th>
                     </tr>
                 </thead>
@@ -237,7 +231,6 @@ const ProfessorView = () => {
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
-                            <td>True</td>
                             <td>{log.excused}</td>
                         </tr>
                     ))}
@@ -251,10 +244,11 @@ const ProfessorView = () => {
     return (
         <div className='wrapper'>
             {createTable(attendanceLogs)}
-            <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
+            <div className='button-container' style={{ marginTop: '20px'}}>
                 <button onClick={handlePreviousButton}>Previous</button>
                 <button onClick={handleNextButton}>Next</button>
             </div>
+            <button onClick={handleViewAbsencesButton}>View Absences Only</button>
             <div className="sidbar-bottom">
                     <button className="signoutButton" onClick={handleClickSignOut}>Sign Out</button>
             </div>
@@ -262,4 +256,4 @@ const ProfessorView = () => {
     );
 };
 
-export default ProfessorView;
+export default ProfessorViewAttendanceLogs;

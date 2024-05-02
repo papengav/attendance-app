@@ -5,12 +5,11 @@ Purpose: Page to view attendance logs in our database per student per section
 */
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
-import './ViewAttendanceLogs.css';
 import '../../Components/Styles/GruvboxTheme.css';
 
-const ViewAttendanceLogs = () => {
+const ViewAbsences = () => {
     // State to store various pieces of data necessary for the component
     const [attendanceLogs, setAttendanceLogs] = useState([]);
     const [studentId, setStudentId] = useState('');
@@ -22,6 +21,7 @@ const ViewAttendanceLogs = () => {
     const [pageSize, setPageSize] = useState(10);
     const jwtToken = useFetchJWT();  // Custom hook to fetch JWT from cookies
     const [user, setUser] = useState({});
+    const history = useNavigate();
 
     // Custom hook to fetch and set JWT token
     function useFetchJWT() {
@@ -79,22 +79,39 @@ const ViewAttendanceLogs = () => {
         fetchUserData();
     }, [studentId, jwtToken]);
 
+    function handleClickSignOut() {
+        const allCookies = Cookies.get(); // Retrieve all cookies as an object
+        Object.keys(allCookies).forEach(cookieName => {
+            Cookies.remove(cookieName); // Remove each cookie by name
+        });
+        window.location.href = "/";
+    }
+
     // Async function to fetch attendance logs from the API
     const fetchAttendanceLogs = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/attendancelogs/by-studentId-and-sectionId?studentId=${studentId}&sectionId=${sectionId}`, {
+            const url = new URL('http://localhost:8080/attendancelogs/by-studentId-and-sectionId');
+            url.searchParams.append('studentId', studentId);
+            url.searchParams.append('sectionId', sectionId);
+    
+            const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${jwtToken}`
                 }
             });
+    
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setAttendanceLogs(data || []);
-            setTotalPages(data.content.length / pageSize);
+            
+            // Filter the data to only include logs where is_absent is true
+            const absentLogs = data.filter(log => log.absent === true);
+            setAttendanceLogs(absentLogs);
+            setTotalPages(Math.ceil(absentLogs.length / pageSize)); // Calculate total pages based on filtered data
+
         } catch (error) {
             console.error('Failed to fetch attendance logs:', error);
         }
@@ -160,34 +177,38 @@ const ViewAttendanceLogs = () => {
         }
     }
 
+    function handleBackButton() {
+        history(-1);
+    }
+
     function convertDateTime(dateTimeString) {
         // Create a new Date object using the dateTime string
         const date = new Date(dateTimeString);
-
+    
         // Get the month and ensure it is in MM format
         const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed, add one
-
+    
         // Get the day and ensure it is in DD format
         const day = ('0' + date.getDate()).slice(-2);
-
+    
         // Get the year and convert it to YY format
         const year = date.getFullYear().toString().slice(-2);
-
+    
         // Get the hours and ensure it is in HH format
         const hours = ('0' + date.getHours()).slice(-2);
-
+    
         // Get the minutes and ensure it is in MM format
         const minutes = ('0' + date.getMinutes()).slice(-2);
-
+    
         // Construct the formatted date string in "MM/DD/YY - HH/MM/SS" format
         return `${month}/${day}/${year} - ${hours}:${minutes}`;
-    }
+    }    
 
     // Function to render the attendance log table
     function createTable(attendanceLogs) {
       return (
         <div>
-            <h1>View Attendance Logs</h1>
+            <h1>View Absent Logs</h1>
             <div className='input-box'>
                 <h2>Select Student</h2>
                 <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
@@ -212,6 +233,8 @@ const ViewAttendanceLogs = () => {
                         <th>Student</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
+                        <th>Absent</th>
+                        <th>Excused</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -220,6 +243,8 @@ const ViewAttendanceLogs = () => {
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
+                            <td>True</td>
+                            <td>{log.excused}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -235,12 +260,13 @@ const ViewAttendanceLogs = () => {
             <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
                 <button onClick={handlePreviousButton}>Previous</button>
                 <button onClick={handleNextButton}>Next</button>
+                <button onClick={handleBackButton}>Back</button>
             </div>
-            <button>
-                <Link to="/layout/viewAbsences">View Absences Only</Link>
-            </button>
+            <div className="sidbar-bottom">
+                <button className="signoutButton" onClick={handleClickSignOut}>Sign Out</button>
+            </div>
         </div>
     );
 };
 
-export default ViewAttendanceLogs;
+export default ViewAbsences;
