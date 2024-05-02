@@ -19,12 +19,7 @@ const EnrollmentForm = () => {
     const [jwt, setJwtToken] = useState('');
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [isError, setIsError] = useState(false);
-    const [isErrorUndo, setIsErrorUndo] = useState(false);
-    const [isErrorRedo, setIsErrorRedo] = useState(false);
-    const [userStack, setUserStack] = useState([]); // State variable to store enrollment stack
-    const [userStackRedo, setUserStackRedo] = useState([]); // State variable to store undone enrollment stack
-    const [idStack, setIdStack] = useState([]); //state variable to store enrollment IDs
-    const [idStackRedo, setIdStackRedo] = useState([]); //state variable to store undone enrollment IDs
+    
     
 
     useEffect(() => {
@@ -56,73 +51,7 @@ const EnrollmentForm = () => {
             fetchCourses();
         }
     }, [jwt]);
-    // Push a user onto the stack
-const pushUser = (user) => {
-    setUserStack(prevStack => [...prevStack, user]);
-};
-
-// Pop a user from the stack and return the popped user
-const popUser = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setUserStack(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-    // Push a user onto the stack
-const pushUserRedo = (user) => {
-    setUserStackRedo(prevStack => [...prevStack, user]);
-};
-
-// Pop a user from the stack and return the popped user
-// Pop a user from the stack and return the popped user
-const popUserRedo = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setUserStackRedo(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-// Pop a user from the stack and return the popped user
-const popId = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setIdStack(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-    // Push a user onto the stack
-const pushId = (user) => {
-    setIdStack(prevStack => [...prevStack, user]);
-};
-// Pop a user from the stack and return the popped user
-const popIdRedo = () => {
-    let poppedUser; // Define poppedUser outside the setUserStack callback
-
-    setIdStackRedo(prevStack => {
-        const newStack = [...prevStack];
-        poppedUser = newStack.pop(); // Store the popped user
-        return newStack; // Return the modified stack without the popped user
-    });
-
-    return poppedUser; // Return the popped user
-};
-    // Push a user onto the stack
-const pushIdRedo = (user) => {
-    setIdStackRedo(prevStack => [...prevStack, user]);
-};
+    
 
     // Async function to fetch students from backend
     const fetchStudents = async () => {
@@ -193,7 +122,7 @@ const pushIdRedo = (user) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const enrollmentPost = { sectionId, studentId };
-        pushUser(enrollmentPost);
+        
 
         try {
             const response = await fetch('http://localhost:8080/enrollments', {
@@ -211,70 +140,13 @@ const pushIdRedo = (user) => {
             const ID = data.id // fixx this
             setFeedbackMessage("Enrollment created successfully");
             setIsError(false);
-            pushId(ID)
+            
         } catch (error) {
             setFeedbackMessage(`Error creating enrollment: ${error.message}`);
             setIsError(false);
         }
     };
-    // Handles undoing the most recent user on the stack
-    const handleUndo = (e) => {
-        e.preventDefault();
-        const enrollmentTemp = popUser()
-        const ID = popId()
-        pushUserRedo(enrollmentTemp)
-        pushIdRedo(ID)
-        const undo = {}
-        //config post
-        const postArgs = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + jwt
-            },
-            body: JSON.stringify(undo)
-        };
-    
-
-        //send post to the API
-        fetch('http://localhost:8080/', postArgs)
-        .then(data => {
-            setFeedbackMessage(`User undone successfully!`);
-            setIsErrorUndo(false);
-        })
-        .catch(error => {
-            setFeedbackMessage(`Error undoing user: ${error.message}`);
-            setIsErrorUndo(true);
-        });
-    }
-    // Handles redoing the most recent user on the stack
-    const handleRedo = async (e) => {
-        e.preventDefault();
-        const enrollmentPost = popUserRedo()
-        pushUser(enrollmentPost);
-        const ID = popIdRedo()
-        pushId(ID)
-
-        try {
-            const response = await fetch('http://localhost:8080/enrollments', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwt}`
-                },
-                body: JSON.stringify(enrollmentPost)
-            });
-
-            if (!response.ok) throw new Error('Failed to create enrollment');
-
-            const data = await response.json();
-            setFeedbackMessage("Enrollment created successfully");
-            setIsError(false);
-        } catch (error) {
-            setFeedbackMessage(`Error creating enrollment: ${error.message}`);
-            setIsError(false);
-        }
-    }
+   
 
     // JSX to render the form with dynamic dropdowns
     return (
@@ -313,13 +185,7 @@ const pushIdRedo = (user) => {
                         ))}
                     </select>
                 </div>
-                <div>
                 <button type="submit">Submit</button>
-                </div>
-                <div>
-                    <button onClick={handleUndo}>Undo</button>
-                    <button onClick={handleRedo}>Redo</button>
-                </div>
             </form>
         </div>
     );
