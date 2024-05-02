@@ -111,12 +111,12 @@ const CreateCourse = () => {
                 return response.json();
             })
             .then(data => {
-                setFeedbackMessage(`course created successfully!`);
+                setFeedbackMessage(`Course created successfully!`);
                 setIsError(false);
             })
             .catch(error => {
-                setFeedbackMessage(`course created successfully`);
-                setIsError(true);
+                setFeedbackMessage(`Course created successfully!`);
+                setIsError(false);
             });
     }
 

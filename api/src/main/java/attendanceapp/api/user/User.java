@@ -66,7 +66,7 @@ public class User implements UserDetails {
      * @return List of User Roles
      */
     @Override
-    @JsonIgnore // Prevent Jackson from attempting to deserialize during tests - will always crash tests otherwise
+    @JsonIgnore // Prevent Json from attempting to deserialize during tests - will always crash tests otherwise
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String strRoleId = String.valueOf(roleId);
         return List.of(new SimpleGrantedAuthority(strRoleId));

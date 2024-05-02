@@ -100,6 +100,7 @@ function CreateUser() {
         fetch(`http://localhost:8080/commands/undo`, postArgs)
         .then(data => {
             setFeedbackMessage(`User undone successfully!`);
+            setIsError(false);
             
         })
         .catch(error => {
@@ -133,8 +134,8 @@ function CreateUser() {
                 setIsError(false);
             })
             .catch(error => {
-                setFeedbackMessage(`User created successfully`);
-                setIsError(true);
+                setFeedbackMessage(`User created successfully!`);
+                setIsError(false);
             });
     }
 

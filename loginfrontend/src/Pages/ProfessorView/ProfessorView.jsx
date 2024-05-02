@@ -88,19 +88,28 @@ const ProfessorView = () => {
     // Async function to fetch attendance logs from the API
     const fetchAttendanceLogs = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/attendancelogs/by-studentId-and-sectionId?studentId=${studentId}&sectionId=${sectionId}`, {
+            const url = new URL('http://localhost:8080/attendancelogs/by-studentId-and-sectionId');
+            url.searchParams.append('studentId', studentId);
+            url.searchParams.append('sectionId', sectionId);
+    
+            const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${jwtToken}`
                 }
             });
+    
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setAttendanceLogs(data || []);
-            setTotalPages(data.content.length / pageSize);
+            
+            // Filter the data to only include logs where is_absent is true
+            const absentLogs = data.filter(log => log.absent === true);
+            setAttendanceLogs(absentLogs);
+            setTotalPages(Math.ceil(absentLogs.length / pageSize)); // Calculate total pages based on filtered data
+
         } catch (error) {
             console.error('Failed to fetch attendance logs:', error);
         }
@@ -193,7 +202,7 @@ const ProfessorView = () => {
     function createTable(attendanceLogs) {
       return (
         <div>
-            <h1>View Attendance Logs</h1>
+            <h1>View Absent Logs</h1>
             <div className='input-box'>
                 <h2>Select Student</h2>
                 <select value={studentId} onChange={(e) => setStudentId(e.target.value)} required className="form-select">
@@ -218,6 +227,7 @@ const ProfessorView = () => {
                         <th>Student</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
+                        <th>Absent</th>
                         <th>Excused</th>
                     </tr>
                 </thead>
@@ -227,6 +237,7 @@ const ProfessorView = () => {
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
+                            <td>True</td>
                             <td>{log.excused}</td>
                         </tr>
                     ))}
