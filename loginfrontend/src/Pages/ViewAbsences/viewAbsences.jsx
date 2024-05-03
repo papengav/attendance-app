@@ -234,7 +234,6 @@ const ViewAbsences = () => {
                         <th>Section ID</th>
                         <th>Date-time</th>
                         <th>Absent</th>
-                        <th>Excused</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -243,8 +242,7 @@ const ViewAbsences = () => {
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
-                            <td>True</td>
-                            <td>{log.excused}</td>
+                            <td>{log.absent.toString()}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -260,10 +258,9 @@ const ViewAbsences = () => {
             <div className='button-container' style={{ marginTop: '20px', marginBottom: '20px' }}>
                 <button onClick={handlePreviousButton}>Previous</button>
                 <button onClick={handleNextButton}>Next</button>
-                <button onClick={handleBackButton}>Back</button>
             </div>
-            <div className="sidbar-bottom">
-                <button className="signoutButton" onClick={handleClickSignOut}>Sign Out</button>
+            <div>
+                <button onClick={handleBackButton}>View All Logs</button>
             </div>
         </div>
     );

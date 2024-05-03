@@ -81,7 +81,7 @@ const LoginForm = () => {
                 window.location.href = "/studentView"
             }
         }).catch(error => {
-            setFeedbackMessage(`Login failed: ${error.message}`);
+            setFeedbackMessage(`${error.message}`);
             setIsError(true);
         })
     };

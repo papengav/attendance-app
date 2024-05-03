@@ -222,7 +222,7 @@ const ProfessorViewAttendanceLogs = () => {
                         <th>Student</th>
                         <th>Section ID</th>
                         <th>Date-time</th>
-                        <th>Excused</th>
+                        <th>Absent</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -231,7 +231,7 @@ const ProfessorViewAttendanceLogs = () => {
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
-                            <td>{log.excused}</td>
+                            <td>{log.absent.toString()}</td>
                         </tr>
                     ))}
                 </tbody>

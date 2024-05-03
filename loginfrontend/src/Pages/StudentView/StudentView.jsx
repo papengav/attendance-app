@@ -156,7 +156,7 @@ const StudentView = () => {
                     <tr>
                         <th>Section ID</th>
                         <th>Date-time</th>
-                        <th>Excused</th>
+                        <th>Absent</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,7 +164,7 @@ const StudentView = () => {
                         <tr key={log.id}>
                             <td>{log.sectionId}</td>
                             <td>{convertDateTime(log.dateTime)}</td>
-                            <td>{log.excused}</td>
+                            <td>{log.absent.toString()}</td>
                         </tr>
                     ))}
                 </tbody>
