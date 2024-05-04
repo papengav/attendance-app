@@ -192,7 +192,8 @@ None
     studentId: int,
     sectionId: int,
     dateTime: TimeStamp,
-    excused: Boolean
+    excused: Boolean,
+    absent: boolean
 }
 ```
 **POST /attendancelogs**
