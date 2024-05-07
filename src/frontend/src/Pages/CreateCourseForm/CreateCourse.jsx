@@ -4,7 +4,6 @@
 
 // Importing necessary modules and styles
 import React, { useState, useEffect } from 'react';
-import './CreateCourse.css'; // CSS styles specific to this component
 import Cookies from 'js-cookie'; // Library to handle cookies
 import '../../Components/Styles/GruvboxTheme.css'; // Theme CSS import
 
@@ -29,7 +28,6 @@ const CreateCourse = () => {
     // Effect hook to get the JWT token from cookies when the component mounts
     useEffect(() => {
         const jwtToken = Cookies.get('jwt_authorization'); // Retrieve JWT token from cookies
-        console.log('JWT:', jwtToken); // Log the JWT for debugging
         setJwt(jwtToken); // Update the JWT state with the retrieved token
     }, []);
 
@@ -37,7 +35,6 @@ const CreateCourse = () => {
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent default form submission behavior
         const course = { name }; // Create a course object with the name from state
-        console.log('Submitting course:', course); // Log the course object being submitted for debugging
 
         // Making a POST request to create a new course
         fetch('http://localhost:8080/courses', {

@@ -4,7 +4,6 @@
 
 // Import necessary modules and CSS
 import React, { useState, useEffect } from 'react';
-import './EnrollmentForm.css'; // Styles specific to this form
 import Cookies from 'js-cookie'; // Library to handle cookies
 
 // EnrollmentForm component definition

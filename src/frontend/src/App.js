@@ -11,7 +11,6 @@ import HomePage from './Pages/HomePage/HomePage';
 import Layout from './Pages/Layout/Layout';
 import ViewUsersPage from './Pages/ViewUsersPage/ViewUsersPage';
 import EnrollmentForm from './Pages/EnrollmentPage/EnrollmentForm';
-import ViewEnrollments from './Pages/ViewEnrollmentsPage/ViewEnrollments';
 import CreateMeetingTime from './Pages/CreateMeetingtime/CreateMeetingTimeForm';
 import ViewAttendaceLogs from './Pages/ViewAttendanceLogs/ViewAttendanceLogs';
 import NoPage from './Pages/NoPage/NoPage';
@@ -32,7 +31,6 @@ function App() {
           <Route path="createMeetingTime" element={<CreateMeetingTime />} />
           <Route path="viewUsers" element={<ViewUsersPage />} />
           <Route path="createEnrollment" element={<EnrollmentForm />} />
-          <Route path="viewEnrollments" element={<ViewEnrollments/>} />
           <Route path="viewAttendanceLogs" element={<ViewAttendaceLogs/>} />
           <Route path="viewAbsences" element={<ViewAbsences/>} />
         </Route>

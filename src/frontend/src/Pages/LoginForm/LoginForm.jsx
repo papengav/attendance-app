@@ -64,7 +64,6 @@ const LoginForm = () => {
             const token = data.token; // Extract JWT token from response
             const role = data.roleId;
             const userId = data.userId;
-            console.log("User Logged In", token);
             setJwtToken(token); // Update state with the JWT token
             cookies.set("jwt_authorization", token, { path: '/' }); // Store JWT token in cookies
             setFeedbackMessage('Login successful!');

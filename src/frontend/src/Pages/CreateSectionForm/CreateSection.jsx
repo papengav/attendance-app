@@ -4,7 +4,6 @@
 
 // Import necessary modules and styles
 import React, { useState, useEffect } from 'react';
-import './CreateSection.css'; // CSS for this component
 import Cookies from 'js-cookie'; // Library to handle cookies
 import '../../Components/Styles/GruvboxTheme.css'; // Theme CSS import
 

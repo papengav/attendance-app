@@ -12,7 +12,6 @@ function useFetchJWT() {
     const [jwtToken, setJwtToken] = useState('');
     useEffect(() => {
         const jwt = Cookies.get('jwt_authorization');
-        console.log('JWT Token:', jwt);
         setJwtToken(jwt);
     }, []);
     return jwtToken;
@@ -53,7 +52,6 @@ const ViewUsersPage = () => {
             .then(data => {
                   setUsers(data || []);
                   setTotalPages(data.content.length / pageSize);
-                console.log('Data fetched:', data);
             })
             .catch(error => {
                 console.error('Error fetching users:', error);
@@ -111,8 +109,6 @@ const ViewUsersPage = () => {
             default: return "Unknown";
         }
     }
-
-    console.log(users)
     
     return (
         <div className='wrapper'>

@@ -64,7 +64,6 @@ const CreateMeetingTime = () => {
     useEffect(() => {
         const jwt = Cookies.get('jwt_authorization'); // Fetch JWT token from cookies
         setJwtToken(jwt); // Set the JWT token state
-        console.log('JWT Token:', jwt); // Log JWT token for debugging
     }, []);
 
     // Fetch students and courses when JWT is available
@@ -136,7 +135,6 @@ const CreateMeetingTime = () => {
     
         Promise.all(daysOfWeek.map(day => {
             const meetingTime = { startTime, endTime, dayOfWeek: day, sectionId };
-            console.log('Submitting meeting time:', meetingTime);
     
             return fetch('http://localhost:8080/meetingtimes', {
                 method: "POST",
