@@ -40,6 +40,7 @@
 ## Scanner
 ### In Ubuntu
 * Run scanner/install.sh as root
+* Create relevant roomData.txt in /usr directory
 
 **Dependancies:**
 * Python
