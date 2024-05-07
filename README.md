@@ -6,6 +6,12 @@
 * Dylan Brodie
 
 ## API
+Backend RESTful API \
+Built with Java 21 and Spring Boot 3.2.2 \
+Build Tool - Apache Maven
+
+Authoritative system for all business logic & resource CRUD. \
+Fully implemented stateless JWT authentication & User role-based authorization.
 
 **Dependancies:**
 * Apache Maven 3.9.6 https://maven.apache.org/download.cgi
@@ -19,6 +25,18 @@
 * Select `pom.xml`
 * Choose "Open as project"
 * Run `ApiApplication` file
+
+**Test Reproduction:**
+* Open in IntelliJ IDE with the same method as Build Instructions.
+* Navigate to `src/test/java/attendanceapp.api` in the Project Explorer
+* Right click the `attendanceapp.api` package
+* Hover "More Run/Debug" on the dropdown
+* Select "Run 'tests in "attendanceapp.api'" with Coverage"
+* If prompted in bottom right corner of IDE, accept "Enable Lombok Generation"
+* When tests are complete running, a report should appear on the right side of the IDE.
+* If prompted with popup, select "Replace Active Suites"
+
+**Warning:** If tests are ran at 11:50pm or later, they will crash. The tests are reliant on automatically generated data using SQL queries that add ten minutes to the current local time and does not wrap into the next day, causing failure.
 
 ## Database
 
