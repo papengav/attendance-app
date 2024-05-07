@@ -7,6 +7,7 @@
 package attendanceapp.api.course;
 
 import attendanceapp.api.command.Command;
+import attendanceapp.api.command.CommandService;
 import attendanceapp.api.command.CreateCourseCommand;
 import attendanceapp.api.command.Invoker;
 import attendanceapp.api.exceptions.InvalidCourseException;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class CourseService {
 
     private final CourseRepository courseRepository;
-    private final Invoker invoker;
+    private final CommandService commandService;
 
     /**
      * Find a Course by its ID
@@ -57,17 +58,15 @@ public class CourseService {
     /**
      * Create a new Course
      * Very minimal logic, Courses are only composed of a name right now
+     * This has to jump through a bit of a weird hoop because there is a very specific implementation
+     * of the command pattern we have to follow for a homework assignment
      *
      * @param courseRequest CourseDTO containing name of new Course
      * @return created Course
      */
     public Course createCourse(CourseDTO courseRequest) {
-        Course newCourse = new Course(courseRequest.getName(), 0);
+        commandService.doCreateCourse(courseRequest);
 
-        Command createCourseCommand = new CreateCourseCommand(newCourse, courseRepository);
-        createCourseCommand.execute();
-        invoker.done.push(createCourseCommand);
-
-        return courseRepository.findByName(newCourse.getName());
+        return courseRepository.findByName(courseRequest.getName());
     }
 }

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/commands")
 @RequiredArgsConstructor
 public class CommandController {
-    private final Invoker invoker;
+    private final CommandService commandService;
     private final Logger logger = LoggerFactory.getLogger(CommandController.class);
 
     /**
@@ -38,18 +38,13 @@ public class CommandController {
     @PostMapping("/undo")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<Void> undo() {
-        if (!invoker.done.isEmpty()) {
-            Command command = invoker.done.pop();
-            command.unExecute();
-            invoker.unDone.push(command);
-
+        if (commandService.undo()) {
             logger.info("A resource management process was undone");
             return ResponseEntity.ok().build();
         }
 
         logger.info("Unsuccessful undo of resource management process");
         return ResponseEntity.badRequest().build();
-
     }
 
     /**
@@ -61,11 +56,7 @@ public class CommandController {
     @PostMapping("/redo")
     @PreAuthorize(AuthorityConstants.ADMIN_AUTHORITY)
     public ResponseEntity<Void> redo() {
-        if (!invoker.unDone.isEmpty()) {
-            Command command = invoker.unDone.pop();
-            command.execute();
-            invoker.done.push(command);
-
+        if (commandService.redo()) {
             logger.info("A resource management process was redone");
             return ResponseEntity.ok().build();
         }

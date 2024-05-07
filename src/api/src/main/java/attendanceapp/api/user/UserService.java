@@ -6,9 +6,7 @@
 
 package attendanceapp.api.user;
 
-import attendanceapp.api.command.Invoker;
-import attendanceapp.api.command.Command;
-import attendanceapp.api.command.CreateUserCommand;
+import attendanceapp.api.command.CommandService;
 import attendanceapp.api.exceptions.InvalidAuthorization;
 import attendanceapp.api.exceptions.InvalidRoleException;
 import attendanceapp.api.exceptions.InvalidUserException;
@@ -38,7 +36,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Invoker invoker;
+    private final CommandService commandService;
 
     /**
      * Find a User by their ID
@@ -140,7 +138,7 @@ public class UserService {
 
     /**
      * Validate and create a User
-     * Unconventional implementation because particular assignment homework calls for Command-Pattern undo/redo implementation
+     * Unconventional implementation because particular assignment homework calls for specific Command-Pattern undo/redo implementation
      *
      * @param userRequest UserDTO containing data related to the new User
      * @return User if it was created
@@ -152,16 +150,12 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
 
         verifyStudentCardId(userRequest.getStudentCardId(), role); // Make sure if request is for a Student that a valid studentCardId has been provided
-        User newUser = new User(null, userRequest.getFirstName(), userRequest.getLastName(), userRequest.getStudentCardId(), userRequest.getUsername(), encodedPassword, userRequest.getRoleId());
-
-        Command createUserCommand = new CreateUserCommand(newUser, userRepository);
-        createUserCommand.execute();
-        invoker.done.push(createUserCommand);
+        commandService.doCreateUser(userRequest, encodedPassword);
 
         // Need command pattern to actually save the user, but the ID isn't assigned until saved to the UserRepo
         // And the User cannot be extracted back out of the command
         // So need to grab the user somehow in order to return data to the client
-        return convertUserToUserResponse(userRepository.findByUsername(newUser.getUsername()).orElseThrow(() -> new InvalidUserException("Error")));
+        return convertUserToUserResponse(userRepository.findByUsername(userRequest.getUsername()).orElseThrow(() -> new InvalidUserException("Error")));
     }
 
     /**
