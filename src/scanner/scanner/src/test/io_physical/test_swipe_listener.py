@@ -4,6 +4,9 @@
 # Purpose: Validate functionality of swipe_listener class
 # ----------------------------------------------------------------------------------------------
 
+import sys
+
+sys.path.append('/home/orpheus/Documents/scrumoftheearth/src/scanner/scanner')
 from unittest import TestCase
 from src.main.io_physical.swipe_listener import swipe_listener
 
@@ -25,7 +28,13 @@ class test_room_data_hanlder(TestCase):
     def test_nfc_list_with_reader(self):
         sl = swipe_listener()
 
-        self.assertNotEquals(sl.nfc_list().find("UID"), -1)
+        self.assertNotEqual(sl.nfc_list().find("UID"), -1)
+
+    # Test with NFC card reader attached, no card present
+    def test_nfc_list_with_reader_no_card(self):
+        sl = swipe_listener()
+
+        self.assertEqual(sl.nfc_list(), "")
 
     # Test with constant input 1
     def test_scanner_listen_one_card(self):

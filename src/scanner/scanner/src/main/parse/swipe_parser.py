@@ -4,6 +4,9 @@
 # Purpose: Data parser implementation to parse UID field from an NFC tag.
 # ----------------------------------------------------------------------------------------------
 
+import sys
+
+sys.path.append('/home/orpheus/Documents/scrumoftheearth/src/scanner/scanner')
 from src.main.parse.i_data_parser import data_parser
 
 class swipe_parser(data_parser):
@@ -15,7 +18,7 @@ class swipe_parser(data_parser):
         uid = ""
         start_parse = input_str.find("UID (NFCID1): ") + len("UID (NFCID1): ")
 
-        if (len(input_str)) < 300:          # Scanning a provided card
+        if (len(input_str)) < 265:          # Scanning a provided card
             end_parse = start_parse + 14    # Short data range
         else:
             end_parse = start_parse + 26    # Long data range

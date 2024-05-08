@@ -4,6 +4,9 @@
 # Purpose: Manage instantiations and hold reused objects.
 # ----------------------------------------------------------------------------------------------
 
+import sys
+
+sys.path.append('/home/orpheus/Documents/scrumoftheearth/src/scanner/scanner')
 from src.main.io_abstract.msg_sender import msg_sender
 from src.main.io_abstract.room_data_handler import room_data_handler
 from src.main.io_physical.swipe_listener import swipe_listener
@@ -21,7 +24,7 @@ class start_manager:
 
     # Main loop function to scan NFC tags, parse the data, and handle POST requests
     def run(self):
-        self.room_num = self.room_data_h.read_room_num("roomData.txt")
+        self.room_num = self.room_data_h.read_room_num("/usr/roomData.txt")
         if (-1 == self.room_num):
             exit("Room number error")
 
@@ -45,13 +48,9 @@ class start_manager:
             if (-1 == card_data.find("UID")):
                 return -1
 
-            # print("CARD DATA\n", card_data)
-
             uid = self.swipe_p.parse_string(card_data)
-            # print("UID\n", uid)
 
             message = self.swipe_assembler.assemble_msg(uid, self.room_num)
-            # print("URL\n", message[0])
 
             http_resp = self.sender.send_message(message).status_code
             self.swipe_listen.response_phy(str(http_resp))

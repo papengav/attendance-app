@@ -4,6 +4,9 @@
 # Purpose: JSON message assembler implementation to build POST messages with UID NFC data.
 # ----------------------------------------------------------------------------------------------
 
+import sys
+
+sys.path.append('/home/orpheus/Documents/scrumoftheearth/src/scanner/scanner')
 from src.main.message_assembly.i_JSON_msg_assembler import JSON_msg_assembler
 
 class swipe_msg_assembler(JSON_msg_assembler):

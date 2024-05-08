@@ -22,9 +22,9 @@ class swipe_listener:
     # @return: Card data as read by nfc-list call
     def nfc_list(self):
         card_data = subprocess.getoutput("nfc-list")
-        if(-1 != card_data.find("error")):
+        if(-1 == card_data.find("UID")):
             card_data = ""
-            type(card_data)
+
         return card_data
 
     # Get data on USB port corresponding to button press
