@@ -8,6 +8,9 @@
 # - Requires an entry for "c0  45  4b  12"
 # ----------------------------------------------------------------------------------------------
 
+import sys
+
+sys.path.append('/home/orpheus/Documents/scrumoftheearth/src/scanner/scanner')
 from unittest import TestCase
 from src.main.io_abstract.msg_sender import msg_sender
 
@@ -22,7 +25,7 @@ class test_msg_sender(TestCase):
         data    = "gabagoo"
         msg_data = (url, header, data)
 
-        self.assertEquals(sender.send_message(msg_data), 400)
+        self.assertEqual(sender.send_message(msg_data).status_code, 403)
 
     # Test valid message
     def test_send_message_valid(self):
@@ -34,4 +37,6 @@ class test_msg_sender(TestCase):
         room_num    = -1
         data        = { "studentCardId":uid, "roomNum":room_num }
 
-        self.assertEquals(sender.send_message(url, header, data), 400)
+        msg_data = (url, header, data)
+
+        self.assertEqual(sender.send_message(msg_data).status_code, 201)
