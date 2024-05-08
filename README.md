@@ -56,15 +56,33 @@ Fully implemented stateless JWT authentication & User role-based authorization.
 * Add things to table using the `INSERT INTO` command
 
 ## Scanner
-### In Ubuntu
+**Ubuntu Setup**
 * Run scanner/install.sh as root
 * Create relevant roomData.txt in /usr directory
+* Run script `main` in `src/scanner/scanner/src/main/dist`
 
 **Dependancies:**
 * Python
 * PySerial
 
 **Build Instructions:**
+* Open Pycharm IDE
+* Select `file --> open`
+* Navigate to Scanner source download
+* Open in Pycharm
+* Connect CP2102 USB to UART (NFC reader module)
+* Connect microcontroller
+* Run `main.py`
+
+**Test Reproduction**
+* Open in Pycharm IDE with the same method as Build Instructions
+* Open system terminal in Pycharm
+* Run command `pytest --cov=src --cov-report term-missing`
+**Notes:** 
+Tests on the functionality of the microcontroller will require a pass with a jumper between pin 14 and 3v3 and a pass with no jumper. 
+Tests on the functionality of the API will require that a student with an ID corresponding to the NFC card is enrolled within the system in a class occuring during time of test.
+Tests on the functionality of the NFC scanner module will require a pass with a short card ID, a pass with a long card ID, and a pass with the NFC scanner module unplugged.
+Function `run()` in `start_manager.py` lacks test functions; `run()` consists of an infinite loop, and is impossible to test by code.
 
 ## Frontend 
 
