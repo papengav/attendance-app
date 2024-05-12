@@ -56,7 +56,7 @@ public class AbsenceManagerTest {
     @DirtiesContext
     void shouldNotCreateAbsentLog() {
         HttpHeaders headers = getAdminHeaders(restTemplate);
-        AttendanceLog log = new AttendanceLog(1, 1, Timestamp.from(Instant.now()), false);
+        AttendanceLog log = new AttendanceLog(2, 1, Timestamp.from(Instant.now()), false);
         attendanceLogRepository.save(log);
         absenceManager.detectAbsences(); // Shouldn't create a new one since we made one manually
 

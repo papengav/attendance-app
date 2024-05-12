@@ -96,7 +96,7 @@ public class EnrollmentControllerTest {
         HttpHeaders adminHeader = getAdminHeaders(restTemplate);
 
         int sectionId = 1;
-        int studentId = 3; // 3 is an admin
+        int studentId = 1; // 1 is an admin
 
         EnrollmentDTO newEnrollment = new EnrollmentDTO(sectionId, studentId);
         HttpEntity<EnrollmentDTO> request = new HttpEntity<>(newEnrollment, adminHeader);

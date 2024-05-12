@@ -232,7 +232,7 @@ public class SectionControllerTest {
         HttpHeaders headers = getAdminHeaders(restTemplate);
         int page = 0;
         int size = 1;
-        int studentId = 1;
+        int studentId = 2;
 
         UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-studentId")
                 .queryParam("studentId", studentId)
@@ -282,7 +282,7 @@ public class SectionControllerTest {
         HttpHeaders headers = getStudentHeaders(restTemplate);
         int page = 0;
         int size = 2;
-        int studentId = 2;
+        int studentId = 3;
 
         UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/sections/by-studentId")
                 .queryParam("studentId", studentId)

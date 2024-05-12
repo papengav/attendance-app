@@ -134,7 +134,7 @@ public class AttendanceLogControllerTest {
         HttpHeaders headers = getAdminHeaders(restTemplate);
         int page = 0;
         int size = 1;
-        int studentId = 1;
+        int studentId = 2;
         int sectionId = 1;
 
         UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/attendancelogs/by-studentId-and-sectionId")
@@ -191,7 +191,7 @@ public class AttendanceLogControllerTest {
         HttpHeaders headers = getAdminHeaders(restTemplate);
         int page = 0;
         int size = 2;
-        int studentId = 3; // admin
+        int studentId = 1; // admin
         int sectionId = 1;
 
         UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/attendancelogs/by-studentId-and-sectionId")
@@ -244,7 +244,7 @@ public class AttendanceLogControllerTest {
         HttpHeaders headers = getStudentHeaders(restTemplate); // returns first student entry (id = 1)
         int page = 0;
         int size = 2;
-        int studentId = 2; // Not student 1, should throw error
+        int studentId = 3; // Not student 2, should throw error
         int sectionId = 1;
 
         UriComponentsBuilder ucb = UriComponentsBuilder.fromUriString("/attendancelogs/by-studentId-and-sectionId")

@@ -66,3 +66,6 @@ INSERT INTO roles (name) VALUES
 ('Administrator'),
 ('Professor'),
 ('Student');
+
+INSERT INTO users (first_name, last_name, student_card_id, username, password, role_id) VALUES
+('admin', 'admin', '', 'admin', '$2a$12$JeEd1mOtw8w7SRuApO2KNe958L3iqiTFJYW2IxL3YXyfacoare4Cy', 1);
